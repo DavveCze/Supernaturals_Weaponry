@@ -1,4 +1,4 @@
-package com.darkhoundsstudios.supernaturalsweaponry.items;
+package com.darkhoundsstudios.supernaturalsweaponry.items.weapons;
 
 import com.darkhoundsstudios.supernaturalsweaponry.tools.ModItemTier;
 import net.minecraft.entity.LivingEntity;

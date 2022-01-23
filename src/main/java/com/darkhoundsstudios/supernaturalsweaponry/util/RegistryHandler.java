@@ -2,12 +2,16 @@ package com.darkhoundsstudios.supernaturalsweaponry.util;
 
 import com.darkhoundsstudios.supernaturalsweaponry.SupernaturalWeaponry;
 import com.darkhoundsstudios.supernaturalsweaponry.blocks.*;
+import com.darkhoundsstudios.supernaturalsweaponry.effects.ModEffects;
 import com.darkhoundsstudios.supernaturalsweaponry.items.ItemBase;
-import com.darkhoundsstudios.supernaturalsweaponry.items.SilverWeapon;
-import com.darkhoundsstudios.supernaturalsweaponry.items.WGWeapon;
+import com.darkhoundsstudios.supernaturalsweaponry.items.weapons.SilverWeapon;
+import com.darkhoundsstudios.supernaturalsweaponry.items.weapons.WGWeapon;
+import com.darkhoundsstudios.supernaturalsweaponry.items.weapons.daggers.DaggerWeapon;
 import com.darkhoundsstudios.supernaturalsweaponry.tools.ModItemTier;
 import net.minecraft.block.Block;
 import net.minecraft.item.*;
+import net.minecraft.potion.Effect;
+import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
@@ -20,8 +24,10 @@ public class RegistryHandler {
 
     public static void init()
     {
-        Items.register(FMLJavaModLoadingContext.get().getModEventBus());
-        Blocks.register(FMLJavaModLoadingContext.get().getModEventBus());
+        IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
+        Items.register(bus);
+        Blocks.register(bus);
+        ModEffects.EFFECTS.register(bus);
     }
 
 
@@ -51,8 +57,8 @@ public class RegistryHandler {
 
     //Tools- nastroje + zbrane
     //Silver
-    public static final RegistryObject<SilverWeapon> SILVER_DAGGER = Items.register("silver_dagger",()->
-            new SilverWeapon(1, -1.8f, new Item.Properties().group(SupernaturalWeaponry.TAB).maxStackSize(1)));
+    public static final RegistryObject<DaggerWeapon> SILVER_DAGGER = Items.register("silver_dagger",()->
+            new DaggerWeapon(ModItemTier.SILVER,1, -1.8f, new Item.Properties().group(SupernaturalWeaponry.TAB).maxStackSize(1), ModEffects.BLEEDING));
     public static final RegistryObject<PickaxeItem> SILVER_PICKAXE = Items.register("silver_pickaxe",()->
             new PickaxeItem(ModItemTier.SILVER, 1, -2.5f, new Item.Properties().group(SupernaturalWeaponry.TAB).maxStackSize(1)));
     public static final RegistryObject<AxeItem> SILVER_AXE = Items.register("silver_axe",()->
@@ -64,8 +70,8 @@ public class RegistryHandler {
 
 
     //White Gold
-    public static final RegistryObject<WGWeapon> WG_DAGGER = Items.register("wg_dagger",()->
-            new WGWeapon(1, -1.9f, new Item.Properties().group(SupernaturalWeaponry.TAB).maxStackSize(1)));
+    public static final RegistryObject<DaggerWeapon> WG_DAGGER = Items.register("wg_dagger",()->
+            new DaggerWeapon(ModItemTier.WHITE_GOLD,1, -1.9f, new Item.Properties().group(SupernaturalWeaponry.TAB).maxStackSize(1), ModEffects.BLEEDING));
     public static final RegistryObject<PickaxeItem> WG_PICKAXE = Items.register("wg_pickaxe",()->
             new PickaxeItem(ModItemTier.WHITE_GOLD, 1, -2.65f, new Item.Properties().group(SupernaturalWeaponry.TAB).maxStackSize(1)));
     public static final RegistryObject<AxeItem> WG_AXE = Items.register("wg_axe",()->
@@ -76,8 +82,8 @@ public class RegistryHandler {
             new WGWeapon(8, -3.35f, new Item.Properties().group(SupernaturalWeaponry.TAB).maxStackSize(1)));
 
     //Iron
-    public static final RegistryObject<SwordItem> IRON_DAGGER = Items.register("iron_dagger",()->
-            new SwordItem(ItemTier.IRON, 1, -2.1f, new Item.Properties().group(SupernaturalWeaponry.TAB).maxStackSize(1)));
+    public static final RegistryObject<DaggerWeapon> IRON_DAGGER = Items.register("iron_dagger",()->
+            new DaggerWeapon(ItemTier.IRON, 1, -2.1f, new Item.Properties().group(SupernaturalWeaponry.TAB).maxStackSize(1), ModEffects.BLEEDING));
     public static final RegistryObject<SwordItem> IRON_LONGSWORD = Items.register("iron_longsword",()->
             new SwordItem(ItemTier.IRON, 10, -3.55f, new Item.Properties().group(SupernaturalWeaponry.TAB).maxStackSize(1)));
 

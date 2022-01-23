@@ -9,10 +9,10 @@ import java.util.function.Supplier;
 
 public enum ModItemTier implements IItemTier {
     //1+baseDmg+addedDmg
-    SILVER(1,112,8.0f,1f,12,() ->{
+    SILVER(1,250,8.0f,1f,12,() ->{
         return Ingredient.fromItems(RegistryHandler.SILVER_INGOT.get());
     }),
-    WHITE_GOLD(2,89,5.5f,0f,23,() ->{
+    WHITE_GOLD(2,145,5.5f,0f,23,() ->{
         return Ingredient.fromItems(RegistryHandler.WG_INGOT.get());
     });
         private final int harvestLevel;

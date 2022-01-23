@@ -5,28 +5,20 @@
       "rolls": 1,
       "entries": [
         {
-          "type": "minecraft:item",
-          "conditions": [
+          "type": "minecraft:alternatives",
+          "children": [
             {
-              "condition": "minecraft:random_chance",
-              "chance": 0.9
+              "type": "minecraft:item",
+              "conditions": [
+                {
+                  "condition": "minecraft:random_chance",
+                  "chance": 0.5
+                }
+              ],
+              "name": "snweaponry:druid_leaf",
+              "weight": 50
             }
-          ],
-          "functions": [
-            {
-              "function": "minecraft:apply_bonus",
-              "enchantment": "minecraft:fortune",
-              "formula": "minecraft:uniform_bonus_count",
-              "parameters": {
-                "bonusMultiplier": 2
-              }
-            },
-            {
-                  "function": "minecraft:explosion_decay"
-            }
-          ],
-          "name": "snweaponry:druid_leaf",
-          "weight": 50
+          ]
         }
       ]
     }

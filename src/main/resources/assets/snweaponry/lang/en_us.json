@@ -33,5 +33,6 @@
   "item.snweaponry.jaguar_fang": "Jaguar Fang",
   "item.snweaponry.jaguar_fur": "Jaguar Fur",
   "item.snweaponry.blade": "Blade",
-  "item.snweaponry.handle": "Handle"
+  "item.snweaponry.handle": "Handle",
+  "effect.snweaponry.bleeding": "Bleeding"
 }
