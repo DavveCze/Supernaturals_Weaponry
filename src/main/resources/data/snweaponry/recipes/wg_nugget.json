@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "snweaponry:wg_ingot"
+    }
+  ],
+  "result":
+  {
+    "item": "snweaponry:wg_nugget",
+    "count": 9
+  }
+}

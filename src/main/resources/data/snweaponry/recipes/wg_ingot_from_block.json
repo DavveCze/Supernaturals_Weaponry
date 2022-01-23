@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "group": "wg_ingot",
+  "ingredients": [
+    {
+      "item": "snweaponry:wg_block"
+    }
+  ],
+  "result":
+  {
+    "item": "snweaponry:wg_ingot",
+    "count": 9
+  }
+}

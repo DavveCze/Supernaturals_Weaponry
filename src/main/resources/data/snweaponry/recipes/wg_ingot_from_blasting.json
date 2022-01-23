@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:blasting",
+  "group": "wg_ingot",
+  "ingredient": {
+    "item": "snweaponry:wg_ore"
+  },
+  "result": "snweaponry:wg_ingot",
+  "experience": 2.6,
+  "cookingtime": 125
+}

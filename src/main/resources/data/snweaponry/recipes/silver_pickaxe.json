@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern":
+  [
+    "iii",
+    " s ",
+    " s "
+  ],
+  "key":
+  {
+    "s":
+    {
+      "item": "minecraft:stick"
+    },
+    "i":
+    {
+      "item": "snweaponry:silver_ingot"
+    }
+  },
+  "result":
+  {
+    "item": "snweaponry:silver_pickaxe",
+    "count": 1
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "snweaponry:amethyst",
+      "item": "snweaponry:iron_dagger"
+    }
+  ],
+  "result":
+  {
+    "item": "snweaponry:amethyst_brushed",
+    "count": 1
+  }
+}

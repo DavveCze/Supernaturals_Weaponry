@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:smelting",
+  "group": "wg_ingot",
+  "ingredient": {
+    "item": "snweaponry:wg_ore"
+  },
+  "result": "snweaponry:wg_ingot",
+  "experience": 2.4,
+  "cookingtime": 245
+}

@@ -1,0 +1,29 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern":
+  [
+    "  b",
+    " s ",
+    "h  "
+  ],
+  "key":
+  {
+    "h":
+    {
+      "item": "snweaponry:handle"
+    },
+    "s":
+    {
+      "item": "minecraft:iron_sword"
+    },
+    "b":
+    {
+      "item": "snweaponry:blade"
+    }
+  },
+  "result":
+  {
+    "item": "snweaponry:iron_longsword",
+    "count": 1
+  }
+}

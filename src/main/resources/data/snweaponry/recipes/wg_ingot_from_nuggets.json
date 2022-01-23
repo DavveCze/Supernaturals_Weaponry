@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "wg_ingot",
+  "pattern": [
+    "xxx",
+    "xxx",
+    "xxx"
+  ],
+  "key": {
+    "x": {
+      "item": "snweaponry:wg_nugget"
+    }
+  },
+  "result": {
+    "item": "snweaponry:wg_ingot",
+    "count": 1
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern":
+  [
+    "ii ",
+    "is ",
+    " s "
+  ],
+  "key":
+  {
+    "s":
+    {
+      "item": "minecraft:stick"
+    },
+    "i":
+    {
+      "item": "snweaponry:wg_ingot"
+    }
+  },
+  "result":
+  {
+    "item": "snweaponry:wg_axe",
+    "count": 1
+  }
+}

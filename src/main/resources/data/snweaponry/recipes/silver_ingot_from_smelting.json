@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:smelting",
+  "group": "silver_ingot",
+  "ingredient": {
+    "item": "snweaponry:silver_ore"
+  },
+  "result": "snweaponry:silver_ingot",
+  "experience": 1.5,
+  "cookingtime": 185
+}

@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern":
+  [
+    "  s",
+    " n ",
+    "s  "
+  ],
+  "key":
+  {
+    "s":
+    {
+      "item": "minecraft:stick"
+    },
+    "n":
+    {
+      "item": "snweaponry:silver_nugget"
+    }
+  },
+  "result":
+  {
+    "item": "snweaponry:handle",
+    "count": 1
+  }
+}
