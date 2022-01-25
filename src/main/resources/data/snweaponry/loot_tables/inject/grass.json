@@ -6,6 +6,7 @@
       "entries": [
         {
           "type": "minecraft:alternatives",
+          "weight": 50,
           "children": [
             {
               "type": "minecraft:item",
@@ -15,8 +16,7 @@
                   "chance": 0.5
                 }
               ],
-              "name": "snweaponry:druid_leaf",
-              "weight": 50
+              "name": "snweaponry:druid_leaf"
             }
           ]
         }

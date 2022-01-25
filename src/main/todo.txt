@@ -1,0 +1,21 @@
+1. add bandages
+ - item
+ - clear bleeding
+ - crafting recipe
+ - new Item extend
+
+2. add Baubles support
+ - add talismans & rings
+ - make mods compatible
+
+3. add Patchouli
+ - make compatibility
+ - create ingame documentation of how things work
+ - lang file for book
+
+4. start working on armors
+ - create models
+ - create ModArmor.java
+ - create bonuses/buffs/debuffs for armors
+
+5. make all classic & magic items
