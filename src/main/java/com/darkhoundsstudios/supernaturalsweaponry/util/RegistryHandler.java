@@ -7,6 +7,7 @@ import com.darkhoundsstudios.supernaturalsweaponry.items.ItemBase;
 import com.darkhoundsstudios.supernaturalsweaponry.items.useable.Bandage;
 import com.darkhoundsstudios.supernaturalsweaponry.items.weapons.ModWeapon;
 import com.darkhoundsstudios.supernaturalsweaponry.items.weapons.daggers.DaggerWeapon;
+import com.darkhoundsstudios.supernaturalsweaponry.tools.ModAxe;
 import com.darkhoundsstudios.supernaturalsweaponry.tools.ModItemTier;
 import com.darkhoundsstudios.supernaturalsweaponry.tools.ModPickaxe;
 import net.minecraft.block.Block;
@@ -76,6 +77,13 @@ public class RegistryHandler {
     public static final RegistryObject<Item> DOLPHIN_FIN = Items.register("dolphin_fin", ItemBase::new);
     public static final RegistryObject<Item> JAGUAR_FUR = Items.register("jaguar_fur", ItemBase::new);
     public static final RegistryObject<Item> JAGUAR_FANG = Items.register("jaguar_fang", ItemBase::new);
+    /*
+    public static final RegistryObject<Item> BIRD_WING = Items.register("bird_wing", ItemBase:: new);
+    public static final RegistryObject<Item> EARFLAPS = Items.register("earflaps", ItemBase:: new);
+    public static final RegistryObject<Item> OCELOT_CLAW = Items.register("ocelot_claw", ItemBase:: new);
+    public static final RegistryObject<Item> LIZARD_SCALE = Items.register("lizard_scale", ItemBase:: new);
+    public static final RegistryObject<Item> LIZARD_HEART = Items.register("lizard_heart", ItemBase:: new);
+    */
 
     //Block Drops
     public static final RegistryObject<Item> DRUID_LEAF = Items.register("druid_leaf", ItemBase::new);
@@ -84,27 +92,27 @@ public class RegistryHandler {
     //Silver
     public static final RegistryObject<DaggerWeapon> SILVER_DAGGER = Items.register("silver_dagger",()->
             new DaggerWeapon(ModItemTier.SILVER,1, -1.8f, new Item.Properties().group(SupernaturalWeaponry.TAB).maxStackSize(1), ModEffects.BLEEDING));
-    public static final RegistryObject<PickaxeItem> SILVER_PICKAXE = Items.register("silver_pickaxe",()->
-            new PickaxeItem(ModItemTier.SILVER, 1, -2.5f, new Item.Properties().group(SupernaturalWeaponry.TAB).maxStackSize(1)));
-    public static final RegistryObject<AxeItem> SILVER_AXE = Items.register("silver_axe",()->
-            new AxeItem(ModItemTier.SILVER, 5, -2.45f, new Item.Properties().group(SupernaturalWeaponry.TAB).maxStackSize(1)));
-    public static final RegistryObject<SilverWeapon> SILVER_SWORD = Items.register("silver_sword",()->
-            new SilverWeapon(2, -2.1f, new Item.Properties().group(SupernaturalWeaponry.TAB).maxStackSize(1)));
-    public static final RegistryObject<SilverWeapon> SILVER_LONGSWORD = Items.register("silver_longsword",()->
-            new SilverWeapon(10, -3.15f, new Item.Properties().group(SupernaturalWeaponry.TAB).maxStackSize(1)));
+    public static final RegistryObject<ModPickaxe> SILVER_PICKAXE = Items.register("silver_pickaxe",()->
+            new ModPickaxe(ModItemTier.SILVER, 1, -2.5f, new Item.Properties().group(SupernaturalWeaponry.TAB).maxStackSize(1)));
+    public static final RegistryObject<ModAxe> SILVER_AXE = Items.register("silver_axe",()->
+            new ModAxe(ModItemTier.SILVER, 5, -2.45f, new Item.Properties().group(SupernaturalWeaponry.TAB).maxStackSize(1)));
+    public static final RegistryObject<ModWeapon> SILVER_SWORD = Items.register("silver_sword",()->
+            new ModWeapon(ModItemTier.SILVER, 2, -2.1f, new Item.Properties().group(SupernaturalWeaponry.TAB).maxStackSize(1)));
+    public static final RegistryObject<ModWeapon> SILVER_LONGSWORD = Items.register("silver_longsword",()->
+            new ModWeapon(ModItemTier.SILVER, 10, -3.15f, new Item.Properties().group(SupernaturalWeaponry.TAB).maxStackSize(1)));
 
 
     //White Gold
     public static final RegistryObject<DaggerWeapon> WG_DAGGER = Items.register("wg_dagger",()->
             new DaggerWeapon(ModItemTier.WHITE_GOLD,1, -1.9f, new Item.Properties().group(SupernaturalWeaponry.TAB).maxStackSize(1), ModEffects.BLEEDING));
-    public static final RegistryObject<PickaxeItem> WG_PICKAXE = Items.register("wg_pickaxe",()->
-            new PickaxeItem(ModItemTier.WHITE_GOLD, 1, -2.65f, new Item.Properties().group(SupernaturalWeaponry.TAB).maxStackSize(1)));
-    public static final RegistryObject<AxeItem> WG_AXE = Items.register("wg_axe",()->
-            new AxeItem(ModItemTier.WHITE_GOLD, 5, -2.55f, new Item.Properties().group(SupernaturalWeaponry.TAB).maxStackSize(1)));
-    public static final RegistryObject<WGWeapon> WG_SWORD = Items.register("wg_sword",()->
-            new WGWeapon(2, -2.35f, new Item.Properties().group(SupernaturalWeaponry.TAB).maxStackSize(1)));
-    public static final RegistryObject<WGWeapon> WG_LONGSWORD = Items.register("wg_longsword",()->
-            new WGWeapon(8, -3.35f, new Item.Properties().group(SupernaturalWeaponry.TAB).maxStackSize(1)));
+    public static final RegistryObject<ModPickaxe> WG_PICKAXE = Items.register("wg_pickaxe",()->
+            new ModPickaxe(ModItemTier.WHITE_GOLD, 1, -2.65f, new Item.Properties().group(SupernaturalWeaponry.TAB).maxStackSize(1)));
+    public static final RegistryObject<ModAxe> WG_AXE = Items.register("wg_axe",()->
+            new ModAxe(ModItemTier.WHITE_GOLD, 5, -2.55f, new Item.Properties().group(SupernaturalWeaponry.TAB).maxStackSize(1)));
+    public static final RegistryObject<ModWeapon> WG_SWORD = Items.register("wg_sword",()->
+            new ModWeapon(ModItemTier.WHITE_GOLD, 2, -2.35f, new Item.Properties().group(SupernaturalWeaponry.TAB).maxStackSize(1)));
+    public static final RegistryObject<ModWeapon> WG_LONGSWORD = Items.register("wg_longsword",()->
+            new ModWeapon(ModItemTier.WHITE_GOLD,8, -3.35f, new Item.Properties().group(SupernaturalWeaponry.TAB).maxStackSize(1)));
 
     //Iron
     public static final RegistryObject<DaggerWeapon> IRON_DAGGER = Items.register("iron_dagger",()->
