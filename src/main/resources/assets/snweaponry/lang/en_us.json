@@ -34,5 +34,10 @@
   "item.snweaponry.jaguar_fur": "Jaguar Fur",
   "item.snweaponry.blade": "Blade",
   "item.snweaponry.handle": "Handle",
-  "effect.snweaponry.bleeding": "Bleeding"
+  "effect.snweaponry.bleeding": "Bleeding",
+  "item.snweaponry.bandage": "Bandage",
+  "item.snweaponry.leather_pouch": "Leather Pouch",
+  "item.snweaponry.cw_leather_pouch": "Leather Pouch - Cursed Wood",
+  "item.snweaponry.ma_leather_pouch": "Leather Pouch - Mountain Ash",
+  "item.snweaponry.sd_leather_pouch": "Leather Pouch - Silver Dust"
 }

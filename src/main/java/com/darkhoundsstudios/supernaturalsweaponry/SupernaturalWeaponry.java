@@ -64,7 +64,7 @@ public class SupernaturalWeaponry
         if (evt.getName().toString().equals("minecraft:entities/wolf")) {
             evt.getTable().addPool(LootPool.builder().addEntry(TableLootEntry.builder(new ResourceLocation(SupernaturalWeaponry.Mod_ID, "inject/wolf"))).build());
         }
-        if (evt.getName().toString().equals("minecraft:block/grass")) {
+        if (evt.getName().toString().equals("minecraft:blocks/grass")) {
             evt.getTable().addPool(LootPool.builder().addEntry(TableLootEntry.builder(new ResourceLocation(SupernaturalWeaponry.Mod_ID, "inject/grass"))).build());
         }
         if (evt.getName().toString().equals("minecraft:entities/dolphin")) {
@@ -72,9 +72,6 @@ public class SupernaturalWeaponry
         }
         if (evt.getName().toString().equals("minecraft:entities/polar_bear")) {
             evt.getTable().addPool(LootPool.builder().addEntry(TableLootEntry.builder(new ResourceLocation(SupernaturalWeaponry.Mod_ID, "inject/polar_bear"))).build());
-        }
-        if (evt.getName().toString().equals("minecraft:entities/ocelot")) {
-            evt.getTable().addPool(LootPool.builder().addEntry(TableLootEntry.builder(new ResourceLocation(SupernaturalWeaponry.Mod_ID, "inject/ocelot"))).build());
         }
     }
 }

@@ -4,10 +4,11 @@ import com.darkhoundsstudios.supernaturalsweaponry.SupernaturalWeaponry;
 import com.darkhoundsstudios.supernaturalsweaponry.blocks.*;
 import com.darkhoundsstudios.supernaturalsweaponry.effects.ModEffects;
 import com.darkhoundsstudios.supernaturalsweaponry.items.ItemBase;
-import com.darkhoundsstudios.supernaturalsweaponry.items.weapons.SilverWeapon;
-import com.darkhoundsstudios.supernaturalsweaponry.items.weapons.WGWeapon;
+import com.darkhoundsstudios.supernaturalsweaponry.items.useable.Bandage;
+import com.darkhoundsstudios.supernaturalsweaponry.items.weapons.ModWeapon;
 import com.darkhoundsstudios.supernaturalsweaponry.items.weapons.daggers.DaggerWeapon;
 import com.darkhoundsstudios.supernaturalsweaponry.tools.ModItemTier;
+import com.darkhoundsstudios.supernaturalsweaponry.tools.ModPickaxe;
 import net.minecraft.block.Block;
 import net.minecraft.item.*;
 import net.minecraft.potion.Effect;
@@ -41,8 +42,32 @@ public class RegistryHandler {
     public static final RegistryObject<Item> AMETHYST = Items.register("amethyst", ItemBase::new);
     public static final RegistryObject<Item> AMETHYST_BRUSHED = Items.register("amethyst_brushed", ItemBase::new);
 
-    public static final RegistryObject<Item> Blade = Items.register("blade", ItemBase::new);
-    public static final RegistryObject<Item> Handle = Items.register("handle", ItemBase::new);
+    public static final RegistryObject<Item> BLADE = Items.register("blade", ItemBase::new);
+    public static final RegistryObject<Item> HANDLE = Items.register("handle", ItemBase::new);
+
+    public static final RegistryObject<Item> LEATHER_POUCH = Items.register("leather_pouch", ItemBase:: new);
+    public static final RegistryObject<Item> MA_LEATHER_POUCH = Items.register("ma_leather_pouch", ItemBase:: new);
+    public static final RegistryObject<Item> CW_LEATHER_POUCH = Items.register("cw_leather_pouch", ItemBase:: new);
+    public static final RegistryObject<Item> SD_LEATHER_POUCH = Items.register("sd_leather_pouch", ItemBase:: new);
+
+    /*
+    public static final RegistryObject<Item> SILVER_TIP = Items.register("silver_tip", ItemBase:: new);
+    public static final RegistryObject<Item> MAGIC_SEASHELL = Items.register("magic_seashell", ItemBase:: new);
+    public static final RegistryObject<Item> CERBEROS_HORN = Items.register("cerberos_horn", ItemBase:: new);
+    public static final RegistryObject<Item> CERBEROS_LEATHER = Items.register("cerberos_leather", ItemBase:: new);_
+    public static final RegistryObject<Item> MISTLETOE = Items.register("mistletoe", ItemBase:: new);
+    public static final RegistryObject<Item> A_BOTTLE_OF_LIZARD_POISON = Items.register("a_bottle_of_lizard_poison", ItemBase:: new);
+    public static final RegistryObject<Item> SCREAM_IN_A_BOTTLE = Items.register("scream_in_a_bottle", ItemBase:: new);
+    public static final RegistryObject<Item> HARDENED_LEATHER = Items.register("hardened_leather", ItemBase:: new);
+    public static final RegistryObject<Item> BOOK_OF_TRANSFORMATION = Items.register("book_otransformation", ItemBase:: new);
+    public static final RegistryObject<Item> BLOODY_ROSE = Items.register("bloody_rose", ItemBase:: new);
+    public static final RegistryObject<Item> LEAF_OF_BLOODY_ROSE = Items.register("leaf_of_bloody_rose", ItemBase:: new);
+    public static final RegistryObject<Item> DUST_OF_THE_DEAD = Items.register("dust_of_the_dead", ItemBase:: new);
+    */
+
+
+    //Active Items
+    public static final RegistryObject<Bandage> BANDAGE = Items.register("bandage", () -> new Bandage(new Item.Properties().group(SupernaturalWeaponry.TAB).maxStackSize(4)));
 
     //Entity drops
     public static final RegistryObject<Item> WOLF_FUR = Items.register("wolf_fur", ItemBase::new);
