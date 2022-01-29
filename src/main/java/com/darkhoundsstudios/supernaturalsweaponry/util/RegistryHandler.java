@@ -12,7 +12,6 @@ import com.darkhoundsstudios.supernaturalsweaponry.tools.ModItemTier;
 import com.darkhoundsstudios.supernaturalsweaponry.tools.ModPickaxe;
 import net.minecraft.block.Block;
 import net.minecraft.item.*;
-import net.minecraft.potion.Effect;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -68,7 +67,7 @@ public class RegistryHandler {
 
 
     //Active Items
-    public static final RegistryObject<Bandage> BANDAGE = Items.register("bandage", () -> new Bandage(new Item.Properties().group(SupernaturalWeaponry.TAB).maxStackSize(4)));
+    public static final RegistryObject<Bandage> BANDAGE = Items.register("bandage", () -> new Bandage(new Item.Properties().group(SupernaturalWeaponry.TAB)));
 
     //Entity drops
     public static final RegistryObject<Item> WOLF_FUR = Items.register("wolf_fur", ItemBase::new);
@@ -77,13 +76,13 @@ public class RegistryHandler {
     public static final RegistryObject<Item> DOLPHIN_FIN = Items.register("dolphin_fin", ItemBase::new);
     public static final RegistryObject<Item> JAGUAR_FUR = Items.register("jaguar_fur", ItemBase::new);
     public static final RegistryObject<Item> JAGUAR_FANG = Items.register("jaguar_fang", ItemBase::new);
-    /*
+
     public static final RegistryObject<Item> BIRD_WING = Items.register("bird_wing", ItemBase:: new);
-    public static final RegistryObject<Item> EARFLAPS = Items.register("earflaps", ItemBase:: new);
-    public static final RegistryObject<Item> OCELOT_CLAW = Items.register("ocelot_claw", ItemBase:: new);
+    //public static final RegistryObject<Item> EAR_FLAPS = Items.register("ear_flaps", ItemBase:: new);
+    public static final RegistryObject<Item> OCELOT_TALON = Items.register("ocelot_talon", ItemBase:: new);
     public static final RegistryObject<Item> LIZARD_SCALE = Items.register("lizard_scale", ItemBase:: new);
     public static final RegistryObject<Item> LIZARD_HEART = Items.register("lizard_heart", ItemBase:: new);
-    */
+
 
     //Block Drops
     public static final RegistryObject<Item> DRUID_LEAF = Items.register("druid_leaf", ItemBase::new);
@@ -119,6 +118,20 @@ public class RegistryHandler {
             new DaggerWeapon(ItemTier.IRON, 1, -2.1f, new Item.Properties().group(SupernaturalWeaponry.TAB).maxStackSize(1), ModEffects.BLEEDING));
     public static final RegistryObject<SwordItem> IRON_LONGSWORD = Items.register("iron_longsword",()->
             new SwordItem(ItemTier.IRON, 10, -3.55f, new Item.Properties().group(SupernaturalWeaponry.TAB).maxStackSize(1)));
+
+
+    //Armors
+    /*public static final RegistryObject<ArmorItem> WG_HELMET = Items.register("wg_helmet", () ->
+            new ArmorItem(ModArmorMaterial.WG, EquipmentSlotType.HEAD, new Item.Properties().group(SupernaturalWeaponry.TAB)));
+    public static final RegistryObject<ArmorItem> WG_CHESTPLATE = Items.register("wg_chestplate", () ->
+            new ArmorItem(ModArmorMaterial.WG, EquipmentSlotType.CHEST, new Item.Properties().group(SupernaturalWeaponry.TAB)));
+    public static final RegistryObject<ArmorItem> WG_LEGGINGS = Items.register("wg_leggings", () ->
+            new ArmorItem(ModArmorMaterial.WG, EquipmentSlotType.LEGS, new Item.Properties().group(SupernaturalWeaponry.TAB)));
+    public static final RegistryObject<ArmorItem> WG_BOOTS = Items.register("wg_boots", () ->
+            new ArmorItem(ModArmorMaterial.WG, EquipmentSlotType.FEET, new Item.Properties().group(SupernaturalWeaponry.TAB)));
+    */
+    public static final RegistryObject<Item> EAR_FLAPS = Items.register("ear_flaps", () ->
+            new Item(new Item.Properties().group(SupernaturalWeaponry.TAB)));
 
 
     //Blocks
