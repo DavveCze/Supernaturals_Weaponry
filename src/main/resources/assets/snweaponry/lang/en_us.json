@@ -9,6 +9,7 @@
   "item.snweaponry.silver_axe": "Silver Axe",
   "item.snweaponry.silver_sword": "Silver Sword",
   "item.snweaponry.silver_longsword": "Silver Longsword",
+  "item.snweaponry.silver_da": "Silver Double Axe",
   "block.snweaponry.wg_ore": "White Gold Ore",
   "item.snweaponry.wg_ingot": "White Gold Ingot",
   "item.snweaponry.wg_nugget": "White Gold Nugget",
@@ -18,8 +19,10 @@
   "item.snweaponry.wg_axe": "White Gold Axe",
   "item.snweaponry.wg_sword": "White Gold Sword",
   "item.snweaponry.wg_longsword": "White Gold Longsword",
+  "item.snweaponry.wg_da": "White Gold Double Axe",
   "item.snweaponry.iron_dagger": "Iron Dagger",
   "item.snweaponry.iron_longsword": "Iron Longsword",
+  "item.snweaponry.iron_da": "Iron Double Axe",
   "item.snweaponry.mana_crystal": "Mana Crystal",
   "block.snweaponry.mana_ore": "Mana Ore",
   "item.snweaponry.amethyst": "Amethyst",
@@ -39,5 +42,9 @@
   "item.snweaponry.leather_pouch": "Leather Pouch",
   "item.snweaponry.cw_leather_pouch": "Leather Pouch - Cursed Wood",
   "item.snweaponry.ma_leather_pouch": "Leather Pouch - Mountain Ash",
-  "item.snweaponry.sd_leather_pouch": "Leather Pouch - Silver Dust"
+  "item.snweaponry.sd_leather_pouch": "Leather Pouch - Silver Dust",
+  "item.snweaponry.wg_helmet": "White Gold Helmet",
+  "item.snweaponry.wg_chestplate": "White Gold Chestplate",
+  "item.snweaponry.wg_leggings": "White Gold Leggings",
+  "item.snweaponry.wg_boots": "White Gold Boots"
 }

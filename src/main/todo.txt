@@ -19,3 +19,4 @@
  - create bonuses/buffs/debuffs for armors
 
 5. make all classic & magic items
+

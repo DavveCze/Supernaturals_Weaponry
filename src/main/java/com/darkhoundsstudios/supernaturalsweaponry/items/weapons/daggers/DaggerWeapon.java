@@ -31,7 +31,7 @@ public class DaggerWeapon extends SwordItem {
         });
 
         if (!attacker.getEntityWorld().isRemote) {
-            if (Math.random() * 100 >= 20) {
+            if (Math.random() * 100 <= 20) {
                 target.addPotionEffect(new EffectInstance(effect.get(), 900, 0, false, true));
             }
         }
