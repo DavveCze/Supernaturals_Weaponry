@@ -1,8 +1,8 @@
 1. add bandages
- - item
- - clear bleeding
+ - item - completed
+ - clear bleeding - completed
  - crafting recipe
- - new Item extend
+ - new Item extend - completed
 
 2. add Baubles support
  - add talismans & rings
@@ -15,8 +15,8 @@
 
 4. start working on armors
  - create models
- - create ModArmor.java
+ - create ModArmor.java - complete
  - create bonuses/buffs/debuffs for armors
 
-5. make all classic & magic items
+5. make all classic & magic items - currently working on
 

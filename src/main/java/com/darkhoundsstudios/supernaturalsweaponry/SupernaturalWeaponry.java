@@ -3,6 +3,7 @@ package com.darkhoundsstudios.supernaturalsweaponry;
 import com.darkhoundsstudios.supernaturalsweaponry.util.RegistryHandler;
 import net.java.games.input.Component;
 import net.minecraft.block.Blocks;
+import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.data.loot.EntityLootTables;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.*;
@@ -30,6 +31,7 @@ public class SupernaturalWeaponry
     private static final Logger LOGGER = LogManager.getLogger();
 
     public static final String Mod_ID = "snweaponry";
+
 
     public SupernaturalWeaponry() {
         // Register the setup method for modloading

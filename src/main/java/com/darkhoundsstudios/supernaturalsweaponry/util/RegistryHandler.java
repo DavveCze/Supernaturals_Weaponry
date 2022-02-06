@@ -13,13 +13,19 @@ import com.darkhoundsstudios.supernaturalsweaponry.tools.ModAxe;
 import com.darkhoundsstudios.supernaturalsweaponry.tools.ModItemTier;
 import com.darkhoundsstudios.supernaturalsweaponry.tools.ModPickaxe;
 import net.minecraft.block.Block;
+import net.minecraft.block.RotatedPillarBlock;
+import net.minecraft.block.StairsBlock;
+import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.*;
+import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
+
+import javax.swing.*;
 
 public class RegistryHandler {
     public static final DeferredRegister<Item> Items = new DeferredRegister<>(ForgeRegistries.ITEMS, SupernaturalWeaponry.Mod_ID);
@@ -32,8 +38,10 @@ public class RegistryHandler {
         Items.register(bus);
         Blocks.register(bus);
         ModEffects.EFFECTS.register(bus);
-    }
 
+
+
+    }
 
     //Items
     public static final RegistryObject<Item> SILVER_INGOT = Items.register("silver_ingot", ItemBase::new);
@@ -93,7 +101,7 @@ public class RegistryHandler {
     //Tools- nastroje + zbrane
     //Silver
     public static final RegistryObject<DaggerWeapon> SILVER_DAGGER = Items.register("silver_dagger",()->
-            new DaggerWeapon(ModItemTier.SILVER,1, -1.8f, new Item.Properties().group(SupernaturalWeaponry.TAB).maxStackSize(1), ModEffects.BLEEDING));
+            new DaggerWeapon(ModItemTier.SILVER,0, -1.8f, new Item.Properties().group(SupernaturalWeaponry.TAB).maxStackSize(1), ModEffects.BLEEDING));
     public static final RegistryObject<ModPickaxe> SILVER_PICKAXE = Items.register("silver_pickaxe",()->
             new ModPickaxe(ModItemTier.SILVER, 1, -2.5f, new Item.Properties().group(SupernaturalWeaponry.TAB).maxStackSize(1)));
     public static final RegistryObject<ModAxe> SILVER_AXE = Items.register("silver_axe",()->
@@ -108,7 +116,7 @@ public class RegistryHandler {
 
     //White Gold
     public static final RegistryObject<DaggerWeapon> WG_DAGGER = Items.register("wg_dagger",()->
-            new DaggerWeapon(ModItemTier.WHITE_GOLD,1, -1.9f, new Item.Properties().group(SupernaturalWeaponry.TAB).maxStackSize(1), ModEffects.BLEEDING));
+            new DaggerWeapon(ModItemTier.WHITE_GOLD,0, -1.9f, new Item.Properties().group(SupernaturalWeaponry.TAB).maxStackSize(1), ModEffects.BLEEDING));
     public static final RegistryObject<ModPickaxe> WG_PICKAXE = Items.register("wg_pickaxe",()->
             new ModPickaxe(ModItemTier.WHITE_GOLD, 1, -2.65f, new Item.Properties().group(SupernaturalWeaponry.TAB).maxStackSize(1)));
     public static final RegistryObject<ModAxe> WG_AXE = Items.register("wg_axe",()->
@@ -122,11 +130,11 @@ public class RegistryHandler {
 
     //Iron
     public static final RegistryObject<DaggerWeapon> IRON_DAGGER = Items.register("iron_dagger",()->
-            new DaggerWeapon(ItemTier.IRON, 1, -2.1f, new Item.Properties().group(SupernaturalWeaponry.TAB).maxStackSize(1), ModEffects.BLEEDING));
+            new DaggerWeapon(ItemTier.IRON, 0, -2.1f, new Item.Properties().group(SupernaturalWeaponry.TAB).maxStackSize(1), ModEffects.BLEEDING));
     public static final RegistryObject<Two_Handed> IRON_LONGSWORD = Items.register("iron_longsword",()->
             new Two_Handed(ItemTier.IRON, 10, -3.55f, new Item.Properties().group(SupernaturalWeaponry.TAB).maxStackSize(1)));
-    public static final RegistryObject<ModWeapon> IRON_DA = Items.register("iron_da", ()->
-            new ModWeapon(ItemTier.IRON,9,-3.2f,new Item.Properties().group(SupernaturalWeaponry.TAB).maxStackSize(1)));
+    public static final RegistryObject<Two_Handed> IRON_DA = Items.register("iron_da", ()->
+            new Two_Handed(ItemTier.IRON,9,-3.2f,new Item.Properties().group(SupernaturalWeaponry.TAB).maxStackSize(1)));
 
     //Armors
     public static final RegistryObject<ArmorItem> WG_HELMET = Items.register("wg_helmet", () ->
@@ -143,7 +151,7 @@ public class RegistryHandler {
 
     //Blocks
     public static final RegistryObject<Block> SILVER_BLOCK = Blocks.register("silver_block", SilverBlock::new);
-    public static final RegistryObject<Block> WG_BLOCK = Blocks.register("wg_block", WGBlock::new);
+    public static final RegistryObject<RotatedPillarBlock> WG_BLOCK = Blocks.register("wg_block", WGBlock::new);
     public static final RegistryObject<Block> SILVER_ORE = Blocks.register("silver_ore", SilverOre::new);
     public static final RegistryObject<Block> WG_ORE = Blocks.register("wg_ore", WGOre::new);
     public static final RegistryObject<Block> MANA_ORE = Blocks.register("mana_ore", ManaOre::new);

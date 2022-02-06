@@ -1,5 +1,5 @@
 {
-  "parent": "block/cube_column",
+  "parent": "block/column_side",
   "textures": {
     "end": "snweaponry:blocks/wg_block_top",
     "side": "snweaponry:blocks/wg_block_side"

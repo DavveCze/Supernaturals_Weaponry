@@ -1,5 +1,6 @@
 package com.darkhoundsstudios.supernaturalsweaponry.items.weapons;
 
+import com.darkhoundsstudios.supernaturalsweaponry.effects.ModDamageSources;
 import com.darkhoundsstudios.supernaturalsweaponry.tools.ModItemTier;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -7,11 +8,7 @@ import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.IItemTier;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.SwordItem;
-import net.minecraft.potion.Effect;
-import net.minecraft.potion.EffectInstance;
 import net.minecraft.util.DamageSource;
-
-import java.util.function.Supplier;
 
 public class ModWeapon extends SwordItem {
     public float realAttackDamage;
@@ -31,55 +28,61 @@ public class ModWeapon extends SwordItem {
         if (this.getTier() instanceof ModItemTier) {
             switch ((ModItemTier)this.getTier()) {
                 case SILVER: {
-                    if (target.isEntityUndead()) {
-                        realAttackDamage = baseAttackDamage * 2;
-                        if (attacker instanceof PlayerEntity) {
-                            target.attackEntityFrom(DamageSource.causePlayerDamage((PlayerEntity) attacker), this.realAttackDamage);
-                        } else {
-                            target.attackEntityFrom(DamageSource.causeMobDamage(attacker), this.realAttackDamage);
-                        }
-                        System.out.println("Damage dealt: " + realAttackDamage);
-                        realAttackDamage = baseAttackDamage;
-                    } else
-                        System.out.println("Damage dealt: " + realAttackDamage);
-                    System.out.println("Target's health: " + target.getHealth());
+                    performSpecial_Silver(stack,target,attacker, baseAttackDamage);
                 }
                 break;
                 case WHITE_GOLD:
-                    if (target.hasItemInSlot(EquipmentSlotType.CHEST) || target.hasItemInSlot(EquipmentSlotType.HEAD) || target.hasItemInSlot(EquipmentSlotType.LEGS) || target.hasItemInSlot(EquipmentSlotType.FEET)) {
-                        System.out.println("cover %: " + target.getArmorCoverPercentage());
-                        System.out.println("total armor: " + target.getTotalArmorValue());
-                        System.out.println("equip: " + target.getEquipmentAndArmor());
-                        System.out.println("base dmg: " + baseAttackDamage);
-                        if (target.getArmorInventoryList().toString().contains("diamond")) {
-                            float x = 0;
-                            if (target.getItemStackFromSlot(EquipmentSlotType.HEAD).toString().contains("diamond"))
-                                x += 2;
-                            if (target.getItemStackFromSlot(EquipmentSlotType.CHEST).toString().contains("diamond"))
-                                x += 2;
-                            if (target.getItemStackFromSlot(EquipmentSlotType.LEGS).toString().contains("diamond"))
-                                x += 2;
-                            if (target.getItemStackFromSlot(EquipmentSlotType.FEET).toString().contains("diamond"))
-                                x += 2;
-                            System.out.println("toughness: " + x);
-                            realAttackDamage = baseAttackDamage + (baseAttackDamage - baseAttackDamage * (1 - (Math.min(20, Math.max(((target.getTotalArmorValue() - x) / 5), (target.getTotalArmorValue() - x) - ((4 * baseAttackDamage) / (x + 8))))) / 25));
-                        } else
-                            realAttackDamage = baseAttackDamage + (baseAttackDamage - baseAttackDamage * (1 - (Math.min(20, Math.max((target.getTotalArmorValue() / 5f), target.getTotalArmorValue() - ((4 * baseAttackDamage) / 8)))) / 25));
-                        if (attacker instanceof PlayerEntity) {
-                            target.attackEntityFrom(DamageSource.causePlayerDamage((PlayerEntity) attacker), this.realAttackDamage);
-                        } else {
-                            target.attackEntityFrom(DamageSource.causeMobDamage(attacker), this.realAttackDamage);
-                        }
-                        System.out.println("Damage dealt: " + realAttackDamage);
-                        realAttackDamage = baseAttackDamage;
-                    } else
-                        System.out.println("Damage dealt: " + realAttackDamage);
-                    System.out.println("Target's health: " + target.getHealth());
-                    System.out.println("After: " + target.getHealth());
+                    performSpecial_WG(stack,target,attacker, baseAttackDamage);
                     break;
             }
         }
 
         return true;
+    }
+
+    public final void performSpecial_WG(ItemStack stack, LivingEntity target, LivingEntity attacker,float Damage)
+    {
+        System.out.println("base dmg: " + Damage);
+        float vanillaDMG = 0;
+        if (target.getArmorInventoryList().toString().contains("diamond")) {
+            float x = 0;
+            if (target.getItemStackFromSlot(EquipmentSlotType.HEAD).toString().contains("diamond"))
+                x += 2;
+            if (target.getItemStackFromSlot(EquipmentSlotType.CHEST).toString().contains("diamond"))
+                x += 2;
+            if (target.getItemStackFromSlot(EquipmentSlotType.LEGS).toString().contains("diamond"))
+                x += 2;
+            if (target.getItemStackFromSlot(EquipmentSlotType.FEET).toString().contains("diamond"))
+                x += 2;
+            vanillaDMG = (Damage - Damage * (1 - (Math.min(20, Math.max(((target.getTotalArmorValue() - x) / 5), (target.getTotalArmorValue() - x) - ((4 * Damage) / (x + 8))))) / 25));
+            realAttackDamage = Damage + vanillaDMG + vanillaDMG * 0.49f + 1;
+        } else {
+            vanillaDMG = ((Damage - Damage * (1 - (Math.min(20, Math.max((target.getTotalArmorValue() / 5f), target.getTotalArmorValue() - ((4 * Damage) / 8)))) / 25)));
+            realAttackDamage = Damage + vanillaDMG + vanillaDMG * 0.49f;
+        }
+        if (attacker instanceof PlayerEntity) {
+            target.attackEntityFrom(ModDamageSources.PURITY, this.realAttackDamage);
+        } else {
+            target.attackEntityFrom(ModDamageSources.PURITY, this.realAttackDamage);
+        }
+        System.out.println("Damage dealt: " + realAttackDamage);
+        realAttackDamage = Damage;
+        System.out.println("HP: " + target.getHealth());
+    }
+
+    public final void performSpecial_Silver(ItemStack stack, LivingEntity target, LivingEntity attacker, float Damage)
+    {
+        if (target.isEntityUndead()) {
+            realAttackDamage = Damage * 2;
+            if (attacker instanceof PlayerEntity) {
+                target.attackEntityFrom(DamageSource.causePlayerDamage((PlayerEntity) attacker), this.realAttackDamage);
+            } else {
+                target.attackEntityFrom(DamageSource.causeMobDamage(attacker), this.realAttackDamage);
+            }
+            System.out.println("Damage dealt: " + realAttackDamage);
+            realAttackDamage = Damage;
+        } else
+            System.out.println("Damage dealt: " + realAttackDamage);
+        System.out.println("Target's health: " + target.getHealth());
     }
 }

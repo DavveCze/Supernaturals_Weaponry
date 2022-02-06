@@ -2,10 +2,8 @@ package com.darkhoundsstudios.supernaturalsweaponry.items.weapons;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.IItemTier;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
+import net.minecraft.item.*;
+import net.minecraft.util.Hand;
 import net.minecraft.world.World;
 
 public class Two_Handed extends ModWeapon{
@@ -15,31 +13,47 @@ public class Two_Handed extends ModWeapon{
 
     @Override
     public void inventoryTick(ItemStack stack, World worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
-        if(itemSlot == EquipmentSlotType.MAINHAND.getSlotIndex() && isOffHandItem((PlayerEntity) entityIn,EquipmentSlotType.OFFHAND))
-        {
-            dropItem((PlayerEntity) entityIn, EquipmentSlotType.OFFHAND);
+        if (!PlayerCreative((PlayerEntity) entityIn))
+            if (isOffHandItem((PlayerEntity) entityIn) && isSelected) {
+                if (getHandItemPl((PlayerEntity) entityIn, Hand.OFF_HAND) != stack) {
+                    findSlot((PlayerEntity) entityIn, Hand.OFF_HAND);
+                }
+            }
+    }
+
+    private ItemStack getHandItemPl(PlayerEntity player, Hand hand)
+    {
+        return player.getHeldItem(hand);
+    }
+
+    private void findSlot(PlayerEntity player, Hand hand) {
+        ItemStack stack = getHandItemPl(player, hand);
+        if (stack != ItemStack.EMPTY) {
+            if (player.inventory.getFirstEmptyStack() != -1) {
+                player.inventory.deleteStack(stack);
+                player.replaceItemInInventory(player.inventory.getFirstEmptyStack(),stack);
+            }
+            else
+                dropItem(player, stack);
         }
-        else if(itemSlot == EquipmentSlotType.OFFHAND.getSlotIndex() && isOffHandItem((PlayerEntity) entityIn,EquipmentSlotType.MAINHAND))
-        {
-            dropItem((PlayerEntity) entityIn,EquipmentSlotType.MAINHAND);
-        }
     }
 
-    private ItemStack getOffHandItemPl(PlayerEntity player, EquipmentSlotType slot)
+    private void dropItem(PlayerEntity player, ItemStack stack)
     {
-        return player.getItemStackFromSlot(slot);
+        player.inventory.deleteStack(stack);
+        player.dropItem(stack,true);
     }
 
-    private void dropItem(PlayerEntity player, EquipmentSlotType slot)
+    private boolean isOffHandItem(PlayerEntity player)
     {
-        player.entityDropItem(getOffHandItemPl(player,slot),slot.getSlotIndex());
-    }
-
-    private boolean isOffHandItem(PlayerEntity player, EquipmentSlotType slot)
-    {
-        if (player.getItemStackFromSlot(slot) != ItemStack.EMPTY)
+        if (getHandItemPl(player,Hand.OFF_HAND) != ItemStack.EMPTY)
             return true;
         else
             return false;
+    }
+
+    private boolean PlayerCreative(PlayerEntity player)
+    {
+        return player.isCreative();
     }
 }

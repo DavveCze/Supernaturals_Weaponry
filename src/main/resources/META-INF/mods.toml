@@ -3,7 +3,6 @@ modLoader="javafml"
 
 loaderVersion="[31,)"
 
-issueTrackerURL="http://my.issue.tracker/"
 
 [[mods]]
 
@@ -13,15 +12,12 @@ version="1.15.2-1.0.0"
 
 displayName="Supernaturals Weaponry"
 
-updateJSONURL="http://myurl.me/"
-
-displayURL="http://example.com/" #optional
-
-logoFile=""
+logoFile="Swolf.png"
 
 credits="Thanks for all great people who worked on it & great community <3"
 
 authors="Darkhounds Studios"
+
 description='''
 Contains all weaponry from core mod: Supernaturals
 '''
