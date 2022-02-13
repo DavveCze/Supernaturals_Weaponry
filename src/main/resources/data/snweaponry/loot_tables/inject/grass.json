@@ -1,5 +1,5 @@
 {
-  "type": "minecraft:block",
+  "type": "block",
   "pools": [
     {
       "rolls": 1,

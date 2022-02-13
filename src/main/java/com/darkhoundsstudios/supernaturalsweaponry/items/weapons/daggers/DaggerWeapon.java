@@ -1,6 +1,7 @@
 package com.darkhoundsstudios.supernaturalsweaponry.items.weapons.daggers;
 
 import com.darkhoundsstudios.supernaturalsweaponry.effects.ModDamageSources;
+import com.darkhoundsstudios.supernaturalsweaponry.effects.ModEffects;
 import com.darkhoundsstudios.supernaturalsweaponry.entities.player.ModPlayerEntity;
 import com.darkhoundsstudios.supernaturalsweaponry.items.weapons.ModWeapon;
 import com.darkhoundsstudios.supernaturalsweaponry.tools.ModItemTier;
@@ -13,6 +14,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.SwordItem;
 import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectInstance;
+import net.minecraft.potion.Effects;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.DamageSource;
@@ -51,8 +53,15 @@ public class DaggerWeapon extends ModWeapon {
 
 
         if (!attacker.getEntityWorld().isRemote) {
-            if (Math.random() * 100 <= 20) {
-                target.addPotionEffect(new EffectInstance(effect.get(), 10000, 0, false, true));
+            if (Math.random() * 100 <= 90) {
+                int x = 0;
+                for (EffectInstance effect : target.getActivePotionEffects()) {
+                    if(effect.getPotion() == ModEffects.BLEEDING.get() && effect.getAmplifier() < 3)
+                    {
+                        x = effect.getAmplifier() + 1;
+                    }
+                }
+                target.addPotionEffect(new EffectInstance(effect.get(), 10000, x, false, true));
             }
         }
 

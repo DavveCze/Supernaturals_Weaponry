@@ -85,4 +85,6 @@ public class ModWeapon extends SwordItem {
             System.out.println("Damage dealt: " + realAttackDamage);
         System.out.println("Target's health: " + target.getHealth());
     }
+
+
 }

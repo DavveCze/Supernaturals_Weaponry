@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern":
+  [
+    " w ",
+    "wrw",
+    " w "
+  ],
+  "key":
+  {
+    "w":
+    {
+      "item": "minecraft:white_wool"
+    },
+    "r":
+    {
+      "item": "minecraft:poppy"
+    }
+  },
+  "result":
+  {
+    "item": "snweaponry:bandage",
+    "count": 1
+  }
+}

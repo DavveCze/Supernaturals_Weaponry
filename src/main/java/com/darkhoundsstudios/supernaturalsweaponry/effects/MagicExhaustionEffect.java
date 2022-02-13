@@ -1,38 +1,53 @@
 package com.darkhoundsstudios.supernaturalsweaponry.effects;
 
+import net.minecraft.enchantment.DamageEnchantment;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.item.Items;
+import net.minecraft.item.MilkBucketItem;
 import net.minecraft.potion.Effect;
+import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.EffectType;
+import net.minecraft.potion.Effects;
 import net.minecraft.util.DamageSource;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 
-public class BleedingEffect extends Effect {
+public class MagicExhaustionEffect extends Effect {
     private final EffectType type;
     private final int liquidColor;
     private String name;
 
-    protected BleedingEffect(EffectType _effectType, int _liquidCol, String _Name) {
-        super(_effectType, _liquidCol);
-        type = _effectType;
-        liquidColor = _liquidCol;
-        name = _Name;
+    protected MagicExhaustionEffect(EffectType typeIn, int liquidColorIn, String nameIn) {
+        super(typeIn, liquidColorIn);
+        type = typeIn;
+        liquidColor = liquidColorIn;
+        name = nameIn;
     }
-
-
 
     @Override
     public void performEffect(@NotNull LivingEntity entityLivingBaseIn, int amplifier) {
-        if (this == ModEffects.BLEEDING.get())
-            if (entityLivingBaseIn.getHealth() > 0.0F) entityLivingBaseIn.attackEntityFrom(DamageSource.MAGIC, 1.0F);
+        if (this == ModEffects.MAGIC_EXHAUSTION.get()) {
+            if (amplifier >= 0) {
+                for (EffectInstance effect : entityLivingBaseIn.getActivePotionEffects()) {
+                    System.out.println(effect);
+                    if (effect.getPotion() == ModEffects.MAGIC_EXHAUSTION.get() || effect.getPotion()
+                            == ModEffects.BLEEDING.get() || effect.getPotion() == Effects.POISON ||
+                            effect.getPotion() == Effects.HUNGER || effect.getPotion() == Effects.SATURATION) {
+                    } else {
+                        entityLivingBaseIn.removePotionEffect(effect.getPotion());
+
+                    }
+                }
+            }
+        }
     }
 
     @Override
     public boolean isReady(int duration, int amplifier) {
-        if (this == ModEffects.BLEEDING.get()) {
-            int j = 120 >> amplifier;
+        if (this == ModEffects.MAGIC_EXHAUSTION.get()) {
+            int j = 20 >> amplifier;
             if (j > 0) {
                 return duration % j == 0;
             } else {
@@ -58,7 +73,7 @@ public class BleedingEffect extends Effect {
     }
 
     @Override
-    public BleedingEffect getEffect() {
+    public MagicExhaustionEffect getEffect() {
         return this;
     }
 

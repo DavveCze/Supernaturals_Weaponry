@@ -1,0 +1,29 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern":
+  [
+    " is",
+    " hi",
+    "h  "
+  ],
+  "key":
+  {
+    "h":
+    {
+      "item": "snweaponry:haft"
+    },
+    "i":
+    {
+      "item": "snweaponry:silver_ingot"
+    },
+    "s":
+    {
+      "item": "snweaponry:spike"
+    }
+  },
+  "result":
+  {
+    "item": "snweaponry:silver_spear",
+    "count": 1
+  }
+}

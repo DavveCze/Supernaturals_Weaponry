@@ -26,14 +26,13 @@ public class ModOreGen {
         for (Biome biome: ForgeRegistries.BIOMES)
         {
             if (biome.getCategory() == Biome.Category.NETHER || biome.getCategory() == Biome.Category.THEEND);
-            else
-            {
-                genOre(biome, 18,15,5,45, OreFeatureConfig.FillerBlockType.NATURAL_STONE, RegistryHandler.SILVER_ORE.get().getDefaultState(),6);
-                if (biome.getCategory() == Biome.Category.EXTREME_HILLS ||biome.getCategory() == Biome.Category.ICY || biome.getCategory() == Biome.Category.PLAINS)
-                genOre(biome, 10,8,2,24, OreFeatureConfig.FillerBlockType.NATURAL_STONE, RegistryHandler.WG_ORE.get().getDefaultState(),4);
-                genOre(biome, 7,10,5,35, OreFeatureConfig.FillerBlockType.NATURAL_STONE, RegistryHandler.AMETHYST_ORE.get().getDefaultState(),3);
+            else {
+                genOre(biome, 18, 15, 5, 45, OreFeatureConfig.FillerBlockType.NATURAL_STONE, RegistryHandler.SILVER_ORE.get().getDefaultState(), 5);
+                if (biome.getCategory() == Biome.Category.EXTREME_HILLS || biome.getCategory() == Biome.Category.ICY || biome.getCategory() == Biome.Category.PLAINS)
+                    genOre(biome, 10, 8, 2, 24, OreFeatureConfig.FillerBlockType.NATURAL_STONE, RegistryHandler.WG_ORE.get().getDefaultState(), 4);
+                genOre(biome, 7, 10, 5, 35, OreFeatureConfig.FillerBlockType.NATURAL_STONE, RegistryHandler.AMETHYST_ORE.get().getDefaultState(), 3);
                 if (biome.getCategory() == Biome.Category.JUNGLE || biome.getCategory() == Biome.Category.MESA || biome.getCategory() == Biome.Category.FOREST || biome.getCategory() == Biome.Category.TAIGA)
-                genOre(biome, 15,24,5,55, OreFeatureConfig.FillerBlockType.NATURAL_STONE, RegistryHandler.MANA_ORE.get().getDefaultState(),4);
+                    genOre(biome, 15, 24, 5, 55, OreFeatureConfig.FillerBlockType.NATURAL_STONE, RegistryHandler.MANA_ORE.get().getDefaultState(), 4);
             }
         }
     }

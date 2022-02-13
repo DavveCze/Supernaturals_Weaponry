@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern":
+  [
+    " ii",
+    "iii",
+    "ii "
+  ],
+  "key":
+  {
+    "i":
+    {
+      "item": "snweaponry:silver_ingot"
+    }
+  },
+  "result":
+  {
+    "item": "snweaponry:axe_head",
+    "count": 1
+  }
+}

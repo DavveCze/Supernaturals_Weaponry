@@ -1,7 +1,7 @@
-1. add bandages
+1. add bandages - completed
  - item - completed
  - clear bleeding - completed
- - crafting recipe
+ - crafting recipe - completed
  - new Item extend - completed
 
 2. add Baubles support

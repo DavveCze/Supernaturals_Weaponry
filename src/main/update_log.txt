@@ -1,0 +1,11 @@
+#12.02.2022
+1, throwing daggers added
+2, improved & changed bleeding
+3, added spears
+4, add haft & spike for crafting of spears
+5, double axe crafting recipes done
+6, bandage recipes done(poppy, red dye, red tulip)
+7, new item added - axe_head
+8, added broadswords(iron, silver, wg)
+9, glass globe(empty, full) added
+10, granade(only item & texture)

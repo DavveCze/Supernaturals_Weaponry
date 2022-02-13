@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern":
+  [
+    "  n",
+    "ii ",
+    "ii "
+  ],
+  "key":
+  {
+    "n":
+    {
+      "item": "minecraft:iron_nugget"
+    },
+    "i":
+    {
+      "item": "minecraft:iron_ingot"
+    }
+  },
+  "result":
+  {
+    "item": "snweaponry:spike",
+    "count": 1
+  }
+}

@@ -1,32 +1,31 @@
 {
   "parent": "item/handheld",
   "textures": {
-    "layer0": "snweaponry:items/iron_dagger"
+    "layer0": "snweaponry:items/silver_broadsword"
   },
   "display": {
     "thirdperson_righthand": {
       "rotation": [0, 90, 40],
-      "translation": [0, 3, 1.75],
-      "scale": [0.7, 0.7, 0.7]
+      "translation": [0, 5.5, 1.75],
+      "scale": [1.25, 1.25, 1]
     },
     "thirdperson_lefthand": {
       "rotation": [0, 90, -40],
-      "translation": [0, 3, 1.75],
-      "scale": [0.7, 0.7, 0.7]
+      "translation": [0, 5.5, 2.25],
+      "scale": [1.25, 1.25, 1]
     },
     "firstperson_righthand": {
       "rotation": [0, 90, 40],
-      "translation": [0, 4, 2],
-      "scale": [0.5, 0.5, 0.5]
+      "translation": [0, 5, 2],
+      "scale": [1.25, 1.25, 1]
     },
     "firstperson_lefthand": {
       "rotation": [0, 90, -40],
-      "translation": [0, 4, 2],
-      "scale": [0.5, 0.5, 0.5]
+      "translation": [0, 5, 2],
+      "scale": [1.25, 1.25, 1]
     },
     "ground": {
-      "translation": [0, 4, 0],
-      "scale": [0.7, 0.7, 0.7]
+      "translation": [0, 4, 0]
     }
   }
 }

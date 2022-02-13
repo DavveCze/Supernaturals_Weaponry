@@ -12,4 +12,7 @@ public class ModEffects {
 
     public static RegistryObject<Effect> BLEEDING = EFFECTS.register("bleeding", () ->
             new BleedingEffect(EffectType.HARMFUL, 4393481, "Bleeding"));
+    public static RegistryObject<Effect> MAGIC_EXHAUSTION = EFFECTS.register("magic_exhaustion", () ->
+            new MagicExhaustionEffect(EffectType.NEUTRAL, 3115194, "Magic Exhaustion"));
+
 }

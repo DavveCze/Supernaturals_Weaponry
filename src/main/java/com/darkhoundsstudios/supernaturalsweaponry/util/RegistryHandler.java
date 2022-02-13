@@ -4,28 +4,30 @@ import com.darkhoundsstudios.supernaturalsweaponry.SupernaturalWeaponry;
 import com.darkhoundsstudios.supernaturalsweaponry.armor.ModArmorMaterial;
 import com.darkhoundsstudios.supernaturalsweaponry.blocks.*;
 import com.darkhoundsstudios.supernaturalsweaponry.effects.ModEffects;
+import com.darkhoundsstudios.supernaturalsweaponry.entities.ModEntities;
 import com.darkhoundsstudios.supernaturalsweaponry.items.ItemBase;
 import com.darkhoundsstudios.supernaturalsweaponry.items.useable.Bandage;
 import com.darkhoundsstudios.supernaturalsweaponry.items.weapons.ModWeapon;
 import com.darkhoundsstudios.supernaturalsweaponry.items.weapons.Two_Handed;
 import com.darkhoundsstudios.supernaturalsweaponry.items.weapons.daggers.DaggerWeapon;
+import com.darkhoundsstudios.supernaturalsweaponry.items.weapons.daggers.TDagger;
 import com.darkhoundsstudios.supernaturalsweaponry.tools.ModAxe;
 import com.darkhoundsstudios.supernaturalsweaponry.tools.ModItemTier;
 import com.darkhoundsstudios.supernaturalsweaponry.tools.ModPickaxe;
 import net.minecraft.block.Block;
 import net.minecraft.block.RotatedPillarBlock;
-import net.minecraft.block.StairsBlock;
-import net.minecraft.client.renderer.ItemRenderer;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.entity.EntityRendererManager;
+import net.minecraft.client.renderer.entity.SpriteRenderer;
+import net.minecraft.entity.EntityType;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.*;
-import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.RegistryObject;
+import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
-
-import javax.swing.*;
 
 public class RegistryHandler {
     public static final DeferredRegister<Item> Items = new DeferredRegister<>(ForgeRegistries.ITEMS, SupernaturalWeaponry.Mod_ID);
@@ -38,9 +40,7 @@ public class RegistryHandler {
         Items.register(bus);
         Blocks.register(bus);
         ModEffects.EFFECTS.register(bus);
-
-
-
+        ModEntities.Entities.register(bus);
     }
 
     //Items
@@ -55,6 +55,9 @@ public class RegistryHandler {
 
     public static final RegistryObject<Item> BLADE = Items.register("blade", ItemBase::new);
     public static final RegistryObject<Item> HANDLE = Items.register("handle", ItemBase::new);
+    public static final RegistryObject<Item> HAFT = Items.register("haft", ItemBase::new);
+    public static final RegistryObject<Item> SPIKE = Items.register("spike", ItemBase::new);
+    public static final RegistryObject<Item> AXE_HEAD = Items.register("axe_head", ItemBase::new);
 
     public static final RegistryObject<Item> LEATHER_POUCH = Items.register("leather_pouch", ItemBase:: new);
     public static final RegistryObject<Item> MA_LEATHER_POUCH = Items.register("ma_leather_pouch", ItemBase:: new);
@@ -78,7 +81,11 @@ public class RegistryHandler {
 
 
     //Active Items
-    public static final RegistryObject<Bandage> BANDAGE = Items.register("bandage", () -> new Bandage(new Item.Properties().group(SupernaturalWeaponry.TAB)));
+    public static final RegistryObject<Bandage> BANDAGE = Items.register("bandage", () -> new Bandage(new Item.Properties().group(SupernaturalWeaponry.TAB).maxStackSize(3)));
+    public static final RegistryObject<Item> GLASS_GLOBE = Items.register("glass_globe", ItemBase::new);
+    public static final RegistryObject<Item> GLASS_GLOBE_FULL = Items.register("glass_globe_full", ItemBase::new);
+    public static final RegistryObject<Item> GRENADE = Items.register("grenade", ItemBase::new);
+
 
     //Entity drops
     public static final RegistryObject<Item> WOLF_FUR = Items.register("wolf_fur", ItemBase::new);
@@ -89,7 +96,6 @@ public class RegistryHandler {
     public static final RegistryObject<Item> JAGUAR_FANG = Items.register("jaguar_fang", ItemBase::new);
 
     public static final RegistryObject<Item> BIRD_WING = Items.register("bird_wing", ItemBase:: new);
-    //public static final RegistryObject<Item> EAR_FLAPS = Items.register("ear_flaps", ItemBase:: new);
     public static final RegistryObject<Item> OCELOT_TALON = Items.register("ocelot_talon", ItemBase:: new);
     public static final RegistryObject<Item> LIZARD_SCALE = Items.register("lizard_scale", ItemBase:: new);
     public static final RegistryObject<Item> LIZARD_HEART = Items.register("lizard_heart", ItemBase:: new);
@@ -112,6 +118,12 @@ public class RegistryHandler {
             new Two_Handed(ModItemTier.SILVER, 10, -3.15f, new Item.Properties().group(SupernaturalWeaponry.TAB).maxStackSize(1)));
     public static final RegistryObject<Two_Handed> SILVER_DA = Items.register("silver_da", ()->
             new Two_Handed(ModItemTier.SILVER,9,-2.90f,new Item.Properties().group(SupernaturalWeaponry.TAB).maxStackSize(1)));
+    public static final RegistryObject<TDagger> SILVER_TDAGGER = Items.register("silver_tdagger", () ->
+            new TDagger(new Item.Properties().group(SupernaturalWeaponry.TAB).maxStackSize(12), ModItemTier.SILVER));
+    public static final RegistryObject<Two_Handed> SILVER_SPEAR = Items.register("silver_spear", ()->
+            new Two_Handed(ModItemTier.SILVER,6,-2.2f,new Item.Properties().group(SupernaturalWeaponry.TAB).maxStackSize(1)));
+    public static final RegistryObject<ModWeapon>  SILVER_BROADSWORD = Items.register("silver_broadsword", ()->
+            new ModWeapon(ModItemTier.SILVER,7,-2.4f,new Item.Properties().group(SupernaturalWeaponry.TAB).maxStackSize(1)));
 
 
     //White Gold
@@ -127,6 +139,13 @@ public class RegistryHandler {
             new Two_Handed(ModItemTier.WHITE_GOLD,8, -3.35f, new Item.Properties().group(SupernaturalWeaponry.TAB).maxStackSize(1)));
     public static final RegistryObject<Two_Handed> WG_DA = Items.register("wg_da", ()->
             new Two_Handed(ModItemTier.WHITE_GOLD,9,-3f,new Item.Properties().group(SupernaturalWeaponry.TAB).maxStackSize(1)));
+    public static final RegistryObject<TDagger> WG_TDAGGER = Items.register("wg_tdagger", () ->
+            new TDagger(new Item.Properties().group(SupernaturalWeaponry.TAB).maxStackSize(12), ModItemTier.WHITE_GOLD));
+    public static final RegistryObject<Two_Handed> WG_SPEAR = Items.register("wg_spear", ()->
+            new Two_Handed(ModItemTier.WHITE_GOLD,6,-2.35f,new Item.Properties().group(SupernaturalWeaponry.TAB).maxStackSize(1)));
+    public static final RegistryObject<ModWeapon>  WG_BROADSWORD = Items.register("wg_broadsword", ()->
+            new ModWeapon(ModItemTier.WHITE_GOLD,7,-2.4f,new Item.Properties().group(SupernaturalWeaponry.TAB).maxStackSize(1)));
+
 
     //Iron
     public static final RegistryObject<DaggerWeapon> IRON_DAGGER = Items.register("iron_dagger",()->
@@ -135,6 +154,12 @@ public class RegistryHandler {
             new Two_Handed(ItemTier.IRON, 10, -3.55f, new Item.Properties().group(SupernaturalWeaponry.TAB).maxStackSize(1)));
     public static final RegistryObject<Two_Handed> IRON_DA = Items.register("iron_da", ()->
             new Two_Handed(ItemTier.IRON,9,-3.2f,new Item.Properties().group(SupernaturalWeaponry.TAB).maxStackSize(1)));
+    public static final RegistryObject<TDagger> IRON_TDAGGER = Items.register("iron_tdagger", () ->
+            new TDagger(new Item.Properties().group(SupernaturalWeaponry.TAB).maxStackSize(12), ItemTier.IRON));
+    public static final RegistryObject<Two_Handed> IRON_SPEAR = Items.register("iron_spear", ()->
+            new Two_Handed(ItemTier.IRON,6,-2.4f,new Item.Properties().group(SupernaturalWeaponry.TAB).maxStackSize(1)));
+    public static final RegistryObject<ModWeapon> IRON_BROADSWORD = Items.register("iron_broadsword", ()->
+            new ModWeapon(ItemTier.IRON,7,-2.4f,new Item.Properties().group(SupernaturalWeaponry.TAB).maxStackSize(1)));
 
     //Armors
     public static final RegistryObject<ArmorItem> WG_HELMET = Items.register("wg_helmet", () ->

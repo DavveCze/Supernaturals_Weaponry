@@ -1,0 +1,33 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern":
+  [
+    " ai",
+    " xa",
+    "h  "
+  ],
+  "key":
+  {
+    "h":
+    {
+      "item": "snweaponry:haft"
+    },
+    "x":
+    {
+      "item": "snweaponry:handle"
+    },
+    "i":
+    {
+      "item": "snweaponry:wg_ingot"
+    },
+    "a":
+    {
+      "item": "snweaponry:axe_head"
+    }
+  },
+  "result":
+  {
+    "item": "snweaponry:wg_da",
+    "count": 1
+  }
+}

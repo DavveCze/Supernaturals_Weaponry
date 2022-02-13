@@ -1,27 +1,28 @@
 package com.darkhoundsstudios.supernaturalsweaponry;
 
+import com.darkhoundsstudios.supernaturalsweaponry.entities.ModEntities;
 import com.darkhoundsstudios.supernaturalsweaponry.util.RegistryHandler;
-import net.java.games.input.Component;
-import net.minecraft.block.Blocks;
-import net.minecraft.client.renderer.RenderTypeLookup;
-import net.minecraft.data.loot.EntityLootTables;
-import net.minecraft.entity.Entity;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.ItemRenderer;
+import net.minecraft.client.renderer.entity.EntityRendererManager;
+import net.minecraft.client.renderer.entity.SpriteRenderer;
 import net.minecraft.item.*;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.storage.loot.LootEntry;
 import net.minecraft.world.storage.loot.LootPool;
-import net.minecraft.world.storage.loot.LootTable;
 import net.minecraft.world.storage.loot.TableLootEntry;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.LootTableLoadEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.registries.IForgeRegistryEntry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.util.Map;
+import java.util.function.Supplier;
 
 
 @Mod(SupernaturalWeaponry.Mod_ID)
@@ -40,10 +41,18 @@ public class SupernaturalWeaponry
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::doClientStuff);
 
         RegistryHandler.init();
-
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
     }
+
+    private void registerEntityModels(Supplier<Minecraft> minecraft)
+    {
+        ItemRenderer renderer = minecraft.get().getItemRenderer();
+
+        RenderingRegistry.registerEntityRenderingHandler(ModEntities.IRON_TDAGGER_E.get(), (renderManager) ->
+                new SpriteRenderer<>(renderManager, renderer));
+    }
+
 
     private void setup(final FMLCommonSetupEvent event)
     {
@@ -51,7 +60,7 @@ public class SupernaturalWeaponry
     }
 
     private void doClientStuff(final FMLClientSetupEvent event) {
-
+        registerEntityModels(event.getMinecraftSupplier());
     }
 
     public static final ItemGroup TAB = new ItemGroup("SN_tab") {

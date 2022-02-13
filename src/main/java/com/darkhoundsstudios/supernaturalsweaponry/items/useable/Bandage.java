@@ -13,9 +13,11 @@ import net.minecraft.util.Hand;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.Mod;
 
+import java.util.Random;
+
 public class Bandage extends Item {
     public Bandage(Properties properties) {
-        super(properties.maxDamage(2).defaultMaxDamage(2));
+        super(properties);
     }
 
     @Override
@@ -27,15 +29,13 @@ public class Bandage extends Item {
                 if (playerIn.getActivePotionEffects().toArray()[i].toString().contains("Bleeding")) {
                     System.out.println("Bleeding is: True");
                     playerIn.removePotionEffect(ModEffects.BLEEDING.get());
-                    stack.damageItem(1,playerIn,(p_220045_0_) -> {
-                        p_220045_0_.sendBreakAnimation(EquipmentSlotType.MAINHAND);
-                    });
                     break;
                 } else {
                     System.out.println("Bleeding is: False");
                 }
             }
         }
-        return ActionResult.resultPass(playerIn.getHeldItem(handIn));
+        playerIn.heal((float) ((Math.random() * (4.0f - 2.0f)) + 2.0f));
+        return ActionResult.resultPass(stack);
     }
 }
