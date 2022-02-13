@@ -2,29 +2,36 @@ package com.darkhoundsstudios.supernaturalsweaponry.util;
 
 import com.darkhoundsstudios.supernaturalsweaponry.SupernaturalWeaponry;
 import com.darkhoundsstudios.supernaturalsweaponry.armor.ModArmorMaterial;
-import com.darkhoundsstudios.supernaturalsweaponry.blocks.*;
+import com.darkhoundsstudios.supernaturalsweaponry.blocks.ores.AmethystOre;
+import com.darkhoundsstudios.supernaturalsweaponry.blocks.ores.ManaOre;
+import com.darkhoundsstudios.supernaturalsweaponry.blocks.ores.SilverOre;
+import com.darkhoundsstudios.supernaturalsweaponry.blocks.ores.WGOre;
+import com.darkhoundsstudios.supernaturalsweaponry.blocks.other.BlockItemBase;
+import com.darkhoundsstudios.supernaturalsweaponry.blocks.other.SilverBlock;
+import com.darkhoundsstudios.supernaturalsweaponry.blocks.other.WGBlock;
+import com.darkhoundsstudios.supernaturalsweaponry.blocks.tileentites.SunlightCollectorBlock;
+import com.darkhoundsstudios.supernaturalsweaponry.container.ModContainers;
 import com.darkhoundsstudios.supernaturalsweaponry.effects.ModEffects;
 import com.darkhoundsstudios.supernaturalsweaponry.entities.ModEntities;
 import com.darkhoundsstudios.supernaturalsweaponry.items.ItemBase;
 import com.darkhoundsstudios.supernaturalsweaponry.items.useable.Bandage;
 import com.darkhoundsstudios.supernaturalsweaponry.items.weapons.ModWeapon;
 import com.darkhoundsstudios.supernaturalsweaponry.items.weapons.Two_Handed;
+import com.darkhoundsstudios.supernaturalsweaponry.items.weapons.bombs.Granade;
 import com.darkhoundsstudios.supernaturalsweaponry.items.weapons.daggers.DaggerWeapon;
 import com.darkhoundsstudios.supernaturalsweaponry.items.weapons.daggers.TDagger;
+import com.darkhoundsstudios.supernaturalsweaponry.tileentity.ModTileEntities;
 import com.darkhoundsstudios.supernaturalsweaponry.tools.ModAxe;
 import com.darkhoundsstudios.supernaturalsweaponry.tools.ModItemTier;
 import com.darkhoundsstudios.supernaturalsweaponry.tools.ModPickaxe;
 import net.minecraft.block.Block;
+import net.minecraft.block.Blocks;
 import net.minecraft.block.RotatedPillarBlock;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.entity.EntityRendererManager;
-import net.minecraft.client.renderer.entity.SpriteRenderer;
-import net.minecraft.entity.EntityType;
+import net.minecraft.block.material.Material;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.*;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.RegistryObject;
-import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -41,6 +48,8 @@ public class RegistryHandler {
         Blocks.register(bus);
         ModEffects.EFFECTS.register(bus);
         ModEntities.Entities.register(bus);
+        ModTileEntities.TILE_ENTITIES.register(bus);
+        ModContainers.CONTAINERS.register(bus);
     }
 
     //Items
@@ -84,8 +93,12 @@ public class RegistryHandler {
     public static final RegistryObject<Bandage> BANDAGE = Items.register("bandage", () -> new Bandage(new Item.Properties().group(SupernaturalWeaponry.TAB).maxStackSize(3)));
     public static final RegistryObject<Item> GLASS_GLOBE = Items.register("glass_globe", ItemBase::new);
     public static final RegistryObject<Item> GLASS_GLOBE_FULL = Items.register("glass_globe_full", ItemBase::new);
-    public static final RegistryObject<Item> GRENADE = Items.register("grenade", ItemBase::new);
-
+    public static final RegistryObject<Granade> GRENADE = Items.register("grenade", () ->
+            new Granade(new Item.Properties().group(SupernaturalWeaponry.TAB).maxStackSize(3),false,false, 2.25f));
+    public static final RegistryObject<Granade> GRENADE_POISON = Items.register("grenade_poison", () ->
+            new Granade(new Item.Properties().group(SupernaturalWeaponry.TAB).maxStackSize(3),true,false, 1f));
+    public static final RegistryObject<Granade> GRENADE_FIRE = Items.register("grenade_fire", () ->
+            new Granade(new Item.Properties().group(SupernaturalWeaponry.TAB).maxStackSize(3),false,true, 1.5f));
 
     //Entity drops
     public static final RegistryObject<Item> WOLF_FUR = Items.register("wolf_fur", ItemBase::new);
@@ -181,6 +194,8 @@ public class RegistryHandler {
     public static final RegistryObject<Block> WG_ORE = Blocks.register("wg_ore", WGOre::new);
     public static final RegistryObject<Block> MANA_ORE = Blocks.register("mana_ore", ManaOre::new);
     public static final RegistryObject<Block> AMETHYST_ORE = Blocks.register("amethyst_ore", AmethystOre::new);
+    public static final RegistryObject<SunlightCollectorBlock> SUNLIGHT_COLLECTOR = Blocks.register("sunlight_collector", ()->
+            new SunlightCollectorBlock(Block.Properties.create(Material.IRON)));
 
     //Blocks Items
     public static final RegistryObject<Item> SILVER_BLOCK_ITEM = Items.register("silver_block", () -> new BlockItemBase(SILVER_BLOCK.get()));
@@ -189,4 +204,6 @@ public class RegistryHandler {
     public static final RegistryObject<Item> SILVER_ORE_ITEM = Items.register("silver_ore", () -> new BlockItemBase(SILVER_ORE.get()));
     public static final RegistryObject<Item> MANA_ORE_ITEM = Items.register("mana_ore", () -> new BlockItemBase(MANA_ORE.get()));
     public static final RegistryObject<Item> AMETHYST_ORE_ITEM = Items.register("amethyst_ore", () -> new BlockItemBase(AMETHYST_ORE.get()));
+    public static final RegistryObject<Item> SUNLIGHT_COLLECTOR_ITEM = Items.register("sunlight_collector", ()->
+            new BlockItemBase(SUNLIGHT_COLLECTOR.get().getBlock()));
 }

@@ -1,6 +1,7 @@
 package com.darkhoundsstudios.supernaturalsweaponry.entities.projectiles;
 
 import com.darkhoundsstudios.supernaturalsweaponry.effects.ModDamageSources;
+import com.darkhoundsstudios.supernaturalsweaponry.effects.ModEffects;
 import com.darkhoundsstudios.supernaturalsweaponry.entities.ModEntities;
 import com.darkhoundsstudios.supernaturalsweaponry.items.weapons.ModWeapon;
 import com.darkhoundsstudios.supernaturalsweaponry.tools.ModItemTier;
@@ -18,6 +19,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.IPacket;
+import net.minecraft.potion.EffectInstance;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
@@ -60,6 +62,16 @@ public class DaggerEntity extends ProjectileItemEntity {
         if (result.getType() == RayTraceResult.Type.ENTITY)
         {
             Entity entity = ((EntityRayTraceResult)result).getEntity();
+                if (Math.random() * 100 <= 20) {
+                    int x = 0;
+                    for (EffectInstance effect : ((LivingEntity)entity).getActivePotionEffects()) {
+                        if(effect.getPotion() == ModEffects.BLEEDING.get() && effect.getAmplifier() < 3)
+                        {
+                            x = effect.getAmplifier() + 1;
+                        }
+                    }
+                    ((LivingEntity)entity).addPotionEffect(new EffectInstance(ModEffects.BLEEDING.get(), 10000, x, false, true));
+                }
             float damage = 3;
             if (material != null)
             {

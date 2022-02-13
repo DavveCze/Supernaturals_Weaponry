@@ -1,11 +1,9 @@
 package com.darkhoundsstudios.supernaturalsweaponry.world.gen;
 
 import com.darkhoundsstudios.supernaturalsweaponry.SupernaturalWeaponry;
-import com.darkhoundsstudios.supernaturalsweaponry.blocks.SilverOre;
 import com.darkhoundsstudios.supernaturalsweaponry.util.RegistryHandler;
 import net.minecraft.block.BlockState;
 import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.NetherBiome;
 import net.minecraft.world.gen.GenerationStage;
 import net.minecraft.world.gen.feature.Feature;
 import net.minecraft.world.gen.feature.OreFeatureConfig;

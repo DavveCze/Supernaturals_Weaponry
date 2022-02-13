@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern":
+  [
+    " s ",
+    "sgs",
+    " s "
+  ],
+  "key":
+  {
+    "s":
+    {
+      "item": "minecraft:spider_eye"
+    },
+    "g":
+    {
+      "item": "snweaponry:grenade"
+    }
+  },
+  "result":
+  {
+    "item": "snweaponry:grenade_poison",
+    "count": 1
+  }
+}

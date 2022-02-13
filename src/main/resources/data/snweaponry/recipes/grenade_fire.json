@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern":
+  [
+    " b ",
+    "bgb",
+    " b "
+  ],
+  "key":
+  {
+    "b":
+    {
+      "item": "minecraft:blaze_powder"
+    },
+    "g":
+    {
+      "item": "snweaponry:grenade"
+    }
+  },
+  "result":
+  {
+    "item": "snweaponry:grenade_fire",
+    "count": 1
+  }
+}

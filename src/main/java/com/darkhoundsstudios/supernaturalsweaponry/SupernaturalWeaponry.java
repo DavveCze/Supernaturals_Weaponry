@@ -1,8 +1,11 @@
 package com.darkhoundsstudios.supernaturalsweaponry;
 
+import com.darkhoundsstudios.supernaturalsweaponry.container.ModContainers;
 import com.darkhoundsstudios.supernaturalsweaponry.entities.ModEntities;
+import com.darkhoundsstudios.supernaturalsweaponry.screen.SunlightCollectorScreen;
 import com.darkhoundsstudios.supernaturalsweaponry.util.RegistryHandler;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.entity.SpriteRenderer;
@@ -51,8 +54,14 @@ public class SupernaturalWeaponry
 
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.IRON_TDAGGER_E.get(), (renderManager) ->
                 new SpriteRenderer<>(renderManager, renderer));
+        RenderingRegistry.registerEntityRenderingHandler(ModEntities.GRENADE.get(), (renderManager) ->
+                new SpriteRenderer<>(renderManager, renderer));
     }
 
+    private void registerTEScreens()
+    {
+        ScreenManager.registerFactory(ModContainers.SUNLIGHT_COLLECTOR_CONTAINER.get(), SunlightCollectorScreen::new);
+    }
 
     private void setup(final FMLCommonSetupEvent event)
     {
@@ -60,7 +69,9 @@ public class SupernaturalWeaponry
     }
 
     private void doClientStuff(final FMLClientSetupEvent event) {
+
         registerEntityModels(event.getMinecraftSupplier());
+        registerTEScreens();
     }
 
     public static final ItemGroup TAB = new ItemGroup("SN_tab") {

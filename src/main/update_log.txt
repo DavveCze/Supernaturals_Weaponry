@@ -8,4 +8,10 @@
 7, new item added - axe_head
 8, added broadswords(iron, silver, wg)
 9, glass globe(empty, full) added
-10, granade(only item & texture)
+10, grenade(only item & texture)
+
+#13.02.2022
+1, grenades done(normal, fire, poison), only crafting is missing
+2, bandages add health on use(1-2 hearts)
+3, grenades completed!
+4, throwing daggers now inflicts bleeding effect

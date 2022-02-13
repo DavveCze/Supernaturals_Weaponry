@@ -1,4 +1,4 @@
-package com.darkhoundsstudios.supernaturalsweaponry.blocks;
+package com.darkhoundsstudios.supernaturalsweaponry.blocks.other;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;

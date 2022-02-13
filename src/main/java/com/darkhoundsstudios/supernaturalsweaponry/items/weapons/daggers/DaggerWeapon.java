@@ -53,7 +53,7 @@ public class DaggerWeapon extends ModWeapon {
 
 
         if (!attacker.getEntityWorld().isRemote) {
-            if (Math.random() * 100 <= 90) {
+            if (Math.random() * 100 <= 20) {
                 int x = 0;
                 for (EffectInstance effect : target.getActivePotionEffects()) {
                     if(effect.getPotion() == ModEffects.BLEEDING.get() && effect.getAmplifier() < 3)
