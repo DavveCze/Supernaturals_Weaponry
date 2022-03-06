@@ -1,5 +1,6 @@
-package com.darkhoundsstudios.supernaturalsweaponry.effects;
+package com.darkhoundsstudios.supernaturalsweaponry.effects.bleeding;
 
+import com.darkhoundsstudios.supernaturalsweaponry.effects.ModEffects;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.potion.Effect;
@@ -14,13 +15,13 @@ public class BleedingEffect extends Effect {
     private final int liquidColor;
     private String name;
 
-    protected BleedingEffect(EffectType _effectType, int _liquidCol, String _Name) {
+    public BleedingEffect(EffectType _effectType, int _liquidCol, String _Name) {
         super(_effectType, _liquidCol);
+
         type = _effectType;
         liquidColor = _liquidCol;
         name = _Name;
     }
-
 
 
     @Override

@@ -1,8 +1,10 @@
 package com.darkhoundsstudios.supernaturalsweaponry.items.weapons;
 
 import com.darkhoundsstudios.supernaturalsweaponry.effects.ModDamageSources;
+import com.darkhoundsstudios.supernaturalsweaponry.entities.ModCreatureAttribute;
 import com.darkhoundsstudios.supernaturalsweaponry.tools.ModItemTier;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.IItemTier;
@@ -43,17 +45,9 @@ public class ModWeapon extends SwordItem {
     public final void performSpecial_WG(ItemStack stack, LivingEntity target, LivingEntity attacker,float Damage)
     {
         System.out.println("base dmg: " + Damage);
-        float vanillaDMG = 0;
+        float vanillaDMG;
         if (target.getArmorInventoryList().toString().contains("diamond")) {
-            float x = 0;
-            if (target.getItemStackFromSlot(EquipmentSlotType.HEAD).toString().contains("diamond"))
-                x += 2;
-            if (target.getItemStackFromSlot(EquipmentSlotType.CHEST).toString().contains("diamond"))
-                x += 2;
-            if (target.getItemStackFromSlot(EquipmentSlotType.LEGS).toString().contains("diamond"))
-                x += 2;
-            if (target.getItemStackFromSlot(EquipmentSlotType.FEET).toString().contains("diamond"))
-                x += 2;
+            float x = (float) target.getAttribute(SharedMonsterAttributes.ARMOR_TOUGHNESS).getValue();
             vanillaDMG = (Damage - Damage * (1 - (Math.min(20, Math.max(((target.getTotalArmorValue() - x) / 5), (target.getTotalArmorValue() - x) - ((4 * Damage) / (x + 8))))) / 25));
             realAttackDamage = Damage + vanillaDMG + vanillaDMG * 0.49f + 1;
         } else {
@@ -72,7 +66,7 @@ public class ModWeapon extends SwordItem {
 
     public final void performSpecial_Silver(ItemStack stack, LivingEntity target, LivingEntity attacker, float Damage)
     {
-        if (target.isEntityUndead()) {
+        if (target.isEntityUndead() || target.getCreatureAttribute().equals(ModCreatureAttribute.Supernatural)) {
             realAttackDamage = Damage * 2;
             if (attacker instanceof PlayerEntity) {
                 target.attackEntityFrom(DamageSource.causePlayerDamage((PlayerEntity) attacker), this.realAttackDamage);

@@ -9,24 +9,28 @@ import java.util.function.Supplier;
 
 public enum ModItemTier implements IItemTier {
     //1+baseDmg+addedDmg
-    SILVER(1,250,8.0f,1f,12,() ->{
+    SILVER(1, 250, 8.0f, 1f, 12, () -> {
         return Ingredient.fromItems(RegistryHandler.SILVER_INGOT.get());
     }),
-    WHITE_GOLD(2,145,5.5f,0f,23,() ->{
+    WHITE_GOLD(2, 145, 5.5f, 0f, 23, () -> {
         return Ingredient.fromItems(RegistryHandler.WG_INGOT.get());
     });
-        private final int harvestLevel;
-        private final int  maxUses;
-        private  final float efficiency;
-        private final float attackDamage;
-        private final int enchantability;
-        private final Supplier<Ingredient> repairMaterial;
+    private final int harvestLevel;
+    private final int maxUses;
+    private final float efficiency;
+    private final float attackDamage;
+    private final int enchantability;
+    private final Supplier<Ingredient> repairMaterial;
 
-        ModItemTier(int _harvestLevel, int _maxUses, float _efficiency, float _attackDamage, int _enchantability, Supplier<Ingredient> _repairMaterial)
-        {
-            harvestLevel = _harvestLevel; maxUses = _maxUses; efficiency = _efficiency; attackDamage = _attackDamage;
-            enchantability = _enchantability; repairMaterial = _repairMaterial;
-        }
+    ModItemTier(int _harvestLevel, int _maxUses, float _efficiency, float _attackDamage, int _enchantability, Supplier<Ingredient> _repairMaterial) {
+        harvestLevel = _harvestLevel;
+        maxUses = _maxUses;
+        efficiency = _efficiency;
+        attackDamage = _attackDamage;
+        enchantability = _enchantability;
+        repairMaterial = _repairMaterial;
+    }
+
     @Override
     public int getMaxUses() {
         return maxUses;

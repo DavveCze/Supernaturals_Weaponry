@@ -1,19 +1,12 @@
 package com.darkhoundsstudios.supernaturalsweaponry.items.useable;
 
-import com.darkhoundsstudios.supernaturalsweaponry.effects.BleedingEffect;
 import com.darkhoundsstudios.supernaturalsweaponry.effects.ModEffects;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.potion.Effect;
-import net.minecraft.potion.Effects;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.Mod;
-
-import java.util.Random;
 
 public class Bandage extends Item {
     public Bandage(Properties properties) {

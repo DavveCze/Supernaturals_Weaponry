@@ -13,6 +13,7 @@ import com.darkhoundsstudios.supernaturalsweaponry.blocks.tileentites.SunlightCo
 import com.darkhoundsstudios.supernaturalsweaponry.container.ModContainers;
 import com.darkhoundsstudios.supernaturalsweaponry.effects.ModEffects;
 import com.darkhoundsstudios.supernaturalsweaponry.entities.ModEntities;
+import com.darkhoundsstudios.supernaturalsweaponry.entities.player.ModPlayerEntity;
 import com.darkhoundsstudios.supernaturalsweaponry.items.ItemBase;
 import com.darkhoundsstudios.supernaturalsweaponry.items.useable.Bandage;
 import com.darkhoundsstudios.supernaturalsweaponry.items.weapons.ModWeapon;
@@ -25,7 +26,6 @@ import com.darkhoundsstudios.supernaturalsweaponry.tools.ModAxe;
 import com.darkhoundsstudios.supernaturalsweaponry.tools.ModItemTier;
 import com.darkhoundsstudios.supernaturalsweaponry.tools.ModPickaxe;
 import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
 import net.minecraft.block.RotatedPillarBlock;
 import net.minecraft.block.material.Material;
 import net.minecraft.inventory.EquipmentSlotType;
@@ -183,8 +183,6 @@ public class RegistryHandler {
             new ArmorItem(ModArmorMaterial.WG, EquipmentSlotType.LEGS, new Item.Properties().group(SupernaturalWeaponry.TAB)));
     public static final RegistryObject<ArmorItem> WG_BOOTS = Items.register("wg_boots", () ->
             new ArmorItem(ModArmorMaterial.WG, EquipmentSlotType.FEET, new Item.Properties().group(SupernaturalWeaponry.TAB)));
-    /* public static final RegistryObject<Item> EAR_FLAPS = Items.register("ear_flaps", () ->
-            new Item(new Item.Properties().group(SupernaturalWeaponry.TAB)));*/
 
 
     //Blocks

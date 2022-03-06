@@ -17,7 +17,7 @@ import javax.annotation.Nullable;
 public class MagicExhaustionEffect extends Effect {
     private final EffectType type;
     private final int liquidColor;
-    private String name;
+    private final String name;
 
     protected MagicExhaustionEffect(EffectType typeIn, int liquidColorIn, String nameIn) {
         super(typeIn, liquidColorIn);
@@ -28,6 +28,7 @@ public class MagicExhaustionEffect extends Effect {
 
     @Override
     public void performEffect(@NotNull LivingEntity entityLivingBaseIn, int amplifier) {
+        super.performEffect(entityLivingBaseIn, amplifier);
         if (this == ModEffects.MAGIC_EXHAUSTION.get()) {
             if (amplifier >= 0) {
                 for (EffectInstance effect : entityLivingBaseIn.getActivePotionEffects()) {
@@ -47,7 +48,7 @@ public class MagicExhaustionEffect extends Effect {
     @Override
     public boolean isReady(int duration, int amplifier) {
         if (this == ModEffects.MAGIC_EXHAUSTION.get()) {
-            int j = 20 >> amplifier;
+            int j = 6 >> amplifier;
             if (j > 0) {
                 return duration % j == 0;
             } else {

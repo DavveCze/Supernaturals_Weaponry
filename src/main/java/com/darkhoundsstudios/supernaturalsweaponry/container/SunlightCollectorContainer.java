@@ -37,8 +37,10 @@ public class SunlightCollectorContainer extends Container {
 
     public boolean isDay()
     {
-        return tileEntity.getWorld().isDaytime();
+        return (player.world.getDayTime() < 15000 && !player.world.isRaining() && !player.world.isThundering());
     }
+
+
 
     @Override
     public boolean canInteractWith(PlayerEntity playerIn) {

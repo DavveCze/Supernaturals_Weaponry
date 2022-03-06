@@ -1,35 +1,120 @@
 package com.darkhoundsstudios.supernaturalsweaponry.entities.player;
-
+import com.darkhoundsstudios.supernaturalsweaponry.entities.ModCreatureAttribute;
+import com.darkhoundsstudios.supernaturalsweaponry.entities.player.transformations.Transformation;
+import net.minecraft.client.audio.Sound;
 import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.CreatureAttribute;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.attributes.AttributeModifier;
+import net.minecraft.entity.ai.attributes.IAttribute;
+import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.boss.dragon.EnderDragonPartEntity;
 import net.minecraft.entity.item.ArmorStandEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.SwordItem;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.play.server.SEntityVelocityPacket;
 import net.minecraft.particles.ParticleTypes;
+import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.stats.Stats;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.Hand;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.storage.IPlayerFileData;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-public class ModPlayerEntity extends PlayerEntity {
+import java.util.*;
 
+public class ModPlayerEntity extends PlayerEntity implements IPlayerFileData {
+    //Transformation things
+    public List<IAttributeInstance> attributes = new ArrayList<>();
+    public List<AttributeModifier> modifiers;
     public PlayerEntity playerEntity;
+    public Transformation transformation;
 
-    public ModPlayerEntity(PlayerEntity playerEntity) {
-        super(playerEntity.getEntityWorld(), playerEntity.getGameProfile());
-        this.playerEntity = playerEntity;
+    //Leveling things
+    private float LevelXp;
+    private int LevelPoints;
+
+    public ModPlayerEntity(PlayerEntity _playerEntity) {
+        super(_playerEntity.getEntityWorld(), _playerEntity.getGameProfile());
+        this.playerEntity = _playerEntity;
+        addAttributesToList();
+    }
+
+    public void initPlayer(boolean levelUp) {
+        if(!levelUp) {
+            LevelXp = 0;
+            LevelPoints = 0;
+        }
+        ResetAttributes();
+        ApplyModifiers();
+        getCreatureAttribute();
+    }
+
+    @Override
+    public @NotNull CreatureAttribute getCreatureAttribute() {
+        if(transformation != null){
+            return ModCreatureAttribute.Supernatural;
+        }
+        return super.getCreatureAttribute();
+    }
+
+    private void addAttributesToList()
+    {
+        attributes.clear();
+        attributes.addAll(playerEntity.getAttributes().getAllAttributes());
+    }
+
+    private void ResetAttributes() {
+        for (IAttributeInstance attribute : attributes) {
+            attribute.removeAllModifiers();
+        }
+    }
+
+    private void ResetEffects() {
+        if (!getActivePotionEffects().isEmpty())
+            for (EffectInstance effect : getActivePotionEffects()) {
+                removeActivePotionEffect(effect.getPotion());
+            }
+    }
+
+    private void ApplyModifiers(){
+        if(transformation != null) {
+            modifiers = Transformation.getModifiers();
+            if (modifiers != null) {
+                for (IAttributeInstance attribute : attributes) {
+                    IAttribute attributeAttribute = attribute.getAttribute();
+                    if (SharedMonsterAttributes.MAX_HEALTH.equals(attributeAttribute)) {
+                        playerEntity.getAttribute(attribute.getAttribute()).applyModifier(modifiers.get(0));
+                    } else if (SharedMonsterAttributes.ATTACK_DAMAGE.equals(attributeAttribute)) {
+                        playerEntity.getAttribute(attribute.getAttribute()).applyModifier(modifiers.get(1));
+                    } else if (SharedMonsterAttributes.ARMOR_TOUGHNESS.equals(attributeAttribute)) {
+                        playerEntity.getAttribute(attribute.getAttribute()).applyModifier(modifiers.get(2));
+                    }
+                }
+            }
+            transformation.ApplyEffects(playerEntity);
+        }
+    }
+
+    public void setTransformation(Transformation transformation){
+        this.transformation = transformation;
+        initPlayer(false);
+    }
+
+    private void setTransformation(){
+        initPlayer(true);
     }
 
     public void customAttackTargetEntityWithCurrentItem(PlayerEntity playerEntity, Entity targetEntity) {
@@ -190,11 +275,87 @@ public class ModPlayerEntity extends PlayerEntity {
 
     @Override
     public boolean isSpectator() {
-        return false;
+        return playerEntity.isSpectator();
     }
 
     @Override
     public boolean isCreative() {
-        return false;
+        return playerEntity.isCreative();
+    }
+
+
+    int updateTick = 120;
+    public void playerTick() {
+        if (transformation != null) {
+            if (updateTick >= 0)
+                updateTick--;
+            else {
+                updateTick = 120;
+                ResetEffects();
+                transformation.ApplyEffects(playerEntity);
+
+                if (transformation.getLevel() > 0) {
+                    int lvlBef = transformation.getLevel();
+                    if (transformation.increaseLevel(LevelXp)) {
+                        System.out.println("Level Up!!!");
+                        this.world.addParticle(ParticleTypes.FLAME, getPosX(), getPosY(),getPosZ(),0,0.1d,0);
+                        int x = 1;
+                        if (transformation.getLevel() - lvlBef > 1){
+                            x = transformation.getLevel() - lvlBef;
+                        }
+                        setTransformation();
+                        for (int i = 0; i < x; i++) {
+                            if (transformation.getLevel() == 10) {
+                                LevelPoints += 5;
+                                break;
+                            }
+                            else
+                                LevelPoints++;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    @Override
+    public void writePlayerData(PlayerEntity player) {
+        if(transformation != null) {
+            player.getPersistentData().putString("transformation_name", transformation.getTransType());
+            player.getPersistentData().putInt("transformation_level", transformation.getLevel());
+        }
+        else
+        {
+            player.getPersistentData().putString("transformation_name", "");
+            player.getPersistentData().putInt("transformation_level", 0);
+        }
+
+        player.getPersistentData().putFloat("transformation_xp", LevelXp);
+        player.getPersistentData().putInt("transformation_sp", LevelPoints);
+    }
+
+    public void giveExperiencePoints(int amount) {
+        System.out.println(amount);
+        this.LevelXp += amount;
+    }
+
+    @Nullable
+    @Override
+    public CompoundNBT readPlayerData(PlayerEntity player) {
+        try {
+            String transformation_name = player.getPersistentData().getString("transformation_name");
+            int transformation_level = player.getPersistentData().getInt("transformation_level");
+            this.LevelXp = player.getPersistentData().getFloat("transformation_xp");
+            this.LevelPoints = player.getPersistentData().getInt("transformation_sp");
+            if(!transformation_name.equals("") && transformation_level > 0){
+                transformation = new Transformation(transformation_name, transformation_level);
+                ApplyModifiers();
+            }
+            else
+                System.out.println("Player is not Supernatural!");
+        }catch (Exception e){
+            System.out.println(e);
+        }
+        return player.getPersistentData();
     }
 }
