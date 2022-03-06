@@ -6,12 +6,12 @@ import com.darkhoundsstudios.supernaturalsweaponry.tools.ModItemTier;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.IItemTier;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.SwordItem;
 import net.minecraft.util.DamageSource;
 
+//stará se o všechny potřebné věci co se týče zbraní - počítání dmg, kontrola materiálů, apod.
 public class ModWeapon extends SwordItem {
     public float realAttackDamage;
     public float baseAttackDamage;
@@ -21,6 +21,7 @@ public class ModWeapon extends SwordItem {
         baseAttackDamage = tier.getAttackDamage() + damage + 1;
     }
 
+    //vyvolá se v případě zásahu entity
     @Override
     public boolean hitEntity(ItemStack stack, LivingEntity target, LivingEntity attacker) {
         stack.damageItem(1, attacker, (p_220045_0_) -> {
@@ -42,6 +43,7 @@ public class ModWeapon extends SwordItem {
         return true;
     }
 
+    //vyvolá a způsobí dmg, který "prochází brněním"
     public final void performSpecial_WG(ItemStack stack, LivingEntity target, LivingEntity attacker,float Damage)
     {
         System.out.println("base dmg: " + Damage);
@@ -64,6 +66,7 @@ public class ModWeapon extends SwordItem {
         System.out.println("HP: " + target.getHealth());
     }
 
+    //působí zvýšené poškození pokud cíl je nemrtvý či nadpřirozený
     public final void performSpecial_Silver(ItemStack stack, LivingEntity target, LivingEntity attacker, float Damage)
     {
         if (target.isEntityUndead() || target.getCreatureAttribute().equals(ModCreatureAttribute.Supernatural)) {

@@ -18,6 +18,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 @Mod.EventBusSubscriber(modid = SupernaturalWeaponry.Mod_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ModOreGen {
 
+    //generuje přímo ores za určitých podmínek při eventu
     @SubscribeEvent
     public static void generateOres(FMLLoadCompleteEvent event)
     {
@@ -35,6 +36,7 @@ public class ModOreGen {
         }
     }
 
+    //metoda na generaci - spouští se v eventu
     private static void genOre(Biome biome, int count, int bottomOffset, int topOffset, int max, OreFeatureConfig.FillerBlockType filler, BlockState defaultBlockState, int size)
     {
         CountRangeConfig range = new CountRangeConfig(count, bottomOffset, topOffset, max);

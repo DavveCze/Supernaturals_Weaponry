@@ -4,6 +4,7 @@ import com.darkhoundsstudios.supernaturalsweaponry.effects.ModEffects;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.potion.EffectInstance;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.world.World;
@@ -14,20 +15,21 @@ public class Bandage extends Item {
     }
 
     @Override
+    //vyvolá se při stisku pravého tlačítka
     public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
         ItemStack stack = playerIn.getHeldItem(handIn);
+        //zjistí zda počet efektů na hráči je více jak 0
         if(playerIn.getActivePotionEffects().toArray().length > 0)
         {
-            for (int i = 0; i < playerIn.getActivePotionEffects().toArray().length; i++) {
-                if (playerIn.getActivePotionEffects().toArray()[i].toString().contains("Bleeding")) {
-                    System.out.println("Bleeding is: True");
-                    playerIn.removePotionEffect(ModEffects.BLEEDING.get());
+            //projdou se všechny efekty co hráč má na sobě, pokud obsahuje krvácení, tak krvácení se zastaví
+            for (EffectInstance effect: playerIn.getActivePotionEffects()) {
+                if (effect.getPotion() == ModEffects.BLEEDING.get()){
+                    playerIn.removePotionEffect(effect.getPotion());
                     break;
-                } else {
-                    System.out.println("Bleeding is: False");
                 }
             }
         }
+        //přidá hráči náhodný počet životů navíc
         playerIn.heal((float) ((Math.random() * (4.0f - 2.0f)) + 2.0f));
         return ActionResult.resultPass(stack);
     }

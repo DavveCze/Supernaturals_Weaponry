@@ -10,6 +10,7 @@ import net.minecraftforge.event.entity.player.AttackEntityEvent;
 
 public class ModPlayerHooks extends ForgeHooks {
 
+    //vyvolává útok offhand rukou
     public static boolean onPlayerOffhandAttackTarget(PlayerEntity player, Entity target) {
         if (MinecraftForge.EVENT_BUS.post(new AttackEntityEvent(player, target))) return false;
         ItemStack stack = player.getHeldItemOffhand();

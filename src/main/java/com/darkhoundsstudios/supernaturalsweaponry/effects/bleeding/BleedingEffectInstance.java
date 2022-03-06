@@ -8,6 +8,7 @@ import net.minecraft.potion.EffectInstance;
 import net.minecraft.util.NonNullList;
 
 public class BleedingEffectInstance extends EffectInstance {
+    //samostatná instance pro bleeding, upravuje to že se nedá léčit ničím jiným než bandážemi
     NonNullList<ItemStack> cures = NonNullList.withSize(1, ItemStack.EMPTY);
     public BleedingEffectInstance() {
         super(ModEffects.BLEEDING.get());

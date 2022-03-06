@@ -9,6 +9,7 @@ import net.minecraft.potion.*;
 import javax.annotation.Nullable;
 
 public class WolfGiftEffect extends Effect {
+    //spojení regenerace a rychlosti
     public int amplifier1, amplifier2;
 
     private final EffectType type;
@@ -24,6 +25,7 @@ public class WolfGiftEffect extends Effect {
     }
 
     @Override
+    //upravuje speed modifier
     public double getAttributeModifierAmount(int amplifier, AttributeModifier modifier) {
         return modifier.getAmount() * amplifier2;
     }

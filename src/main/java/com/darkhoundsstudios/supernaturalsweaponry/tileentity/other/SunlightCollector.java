@@ -23,6 +23,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class SunlightCollector extends LockableLootTileEntity implements ITickableTileEntity, IInventory {
+    //proměnné pro generaci a ukládání předmětů
     private final float tot_coll_time = 100;
     private float curr_coll_time;
     private float ticker = 0;
@@ -60,6 +61,7 @@ public class SunlightCollector extends LockableLootTileEntity implements ITickab
         this(ModTileEntities.SUNLIGHT_COLLECTOR_TILE.get());
     }
 
+    //ukládá data do souboru světa
     @Override
     public CompoundNBT write(CompoundNBT compound) {
         super.write(compound);
@@ -85,6 +87,7 @@ public class SunlightCollector extends LockableLootTileEntity implements ITickab
         return ModContainers.SUNLIGHT_COLLECTOR_CONTAINER.get().create(id,player);
     }
 
+    //čte ze souboru a vkládá informace
     @Override
     public void read(CompoundNBT compound) {
         super.read(compound);
@@ -96,7 +99,7 @@ public class SunlightCollector extends LockableLootTileEntity implements ITickab
         System.out.println("1: " + item1 + ", 2: " + item2);
     }
 
-
+    //stará se o to zda je vložený předmět správný, a celkově všechno ověřuje a ukládá
     private ItemStackHandler createHandler()
     {
         return new ItemStackHandler(2)
@@ -142,6 +145,7 @@ public class SunlightCollector extends LockableLootTileEntity implements ITickab
     }
 
 
+    //kotrolní popř. funkční metody, slouží k ticku
     public void fillOrb()
     {
         if(hasFocus())
@@ -157,13 +161,14 @@ public class SunlightCollector extends LockableLootTileEntity implements ITickab
                 this.itemHandler.getStackInSlot(0).getItem() == RegistryHandler.GLASS_GLOBE.get();
     }
 
+    //stará se o generaci orbů
     @Override
     public void tick() {
         ticker++;
         if(ticker >= 10) {
             ticker = 0;
             long light = getWorld().getDayTime();
-            if (light < 15000 && !getWorld().isRaining() && !getWorld().isThundering()) {
+            if (light > 15000 && !getWorld().isRaining() && !getWorld().isThundering()) {
                 curr_coll_time++;
                 if (curr_coll_time >= tot_coll_time) {
                     fillOrb();

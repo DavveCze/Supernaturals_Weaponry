@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.UUID;
 
 public class Transformation{
+    //drží typy transformací a jejich level
     final String type;
     static boolean isWerewolf, isVampire, isHunter;
     int level;
@@ -26,20 +27,24 @@ public class Transformation{
         this.type = type;
     }
 
+    //vrací transformaci
     public String getTransType(){
         return this.type;
     }
 
+    //vrací úroveň transformace
     public int getLevel(){
         return this.level;
     }
 
+    //vrací list modifierů určité transformace při určitém levelu
     public static List<AttributeModifier> getModifiers(){
         if(isWerewolf)
             return Werewolf.getModifiers();
         return null;
     }
 
+    //zvyšuje level v závislosti na počet xp získaných hráčem
     public boolean increaseLevel(float playerXP) {
         if (isWerewolf) {
             if (this.level >= 1 && this.level < Werewolf.levelCap)
@@ -48,6 +53,7 @@ public class Transformation{
         return false;
     }
 
+    //zjištuje zda hráč ještě může dát level up, popř. zvýší úroveň
     private boolean checkLevel(float playerXP, int lvlCap, int currLvl) {
         boolean x = false;
         for (int i = lvlCap - 1; i >= currLvl; i--) {
@@ -65,7 +71,7 @@ public class Transformation{
         return x;
     }
 
-
+    //Aplikuje speciální effekty transformací závislé na úrovni
     public void ApplyEffects(PlayerEntity player) {
         if (isWerewolf) {
             if (level <= 4) {
@@ -81,26 +87,32 @@ public class Transformation{
         }
     }
 
-
+    //statická třída vlkodlaka, drží všechny důležité informace o něm
     static class Werewolf{
+        //list modifierů
         private static List<AttributeModifier> modifiers;
+        //stálý effekt
         public static EffectInstance Wolf_Gift = new EffectInstance(ModEffects.WOLF_GIFT.get(),300, 0, true,false);
 
+        //drží vnitřní informace
         private final static String name = "Werewolf";
         public final static int levelCap = 10;
         private final static int[] xpNeeded = new int[]{150,400,750,1150,1700,2400,3600,5700,8500};
-        public static int healthBoost, strengthBoost, resistanceBoost;
+        private static int healthBoost, strengthBoost, resistanceBoost;
 
+        //inicializuje nového vlkodlaka či při jeho level upu
         public static void init(int level){
             setBoosts(level);
             modifiers = setModifiers();
         }
 
+        //nastavuje se nový effekt, v závislosti na jeho úrovni
         public static void setEffects(int amplifier){
 
             Wolf_Gift = new EffectInstance(ModEffects.WOLF_GIFT.get(),300, amplifier, true,false,true);
         }
 
+        //nastavují se modifiery attributů, v závislosti na úrovni
         private static void setBoosts(int level)
         {
             switch (level){
@@ -162,6 +174,7 @@ public class Transformation{
             }
         }
 
+        //nastavuje se list modifierů a attributů
         private static List<AttributeModifier> setModifiers() {
             ArrayList<AttributeModifier> _modifiers = new ArrayList<>();
             _modifiers.add(new AttributeModifier(UUID.randomUUID(), "Supernaturality-Health", healthBoost, AttributeModifier.Operation.ADDITION));
@@ -170,10 +183,12 @@ public class Transformation{
             return _modifiers;
         }
 
+        //vrací zpět list
         public static List<AttributeModifier> getModifiers() {
             return modifiers;
         }
 
+        //vrací zpět počet xp nutný pro další level up
         public static int getXpNeeded(int level){
             return xpNeeded[level-1];
         }

@@ -52,6 +52,7 @@ public class ModPlayerEntity extends PlayerEntity implements IPlayerFileData {
         addAttributesToList();
     }
 
+    //inicializuje nového hráče včetně všech jeho vlastností
     public void initPlayer(boolean levelUp) {
         if(!levelUp) {
             LevelXp = 0;
@@ -62,6 +63,7 @@ public class ModPlayerEntity extends PlayerEntity implements IPlayerFileData {
         getCreatureAttribute();
     }
 
+    //pokud není transformace null, tak se mu nastaví že je nadpřirozený
     @Override
     public @NotNull CreatureAttribute getCreatureAttribute() {
         if(transformation != null){
@@ -70,18 +72,21 @@ public class ModPlayerEntity extends PlayerEntity implements IPlayerFileData {
         return super.getCreatureAttribute();
     }
 
+    //přidá všechny attributy do listu
     private void addAttributesToList()
     {
         attributes.clear();
         attributes.addAll(playerEntity.getAttributes().getAllAttributes());
     }
 
+    //resetuje všechny modifiery hráče(hp, síla, rychlost, odolnost apod.)
     private void ResetAttributes() {
         for (IAttributeInstance attribute : attributes) {
             attribute.removeAllModifiers();
         }
     }
 
+    //resetuje všechny jeho effekty
     private void ResetEffects() {
         if (!getActivePotionEffects().isEmpty())
             for (EffectInstance effect : getActivePotionEffects()) {
@@ -89,6 +94,7 @@ public class ModPlayerEntity extends PlayerEntity implements IPlayerFileData {
             }
     }
 
+    //aplikují se všechny modifiery co transformace upravuje
     private void ApplyModifiers(){
         if(transformation != null) {
             modifiers = Transformation.getModifiers();
@@ -108,15 +114,18 @@ public class ModPlayerEntity extends PlayerEntity implements IPlayerFileData {
         }
     }
 
+    //nastavuje zcela novou transformaci hráči - command/level 1
     public void setTransformation(Transformation transformation){
         this.transformation = transformation;
         initPlayer(false);
     }
 
+    //pouze kdyý hráč už transformaci má
     private void setTransformation(){
         initPlayer(true);
     }
 
+    //umožňuje a stará se o dual wielding dýk
     public void customAttackTargetEntityWithCurrentItem(PlayerEntity playerEntity, Entity targetEntity) {
         if (!ModPlayerHooks.onPlayerOffhandAttackTarget(playerEntity, targetEntity)) {
             return;
@@ -284,6 +293,7 @@ public class ModPlayerEntity extends PlayerEntity implements IPlayerFileData {
     }
 
 
+    //Player tick, stará se o effekty
     int updateTick = 120;
     public void playerTick() {
         if (transformation != null) {
@@ -293,31 +303,32 @@ public class ModPlayerEntity extends PlayerEntity implements IPlayerFileData {
                 updateTick = 120;
                 ResetEffects();
                 transformation.ApplyEffects(playerEntity);
+            }
+        }
+    }
 
-                if (transformation.getLevel() > 0) {
-                    int lvlBef = transformation.getLevel();
-                    if (transformation.increaseLevel(LevelXp)) {
-                        System.out.println("Level Up!!!");
-                        this.world.addParticle(ParticleTypes.FLAME, getPosX(), getPosY(),getPosZ(),0,0.1d,0);
-                        int x = 1;
-                        if (transformation.getLevel() - lvlBef > 1){
-                            x = transformation.getLevel() - lvlBef;
-                        }
-                        setTransformation();
-                        for (int i = 0; i < x; i++) {
-                            if (transformation.getLevel() == 10) {
-                                LevelPoints += 5;
-                                break;
-                            }
-                            else
-                                LevelPoints++;
-                        }
+    //vyvolává level up, pokud je možný
+    void makeLevelUp(){
+        if (transformation.getLevel() > 0) {
+            int lvlBef = transformation.getLevel();
+            if (transformation.increaseLevel(LevelXp)) {
+                System.out.println("Level Up!!!");
+                this.world.addParticle(ParticleTypes.FLAME, getPosX(), getPosY(),getPosZ(),0,0.1d,0);
+                int x = Math.max(transformation.getLevel() - lvlBef, 1);
+                setTransformation();
+                for (int i = 0; i < x; i++) {
+                    if (transformation.getLevel() == 10) {
+                        LevelPoints += 5;
+                        break;
                     }
+                    else
+                        LevelPoints++;
                 }
             }
         }
     }
 
+    //zapisuje a ukládá do hráče data při log outu
     @Override
     public void writePlayerData(PlayerEntity player) {
         if(transformation != null) {
@@ -334,11 +345,15 @@ public class ModPlayerEntity extends PlayerEntity implements IPlayerFileData {
         player.getPersistentData().putInt("transformation_sp", LevelPoints);
     }
 
+    //navyšuje hráčovy módované xp - pro transformaci
     public void giveExperiencePoints(int amount) {
-        System.out.println(amount);
-        this.LevelXp += amount;
+        if(transformation != null) {
+            this.LevelXp += amount;
+            makeLevelUp();
+        }
     }
 
+    //čte a zapisuje do hráče data při spuštění
     @Nullable
     @Override
     public CompoundNBT readPlayerData(PlayerEntity player) {

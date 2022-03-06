@@ -9,6 +9,8 @@ import java.util.function.Supplier;
 
 public enum ModItemTier implements IItemTier {
     //1+baseDmg+addedDmg
+
+    //nastavuje vlastnosti nových materiálů
     SILVER(1, 250, 8.0f, 1f, 12, () -> {
         return Ingredient.fromItems(RegistryHandler.SILVER_INGOT.get());
     }),

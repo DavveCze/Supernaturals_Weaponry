@@ -14,6 +14,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 import java.util.UUID;
 
 public class ModEffects {
+    //registuje všechny effekty
     public static final DeferredRegister<Effect> EFFECTS = new DeferredRegister<>(ForgeRegistries.POTIONS, SupernaturalWeaponry.Mod_ID);
 
     public static RegistryObject<Effect> BLEEDING = EFFECTS.register("bleeding", () ->
