@@ -13,7 +13,7 @@ import javax.annotation.Nullable;
 public class BleedingEffect extends Effect {
     private final EffectType type;
     private final int liquidColor;
-    private String name;
+    private final String name;
 
     public BleedingEffect(EffectType _effectType, int _liquidCol, String _Name) {
         super(_effectType, _liquidCol);

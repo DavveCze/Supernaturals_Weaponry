@@ -10,10 +10,10 @@ import com.darkhoundsstudios.supernaturalsweaponry.blocks.other.BlockItemBase;
 import com.darkhoundsstudios.supernaturalsweaponry.blocks.other.SilverBlock;
 import com.darkhoundsstudios.supernaturalsweaponry.blocks.other.WGBlock;
 import com.darkhoundsstudios.supernaturalsweaponry.blocks.tileentites.SunlightCollectorBlock;
+import com.darkhoundsstudios.supernaturalsweaponry.client.particle.ModParticles;
 import com.darkhoundsstudios.supernaturalsweaponry.container.ModContainers;
 import com.darkhoundsstudios.supernaturalsweaponry.effects.ModEffects;
 import com.darkhoundsstudios.supernaturalsweaponry.entities.ModEntities;
-import com.darkhoundsstudios.supernaturalsweaponry.entities.player.ModPlayerEntity;
 import com.darkhoundsstudios.supernaturalsweaponry.items.ItemBase;
 import com.darkhoundsstudios.supernaturalsweaponry.items.useable.Bandage;
 import com.darkhoundsstudios.supernaturalsweaponry.items.weapons.ModWeapon;
@@ -50,6 +50,7 @@ public class RegistryHandler {
         ModEntities.Entities.register(bus);
         ModTileEntities.TILE_ENTITIES.register(bus);
         ModContainers.CONTAINERS.register(bus);
+        ModParticles.PARTICLES.register(bus);
     }
 
     //Items

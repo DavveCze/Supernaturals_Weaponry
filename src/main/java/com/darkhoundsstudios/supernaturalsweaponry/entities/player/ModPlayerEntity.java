@@ -1,7 +1,10 @@
 package com.darkhoundsstudios.supernaturalsweaponry.entities.player;
+import com.darkhoundsstudios.supernaturalsweaponry.client.particle.ModParticles;
 import com.darkhoundsstudios.supernaturalsweaponry.entities.ModCreatureAttribute;
 import com.darkhoundsstudios.supernaturalsweaponry.entities.player.transformations.Transformation;
-import net.minecraft.client.audio.Sound;
+import com.darkhoundsstudios.supernaturalsweaponry.events.ClientEventBus;
+import com.darkhoundsstudios.supernaturalsweaponry.events.ModEventBusEvents;
+import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.CreatureAttribute;
 import net.minecraft.entity.Entity;
@@ -24,12 +27,14 @@ import net.minecraft.potion.Effects;
 import net.minecraft.stats.Stats;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.Hand;
-import net.minecraft.util.SoundEvent;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraft.world.storage.IPlayerFileData;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -50,6 +55,7 @@ public class ModPlayerEntity extends PlayerEntity implements IPlayerFileData {
         super(_playerEntity.getEntityWorld(), _playerEntity.getGameProfile());
         this.playerEntity = _playerEntity;
         addAttributesToList();
+        initPlayer(false);
     }
 
     public void initPlayer(boolean levelUp) {
@@ -283,6 +289,31 @@ public class ModPlayerEntity extends PlayerEntity implements IPlayerFileData {
         return playerEntity.isCreative();
     }
 
+    private void checkLvlUp() {
+        if (transformation.getLevel() > 0) {
+            int lvlBef = transformation.getLevel();
+            if (transformation.increaseLevel(LevelXp)) {
+                System.out.println("Level Up!!!");
+                SummonLvlUpParticle(ModEventBusEvents.getServerPlayer());
+                int x = Math.max(transformation.getLevel() - lvlBef, 1);
+                setTransformation();
+                for (int i = 0; i < x; i++) {
+                    if (transformation.getLevel() == 10) {
+                        LevelPoints += 5;
+                        break;
+                    } else
+                        LevelPoints++;
+                }
+            }
+        }
+    }
+
+    private void SummonLvlUpParticle(ServerPlayerEntity player){
+        for (int i = 0; i < 5; ++i) {
+            ((ServerWorld) player.world).spawnParticle(ModParticles.LEVEL_UP_PARTICLE.get(), player.getPosXRandom(1.0D), player.getPosYRandom(), player.getPosZRandom(1.0D),
+                    0, 0, 0.0D, 0, 0.1d);
+        }
+    }
 
     int updateTick = 120;
     public void playerTick() {
@@ -293,27 +324,7 @@ public class ModPlayerEntity extends PlayerEntity implements IPlayerFileData {
                 updateTick = 120;
                 ResetEffects();
                 transformation.ApplyEffects(playerEntity);
-
-                if (transformation.getLevel() > 0) {
-                    int lvlBef = transformation.getLevel();
-                    if (transformation.increaseLevel(LevelXp)) {
-                        System.out.println("Level Up!!!");
-                        this.world.addParticle(ParticleTypes.FLAME, getPosX(), getPosY(),getPosZ(),0,0.1d,0);
-                        int x = 1;
-                        if (transformation.getLevel() - lvlBef > 1){
-                            x = transformation.getLevel() - lvlBef;
-                        }
-                        setTransformation();
-                        for (int i = 0; i < x; i++) {
-                            if (transformation.getLevel() == 10) {
-                                LevelPoints += 5;
-                                break;
-                            }
-                            else
-                                LevelPoints++;
-                        }
-                    }
-                }
+                checkLvlUp();
             }
         }
     }
@@ -337,6 +348,7 @@ public class ModPlayerEntity extends PlayerEntity implements IPlayerFileData {
     public void giveExperiencePoints(int amount) {
         System.out.println(amount);
         this.LevelXp += amount;
+        checkLvlUp();
     }
 
     @Nullable

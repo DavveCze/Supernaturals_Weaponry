@@ -1,6 +1,7 @@
 package com.darkhoundsstudios.supernaturalsweaponry.commands.transformations;
 
 import com.darkhoundsstudios.supernaturalsweaponry.entities.player.transformations.Transformation;
+import com.darkhoundsstudios.supernaturalsweaponry.events.ClientEventBus;
 import com.darkhoundsstudios.supernaturalsweaponry.events.ModEventBusEvents;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.IntegerArgumentType;

@@ -2,6 +2,7 @@ package com.darkhoundsstudios.supernaturalsweaponry.entities.entity.werewolf.wol
 
 import com.darkhoundsstudios.supernaturalsweaponry.entities.ModCreatureAttribute;
 import com.darkhoundsstudios.supernaturalsweaponry.entities.player.ModPlayerEntity;
+import com.darkhoundsstudios.supernaturalsweaponry.events.ClientEventBus;
 import com.darkhoundsstudios.supernaturalsweaponry.events.ModEventBusEvents;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.*;
@@ -17,9 +18,7 @@ import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.Objects;
 import java.util.Random;
 
 public class Werewolf_Wolf extends WolfEntity {

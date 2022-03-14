@@ -6,11 +6,11 @@ import com.darkhoundsstudios.supernaturalsweaponry.tools.ModItemTier;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.IItemTier;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.SwordItem;
 import net.minecraft.util.DamageSource;
+import org.jetbrains.annotations.NotNull;
 
 public class ModWeapon extends SwordItem {
     public float realAttackDamage;
@@ -22,10 +22,8 @@ public class ModWeapon extends SwordItem {
     }
 
     @Override
-    public boolean hitEntity(ItemStack stack, LivingEntity target, LivingEntity attacker) {
-        stack.damageItem(1, attacker, (p_220045_0_) -> {
-            p_220045_0_.sendBreakAnimation(attacker.getActiveHand());
-        });
+    public boolean hitEntity(ItemStack stack, @NotNull LivingEntity target, @NotNull LivingEntity attacker) {
+        stack.damageItem(1, attacker, (p_220045_0_) -> p_220045_0_.sendBreakAnimation(attacker.getActiveHand()));
 
         if (this.getTier() instanceof ModItemTier) {
             switch ((ModItemTier)this.getTier()) {

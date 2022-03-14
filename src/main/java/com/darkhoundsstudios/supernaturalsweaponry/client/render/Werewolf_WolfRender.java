@@ -13,7 +13,7 @@ import net.minecraft.entity.passive.WolfEntity;
 import net.minecraft.util.ResourceLocation;
 
 public class Werewolf_WolfRender extends WolfRenderer {
-    private static final ResourceLocation WOLF_TEXTURES = new ResourceLocation(SupernaturalWeaponry.Mod_ID, "textures/entity/werewolf/werewolf_wolf.png");
+    public static final ResourceLocation WOLF_TEXTURES = new ResourceLocation(SupernaturalWeaponry.Mod_ID, "textures/entity/werewolf/werewolf_wolf.png");
 
     public Werewolf_WolfRender(EntityRendererManager renderManagerIn) {
         super(renderManagerIn);
@@ -22,5 +22,10 @@ public class Werewolf_WolfRender extends WolfRenderer {
     @Override
     public ResourceLocation getEntityTexture(WolfEntity entity) {
         return WOLF_TEXTURES;
+    }
+
+    @Override
+    public void render(WolfEntity entityIn, float entityYaw, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn) {
+        super.render(entityIn, entityYaw, partialTicks, matrixStackIn, bufferIn, packedLightIn);
     }
 }

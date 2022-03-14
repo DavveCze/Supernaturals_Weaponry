@@ -1,11 +1,13 @@
 package com.darkhoundsstudios.supernaturalsweaponry.events;
 
 import com.darkhoundsstudios.supernaturalsweaponry.SupernaturalWeaponry;
+import com.darkhoundsstudios.supernaturalsweaponry.client.model.Werewolf_WolfModel;
+import com.darkhoundsstudios.supernaturalsweaponry.client.particle.LevelUp_Particle;
+import com.darkhoundsstudios.supernaturalsweaponry.client.particle.ModParticles;
+import com.darkhoundsstudios.supernaturalsweaponry.client.render.ModPlayerRenderer;
 import com.darkhoundsstudios.supernaturalsweaponry.commands.transformations.ForceTransformCommand;
 import com.darkhoundsstudios.supernaturalsweaponry.entities.player.ModPlayerEntity;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
@@ -33,28 +35,26 @@ public class ModEventBusEvents {
     }
 
     @SubscribeEvent
-    public static void onPlayerLoadIn(PlayerEvent.PlayerLoggedInEvent event) throws CommandSyntaxException {
+    public static void onPlayerLogIn(PlayerEvent.PlayerLoggedInEvent event) throws CommandSyntaxException {
         player = new ModPlayerEntity(event.getPlayer());
-        Entity x = event.getEntity();
-        serverPlayer = x.getCommandSource().asPlayer();
         player.readPlayerData(event.getPlayer());
-        player.initPlayer(false);
+
+        serverPlayer = event.getEntity().getCommandSource().asPlayer();
     }
 
+
+
     @SubscribeEvent
-    public static void onPlayerLoadOut(PlayerEvent.PlayerLoggedOutEvent event){
+    public static void onPlayerLogOut(PlayerEvent.PlayerLoggedOutEvent event){
         player.writePlayerData(event.getPlayer());
     }
 
     @SubscribeEvent
     public static void onPlayerRespawn(PlayerEvent.PlayerRespawnEvent event) throws CommandSyntaxException {
-        System.out.println("Respawned");
         player.writePlayerData(event.getPlayer());
         player = new ModPlayerEntity(event.getPlayer());
-        Entity x = event.getEntity();
-        serverPlayer = x.getCommandSource().asPlayer();
         player.readPlayerData(event.getPlayer());
-        player.initPlayer(false);
+        serverPlayer = event.getEntity().getCommandSource().asPlayer();
     }
 
     @SubscribeEvent

@@ -1,16 +1,15 @@
 package com.darkhoundsstudios.supernaturalsweaponry.items.weapons.daggers;
 
 import com.darkhoundsstudios.supernaturalsweaponry.entities.projectiles.DaggerEntity;
-import com.darkhoundsstudios.supernaturalsweaponry.tools.ModItemTier;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.IItemTier;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemTier;
 import net.minecraft.stats.Stats;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.NotNull;
 
 public class TDagger extends Item {
     private final IItemTier material;
@@ -20,7 +19,7 @@ public class TDagger extends Item {
     }
 
     @Override
-    public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
+    public @NotNull ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, @NotNull Hand handIn) {
         ItemStack stack = playerIn.getHeldItem(handIn);
 
         if (!worldIn.isRemote())

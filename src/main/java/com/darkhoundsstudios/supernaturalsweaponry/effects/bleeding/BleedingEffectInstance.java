@@ -3,7 +3,6 @@ package com.darkhoundsstudios.supernaturalsweaponry.effects.bleeding;
 import com.darkhoundsstudios.supernaturalsweaponry.effects.ModEffects;
 import com.darkhoundsstudios.supernaturalsweaponry.util.RegistryHandler;
 import net.minecraft.item.ItemStack;
-import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.util.NonNullList;
 

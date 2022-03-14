@@ -5,6 +5,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.potion.*;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 
@@ -12,14 +13,12 @@ public class WolfGiftEffect extends Effect {
     public int amplifier1, amplifier2;
 
     private final EffectType type;
-    private final int liquidColor;
     private final String name;
 
     public WolfGiftEffect(EffectType typeIn, int liquidColorIn, String nameIn) {
         super(typeIn, liquidColorIn);
 
         type = typeIn;
-        liquidColor = liquidColorIn;
         name = nameIn;
     }
 
@@ -29,7 +28,7 @@ public class WolfGiftEffect extends Effect {
     }
 
     @Override
-    public void performEffect(LivingEntity entityLivingBaseIn, int amplifier) {
+    public void performEffect(@NotNull LivingEntity entityLivingBaseIn, int amplifier) {
         super.performEffect(entityLivingBaseIn, amplifier);
         if (this == ModEffects.WOLF_GIFT.get()) {
             if (amplifier == 0) {
