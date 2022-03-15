@@ -37,10 +37,12 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 
 public class RegistryHandler {
+    //vytváří se listy registrů pro blocky a itemy
     public static final DeferredRegister<Item> Items = new DeferredRegister<>(ForgeRegistries.ITEMS, SupernaturalWeaponry.Mod_ID);
 
     public static final DeferredRegister<Block> Blocks = new DeferredRegister<>(ForgeRegistries.BLOCKS, SupernaturalWeaponry.Mod_ID);
 
+    //inicializují se všechny registry, které v módu jsou
     public static void init()
     {
         IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
@@ -121,7 +123,7 @@ public class RegistryHandler {
     //Tools- nastroje + zbrane
     //Silver
     public static final RegistryObject<DaggerWeapon> SILVER_DAGGER = Items.register("silver_dagger",()->
-            new DaggerWeapon(ModItemTier.SILVER,0, -1.8f, new Item.Properties().group(SupernaturalWeaponry.TAB).maxStackSize(1), ModEffects.BLEEDING));
+            new DaggerWeapon(ModItemTier.SILVER,0, -1.8f, new Item.Properties().group(SupernaturalWeaponry.TAB).maxStackSize(1)));
     public static final RegistryObject<ModPickaxe> SILVER_PICKAXE = Items.register("silver_pickaxe",()->
             new ModPickaxe(ModItemTier.SILVER, 1, -2.5f, new Item.Properties().group(SupernaturalWeaponry.TAB).maxStackSize(1)));
     public static final RegistryObject<ModAxe> SILVER_AXE = Items.register("silver_axe",()->
@@ -142,7 +144,7 @@ public class RegistryHandler {
 
     //White Gold
     public static final RegistryObject<DaggerWeapon> WG_DAGGER = Items.register("wg_dagger",()->
-            new DaggerWeapon(ModItemTier.WHITE_GOLD,0, -1.9f, new Item.Properties().group(SupernaturalWeaponry.TAB).maxStackSize(1), ModEffects.BLEEDING));
+            new DaggerWeapon(ModItemTier.WHITE_GOLD,0, -1.9f, new Item.Properties().group(SupernaturalWeaponry.TAB).maxStackSize(1)));
     public static final RegistryObject<ModPickaxe> WG_PICKAXE = Items.register("wg_pickaxe",()->
             new ModPickaxe(ModItemTier.WHITE_GOLD, 1, -2.65f, new Item.Properties().group(SupernaturalWeaponry.TAB).maxStackSize(1)));
     public static final RegistryObject<ModAxe> WG_AXE = Items.register("wg_axe",()->
@@ -163,7 +165,7 @@ public class RegistryHandler {
 
     //Iron
     public static final RegistryObject<DaggerWeapon> IRON_DAGGER = Items.register("iron_dagger",()->
-            new DaggerWeapon(ItemTier.IRON, 0, -2.1f, new Item.Properties().group(SupernaturalWeaponry.TAB).maxStackSize(1), ModEffects.BLEEDING));
+            new DaggerWeapon(ItemTier.IRON, 0, -2.1f, new Item.Properties().group(SupernaturalWeaponry.TAB).maxStackSize(1)));
     public static final RegistryObject<Two_Handed> IRON_LONGSWORD = Items.register("iron_longsword",()->
             new Two_Handed(ItemTier.IRON, 10, -3.55f, new Item.Properties().group(SupernaturalWeaponry.TAB).maxStackSize(1)));
     public static final RegistryObject<Two_Handed> IRON_DA = Items.register("iron_da", ()->

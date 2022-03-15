@@ -13,21 +13,25 @@ import org.jetbrains.annotations.NotNull;
 
 public class TDagger extends Item {
     private final IItemTier material;
+
     public TDagger(Properties properties, IItemTier _material) {
         super(properties);
         material =_material;
     }
 
+    //vyvolá se když hráč zmáčkne pravé tlačítko myši
     @Override
     public @NotNull ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, @NotNull Hand handIn) {
         ItemStack stack = playerIn.getHeldItem(handIn);
 
         if (!worldIn.isRemote())
         {
+            //vytvoří novou entitu s určitou rychlostí a směrem rotace
             DaggerEntity dagger = new DaggerEntity(playerIn,worldIn);
             dagger.setItem(stack);
             dagger.setMaterial(material);
             dagger.shoot(playerIn,playerIn.rotationPitch,playerIn.rotationYaw,0.0f,1.5f,2.5f);
+            //přidá tuto entitu do světa(tzv. vystřelí)
             worldIn.addEntity(dagger);
         }
 

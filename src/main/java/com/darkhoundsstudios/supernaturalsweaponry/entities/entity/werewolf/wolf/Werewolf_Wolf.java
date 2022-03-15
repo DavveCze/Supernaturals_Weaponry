@@ -7,7 +7,6 @@ import com.darkhoundsstudios.supernaturalsweaponry.events.ModEventBusEvents;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.merchant.villager.AbstractVillagerEntity;
-import net.minecraft.entity.monster.ZombieEntity;
 import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.passive.WolfEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -30,6 +29,7 @@ public class Werewolf_Wolf extends WolfEntity {
     }
 
     @Override
+    //registuje všechny attributy entity a jejich modifiery
     protected void registerAttributes() {
         super.registerAttributes();
         this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(25d);
@@ -41,17 +41,17 @@ public class Werewolf_Wolf extends WolfEntity {
     }
 
     @Override
+    //vrací to že je entita nadpřirozená
     public CreatureAttribute getCreatureAttribute() {
         return ModCreatureAttribute.Supernatural;
     }
 
+    //registuje všechny úkoly co entita má
     protected void registerGoals() {
-        this.sitGoal = new SitGoal(this);
         this.goalSelector.addGoal(1, new SwimGoal(this));
         this.goalSelector.addGoal(4, new LeapAtTargetGoal(this, 0.4F));
         this.goalSelector.addGoal(5, new MeleeAttackGoal(this, 1.0D, true));
         this.goalSelector.addGoal(10, new LookRandomlyGoal(this));
-        this.targetSelector.addGoal(3, (new HurtByTargetGoal(this)).setCallsForHelp());
         this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, false));
         this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, AbstractVillagerEntity.class, false));
         this.goalSelector.addGoal(5, new WaterAvoidingRandomWalkingGoal(this, 0.8D));
@@ -60,6 +60,7 @@ public class Werewolf_Wolf extends WolfEntity {
     }
 
     @Override
+    //zjišťuje zda může zaútočit na entitu
     public boolean canAttack(LivingEntity target) {
         if (target.isAlive())
             if (target instanceof ServerPlayerEntity && target == ModEventBusEvents.getServerPlayer() && !target.getEntity().equals(lastAttacker))
@@ -70,6 +71,7 @@ public class Werewolf_Wolf extends WolfEntity {
     }
 
     @Override
+    //zjišťuje kdo na něho zaútočil
     public boolean attackEntityFrom(DamageSource source, float amount) {
         lastAttacker = source.getTrueSource();
         return super.attackEntityFrom(source, amount);
@@ -92,11 +94,13 @@ public class Werewolf_Wolf extends WolfEntity {
     }
 
     @Override
+    //ukládá o něm data při opouštění světa
     public void writeAdditional(CompoundNBT compound) {
         super.writeAdditional(compound);
     }
 
     @Override
+    //čte data a zapisuje je při načítání světa
     public void read(CompoundNBT compound) {
         super.read(compound);
     }
@@ -108,7 +112,7 @@ public class Werewolf_Wolf extends WolfEntity {
 
     @Override
     public void setTamed(boolean tamed) {
-
+        tamed = false;
     }
 
     @Override
@@ -117,6 +121,7 @@ public class Werewolf_Wolf extends WolfEntity {
     }
 
     @Override
+    //vrací random hodnotu xp co z něho vypadnou po smrti
     protected int getExperiencePoints(PlayerEntity player) {
         return new Random().nextInt(60);
     }
@@ -124,13 +129,14 @@ public class Werewolf_Wolf extends WolfEntity {
 
     int updateTick = 120;
     @Override
+    //aplikuje effekt každých 6 vteřin
     public void tick() {
         super.tick();
         if(updateTick >= 0)
             updateTick--;
         else {
             updateTick = 120;
-            this.addPotionEffect(new EffectInstance(Effects.SPEED, 300,1,false,false,false));
+            this.addPotionEffect(new EffectInstance(Effects.SPEED, 300,0,false,false,false));
         }
     }
 }

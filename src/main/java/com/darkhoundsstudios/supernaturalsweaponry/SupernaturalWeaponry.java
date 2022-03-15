@@ -47,6 +47,7 @@ public class SupernaturalWeaponry
         MinecraftForge.EVENT_BUS.register(this);
     }
 
+    //registruje modely a jejich render přímo ve hře
     private void registerEntityModels(Supplier<Minecraft> minecraft)
     {
         ItemRenderer renderer = minecraft.get().getItemRenderer();
@@ -56,6 +57,7 @@ public class SupernaturalWeaponry
                 new SpriteRenderer<>(renderManager, renderer));
     }
 
+    //registruje GUI Tile Entit, napr. sunlight collector
     private void registerTEScreens()
     {
         ScreenManager.registerFactory(ModContainers.SUNLIGHT_COLLECTOR_CONTAINER.get(), SunlightCollectorScreen::new);
@@ -66,12 +68,15 @@ public class SupernaturalWeaponry
 
     }
 
+    //stará se o registry na straně clienta
     private void doClientStuff(final FMLClientSetupEvent event) {
 
         registerEntityModels(event.getMinecraftSupplier());
         registerTEScreens();
     }
 
+
+    //vytváří nový item tab v creative inventáři
     public static final ItemGroup TAB = new ItemGroup("SN_tab") {
         @Override
         public @NotNull ItemStack createIcon() {
@@ -80,6 +85,8 @@ public class SupernaturalWeaponry
     };
 
 
+
+    //upravuje loot tables(dropy) mobů a blocků z vanilly(popř. z jiných módů)
     @SubscribeEvent
     public void lootLoad(LootTableLoadEvent evt) {
         if (evt.getName().toString().equals("minecraft:entities/wolf")) {

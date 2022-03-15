@@ -13,6 +13,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import java.util.function.Supplier;
 
 public enum ModArmorMaterial implements IArmorMaterial {
+    //stará se a drží informace o armor materiálech
     WG(SupernaturalWeaponry.Mod_ID + ":wg", 11, new int[]{1, 2, 4, 1},23,
             SoundEvents.ITEM_ARMOR_EQUIP_GOLD,0, () -> {return Ingredient.fromItems(RegistryHandler.WG_INGOT.get());});
 

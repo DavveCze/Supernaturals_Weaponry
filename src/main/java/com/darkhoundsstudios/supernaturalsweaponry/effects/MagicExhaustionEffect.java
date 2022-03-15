@@ -1,15 +1,11 @@
 package com.darkhoundsstudios.supernaturalsweaponry.effects;
 
-import net.minecraft.enchantment.DamageEnchantment;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.Items;
-import net.minecraft.item.MilkBucketItem;
 import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.EffectType;
 import net.minecraft.potion.Effects;
-import net.minecraft.util.DamageSource;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
@@ -27,6 +23,7 @@ public class MagicExhaustionEffect extends Effect {
     }
 
     @Override
+    //effekt se aktivuje(po ticku, když je připraven)
     public void performEffect(@NotNull LivingEntity entityLivingBaseIn, int amplifier) {
         super.performEffect(entityLivingBaseIn, amplifier);
         if (this == ModEffects.MAGIC_EXHAUSTION.get()) {
@@ -46,6 +43,7 @@ public class MagicExhaustionEffect extends Effect {
     }
 
     @Override
+    //zjišťuje zda se už může vyvolat
     public boolean isReady(int duration, int amplifier) {
         if (this == ModEffects.MAGIC_EXHAUSTION.get()) {
             int j = 6 >> amplifier;
@@ -79,6 +77,7 @@ public class MagicExhaustionEffect extends Effect {
     }
 
     @Override
+    //affektuje entitu
     public void affectEntity(@Nullable Entity source, @Nullable Entity indirectSource, LivingEntity entityLivingBaseIn, int amplifier, double health) {
         this.performEffect(entityLivingBaseIn, amplifier);
         super.affectEntity(source, indirectSource, entityLivingBaseIn, amplifier, health);

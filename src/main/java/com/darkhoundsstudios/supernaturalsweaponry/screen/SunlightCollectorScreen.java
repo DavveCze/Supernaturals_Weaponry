@@ -7,7 +7,9 @@ import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
+
 public class SunlightCollectorScreen extends ContainerScreen<SunlightCollectorContainer> {
+    //stará se o vzhled a animace GUI
     private final ResourceLocation GUI = new ResourceLocation(SupernaturalWeaponry.Mod_ID,
             "textures/gui/sunlight_collector_gui.png");
 

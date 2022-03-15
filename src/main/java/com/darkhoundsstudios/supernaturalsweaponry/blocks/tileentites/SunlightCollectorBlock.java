@@ -36,6 +36,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Random;
 
 public class SunlightCollectorBlock extends Block {
+    //drží všechny vlastnosti blocku
 
     public SunlightCollectorBlock(Properties properties) {
         super(properties);
