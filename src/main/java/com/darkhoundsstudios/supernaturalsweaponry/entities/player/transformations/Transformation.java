@@ -32,7 +32,6 @@ public class Transformation{
         return this.type;
     }
 
-    //vrací úroveň transformace
     public int getLevel(){
         return this.level;
     }
@@ -53,7 +52,6 @@ public class Transformation{
         return false;
     }
 
-    //zjištuje zda hráč ještě může dát level up, popř. zvýší úroveň
     private boolean checkLevel(float playerXP, int lvlCap, int currLvl) {
         boolean x = false;
         for (int i = lvlCap - 1; i >= currLvl; i--) {

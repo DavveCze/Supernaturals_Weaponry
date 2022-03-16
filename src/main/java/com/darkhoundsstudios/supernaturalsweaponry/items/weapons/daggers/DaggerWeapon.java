@@ -2,7 +2,6 @@ package com.darkhoundsstudios.supernaturalsweaponry.items.weapons.daggers;
 
 import com.darkhoundsstudios.supernaturalsweaponry.effects.ModEffects;
 import com.darkhoundsstudios.supernaturalsweaponry.effects.bleeding.BleedingEffectInstance;
-import com.darkhoundsstudios.supernaturalsweaponry.events.ClientEventBus;
 import com.darkhoundsstudios.supernaturalsweaponry.events.ModEventBusEvents;
 import com.darkhoundsstudios.supernaturalsweaponry.items.weapons.ModWeapon;
 import com.darkhoundsstudios.supernaturalsweaponry.tools.ModItemTier;
@@ -10,16 +9,13 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.IItemTier;
 import net.minecraft.item.ItemStack;
-import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.util.*;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.function.Supplier;
-
 public class DaggerWeapon extends ModWeapon {
     public float baseAttackDamage;
-    public DaggerWeapon(IItemTier tier, int damage, float atc_spd, Properties properties, Supplier<Effect> _effect) {
+    public DaggerWeapon(IItemTier tier, int damage, float atc_spd, Properties properties) {
         super(tier, damage, atc_spd, properties);
         baseAttackDamage = tier.getAttackDamage() + damage + 1;
     }

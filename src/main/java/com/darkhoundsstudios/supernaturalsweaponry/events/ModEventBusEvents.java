@@ -1,14 +1,11 @@
 package com.darkhoundsstudios.supernaturalsweaponry.events;
 
 import com.darkhoundsstudios.supernaturalsweaponry.SupernaturalWeaponry;
-import com.darkhoundsstudios.supernaturalsweaponry.client.model.Werewolf_WolfModel;
-import com.darkhoundsstudios.supernaturalsweaponry.client.particle.LevelUp_Particle;
-import com.darkhoundsstudios.supernaturalsweaponry.client.particle.ModParticles;
-import com.darkhoundsstudios.supernaturalsweaponry.client.render.ModPlayerRenderer;
 import com.darkhoundsstudios.supernaturalsweaponry.commands.transformations.ForceTransformCommand;
 import com.darkhoundsstudios.supernaturalsweaponry.entities.player.ModPlayerEntity;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerXpEvent;
@@ -50,7 +47,7 @@ public class ModEventBusEvents {
     }
 
     @SubscribeEvent
-    public static void onPlayerRespawn(PlayerEvent.PlayerRespawnEvent event) throws CommandSyntaxException {
+    public static void onPlayerRespawn(PlayerEvent.Clone event) throws CommandSyntaxException {
         player.writePlayerData(event.getPlayer());
         player = new ModPlayerEntity(event.getPlayer());
         player.readPlayerData(event.getPlayer());
