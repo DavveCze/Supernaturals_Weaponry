@@ -15,6 +15,7 @@ import com.darkhoundsstudios.supernaturalsweaponry.container.ModContainers;
 import com.darkhoundsstudios.supernaturalsweaponry.effects.ModEffects;
 import com.darkhoundsstudios.supernaturalsweaponry.entities.ModEntities;
 import com.darkhoundsstudios.supernaturalsweaponry.items.ItemBase;
+import com.darkhoundsstudios.supernaturalsweaponry.items.curios.rings.SeaRing;
 import com.darkhoundsstudios.supernaturalsweaponry.items.useable.Bandage;
 import com.darkhoundsstudios.supernaturalsweaponry.items.weapons.ModWeapon;
 import com.darkhoundsstudios.supernaturalsweaponry.items.weapons.Two_Handed;
@@ -177,6 +178,9 @@ public class RegistryHandler {
     public static final RegistryObject<ModWeapon> IRON_BROADSWORD = Items.register("iron_broadsword", ()->
             new ModWeapon(ItemTier.IRON,7,-2.4f,new Item.Properties().group(SupernaturalWeaponry.TAB).maxStackSize(1)));
 
+    //Rings
+    public static final RegistryObject<Item> SEA_RING = Items.register("sea_ring", ()->
+            new SeaRing(new Item.Properties().maxStackSize(1).group(SupernaturalWeaponry.TAB)));
     //Armors
     public static final RegistryObject<ArmorItem> WG_HELMET = Items.register("wg_helmet", () ->
             new ArmorItem(ModArmorMaterial.WG, EquipmentSlotType.HEAD, new Item.Properties().group(SupernaturalWeaponry.TAB)));

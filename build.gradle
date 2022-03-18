@@ -42,7 +42,8 @@ minecraft {
 
             // Recommended logging level for the console
             property 'forge.logging.console.level', 'debug'
-
+            property 'mixin.env.remapRefMap', 'true'
+            property 'mixin.env.refMapRemappingFile', "${projectDir}/createSrgToMcp/output.srg"
             mods {
                 snweaponry {
                     source sourceSets.main
@@ -58,7 +59,8 @@ minecraft {
 
             // Recommended logging level for the console
             property 'forge.logging.console.level', 'debug'
-
+            property 'mixin.env.remapRefMap', 'true'
+            property 'mixin.env.refMapRemappingFile', "${projectDir}/createSrgToMcp/output.srg"
             mods {
                 snweaponry {
                     source sourceSets.main
@@ -87,6 +89,7 @@ minecraft {
 }
 repositories {
     maven { url 'https://maven.blamejared.com'}
+    maven { url 'https://maven.theillusivec4.top/'}
 }
 
 
@@ -99,6 +102,8 @@ dependencies {
     minecraft 'net.minecraftforge:forge:1.15.2-31.2.57'
     compileOnly fg.deobf("vazkii.patchouli:Patchouli:1.15.2-1.2-35.2:api")
     runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:1.15.2-1.2-35.2")
+    runtimeOnly fg.deobf("top.theillusivec4.curios:curios:FORGE-1.15.2-2.0.2.6")
+    compileOnly fg.deobf("top.theillusivec4.curios:curios:FORGE-1.15.2-2.0.2.6:api")
     // You may put jars on which you depend on in ./libs or you may define them like so..
     // compile "some.group:artifact:version:classifier"
     // compile "some.group:artifact:version"

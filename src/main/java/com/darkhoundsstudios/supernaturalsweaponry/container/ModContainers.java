@@ -21,4 +21,6 @@ public class ModContainers {
                 World world = inv.player.world;
                 return new SunlightCollectorContainer(windowId,world,pos,inv,inv.player);
             })));
+    public static final RegistryObject<ContainerType<ContainerBaubleBox>> BAUBLE_BOX_CONTAINER = CONTAINERS.register("bauble_box_container",()->
+            IForgeContainerType.create(ContainerBaubleBox::fromNetwork));
 }

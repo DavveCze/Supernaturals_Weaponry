@@ -287,19 +287,21 @@ public class ModPlayerEntity extends PlayerEntity implements IPlayerFileData {
     }
 
     private void checkLvlUp() {
-        if (transformation.getLevel() > 0) {
-            int lvlBef = transformation.getLevel();
-            if (transformation.increaseLevel(LevelXp)) {
-                System.out.println("Level Up!!!");
-                SummonLvlUpParticle(ModEventBusEvents.getServerPlayer());
-                int x = Math.max(transformation.getLevel() - lvlBef, 1);
-                setTransformation();
-                for (int i = 0; i < x; i++) {
-                    if (transformation.getLevel() == 10) {
-                        LevelPoints += 5;
-                        break;
-                    } else
-                        LevelPoints++;
+        if(transformation != null) {
+            if (transformation.getLevel() > 0) {
+                int lvlBef = transformation.getLevel();
+                if (transformation.increaseLevel(LevelXp)) {
+                    System.out.println("Level Up!!!");
+                    SummonLvlUpParticle(ModEventBusEvents.getServerPlayer());
+                    int x = Math.max(transformation.getLevel() - lvlBef, 1);
+                    setTransformation();
+                    for (int i = 0; i < x; i++) {
+                        if (transformation.getLevel() == 10) {
+                            LevelPoints += 5;
+                            break;
+                        } else
+                            LevelPoints++;
+                    }
                 }
             }
         }
@@ -344,8 +346,10 @@ public class ModPlayerEntity extends PlayerEntity implements IPlayerFileData {
 
     public void giveExperiencePoints(int amount) {
         System.out.println(amount);
-        this.LevelXp += amount;
-        checkLvlUp();
+        if(transformation != null) {
+            this.LevelXp += amount;
+            checkLvlUp();
+        }
     }
 
     @Nullable

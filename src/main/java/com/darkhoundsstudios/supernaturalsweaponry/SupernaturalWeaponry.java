@@ -2,7 +2,9 @@ package com.darkhoundsstudios.supernaturalsweaponry;
 
 import com.darkhoundsstudios.supernaturalsweaponry.container.ModContainers;
 import com.darkhoundsstudios.supernaturalsweaponry.entities.ModEntities;
+import com.darkhoundsstudios.supernaturalsweaponry.integration.curios.CuriosIntegration;
 import com.darkhoundsstudios.supernaturalsweaponry.screen.SunlightCollectorScreen;
+import com.darkhoundsstudios.supernaturalsweaponry.util.EquipmentHandler;
 import com.darkhoundsstudios.supernaturalsweaponry.util.RegistryHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScreenManager;
@@ -15,6 +17,7 @@ import net.minecraft.world.storage.loot.TableLootEntry;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.LootTableLoadEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -23,6 +26,7 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
+import top.theillusivec4.curios.api.CuriosAPI;
 
 import java.util.function.Supplier;
 
@@ -34,13 +38,15 @@ public class SupernaturalWeaponry
     private static final Logger LOGGER = LogManager.getLogger();
 
     public static final String Mod_ID = "snweaponry";
-
+    public static boolean curiosLoaded = false;
 
     public SupernaturalWeaponry() {
         // Register the setup method for modloading
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
         // Register the doClientStuff method for modloading
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::doClientStuff);
+
+        curiosLoaded = ModList.get().isLoaded("curios");
 
         RegistryHandler.init();
         // Register ourselves for server and other game events we are interested in
@@ -65,7 +71,7 @@ public class SupernaturalWeaponry
 
     private void setup(final FMLCommonSetupEvent event)
     {
-
+        EquipmentHandler.init();
     }
 
     //stará se o registry na straně clienta
