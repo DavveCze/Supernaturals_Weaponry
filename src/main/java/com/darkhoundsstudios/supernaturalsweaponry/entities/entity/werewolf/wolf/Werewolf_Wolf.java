@@ -70,6 +70,8 @@ public class Werewolf_Wolf extends WolfEntity {
         return super.canAttack(target);
     }
 
+
+
     @Override
     //zjišťuje kdo na něho zaútočil
     public boolean attackEntityFrom(DamageSource source, float amount) {

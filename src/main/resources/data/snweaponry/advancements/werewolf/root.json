@@ -1,0 +1,44 @@
+{
+  "parent": "snweaponry:root",
+  "display": {
+    "icon": {
+      "item": "snweaponry:codex_lycanis"
+    },
+    "title": {
+      "translate": "advancement.snweaponry.werewolf.root.title"
+    },
+    "description": {
+      "translate": "advancement.snweaponry.werewolf.root.description"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": false,
+    "hidden": true
+  },
+  "criteria": {
+    "use_codex": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "snweaponry:codex_lycanis"
+          }
+        ]
+      }
+    },
+    "children_off": {
+      "trigger": "snweaponry:children_block",
+      "conditions": {
+        "parent_id": "snweaponry:root"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "use_codex"
+    ],
+    [
+      "children_off"
+    ]
+  ]
+}

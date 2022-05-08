@@ -1,7 +1,12 @@
 package com.darkhoundsstudios.supernaturalsweaponry;
 
+import com.darkhoundsstudios.supernaturalsweaponry.advancements.triggers.ChildrenBlock;
+import com.darkhoundsstudios.supernaturalsweaponry.advancements.triggers.MoonPhaseTrigger;
+import com.darkhoundsstudios.supernaturalsweaponry.advancements.triggers.ParentDoneTrigger;
+import com.darkhoundsstudios.supernaturalsweaponry.advancements.triggers.TransformIntoTrigger;
 import com.darkhoundsstudios.supernaturalsweaponry.container.ModContainers;
 import com.darkhoundsstudios.supernaturalsweaponry.entities.ModEntities;
+import com.darkhoundsstudios.supernaturalsweaponry.events.ModEventBusEvents;
 import com.darkhoundsstudios.supernaturalsweaponry.integration.curios.CuriosIntegration;
 import com.darkhoundsstudios.supernaturalsweaponry.screen.SunlightCollectorScreen;
 import com.darkhoundsstudios.supernaturalsweaponry.util.EquipmentHandler;
@@ -51,6 +56,11 @@ public class SupernaturalWeaponry
         RegistryHandler.init();
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
+
+        Advancements.MOON_PHASE = (MoonPhaseTrigger) ModEventBusEvents.registerAdvancementTrigger(new MoonPhaseTrigger());
+        Advancements.TRANSFORM_INTO = (TransformIntoTrigger) ModEventBusEvents.registerAdvancementTrigger(new TransformIntoTrigger());
+        Advancements.PARENT_DONE = (ParentDoneTrigger) ModEventBusEvents.registerAdvancementTrigger(new ParentDoneTrigger());
+        Advancements.CHILDREN_BLOCK = (ChildrenBlock) ModEventBusEvents.registerAdvancementTrigger(new ChildrenBlock());
     }
 
     //registruje modely a jejich render přímo ve hře
@@ -72,6 +82,7 @@ public class SupernaturalWeaponry
     private void setup(final FMLCommonSetupEvent event)
     {
         EquipmentHandler.init();
+
     }
 
     //stará se o registry na straně clienta
@@ -107,5 +118,43 @@ public class SupernaturalWeaponry
         if (evt.getName().toString().equals("minecraft:entities/polar_bear")) {
             evt.getTable().addPool(LootPool.builder().addEntry(TableLootEntry.builder(new ResourceLocation(SupernaturalWeaponry.Mod_ID, "inject/polar_bear"))).build());
         }
+    }
+
+    public static class Advancements {
+        /**
+         * moon_phase_change {<br>
+         * &nbsp;&nbsp; moon_phase:(Phase)
+         *(FULL_MOON,
+         * WANING_GIBBOUS,
+         * THIRD_QUARTER,
+         * WANING_CRESCENT,
+         * NEW_MOON,
+         * WAXING_CRESCENT,
+         * FIRST_QUARTER,
+         * WAXING_GIBBOUS)(<br>
+         * }<br>
+         */
+        public static MoonPhaseTrigger MOON_PHASE;
+        /**
+         * transform_into {<br>
+         * &nbsp;&nbsp; transformation:(transformation)<br>
+         * (Werewolf,
+         * Hunter,
+         * Vampire)
+         * }<br>
+         */
+        public static TransformIntoTrigger TRANSFORM_INTO;
+        /**
+         * parent_done {<br>
+         * &nbsp;&nbsp; parent_id:(resource_location of parent)<br>
+         * }<br>
+         */
+        public static ParentDoneTrigger PARENT_DONE;
+        /**
+         * children_block {<br>
+         * &nbsp;&nbsp; parent_id:(resource_location of parent)<br>
+         * }<br>
+         */
+        public static ChildrenBlock CHILDREN_BLOCK;
     }
 }

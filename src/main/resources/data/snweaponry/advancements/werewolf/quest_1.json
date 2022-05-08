@@ -1,0 +1,40 @@
+{
+  "parent": "snweaponry:werewolf/root",
+  "display": {
+    "icon": {
+      "item": "snweaponry:wolf_fur"
+    },
+    "title": {
+      "translate": "advancement.snweaponry.werewolf.quest1.title"
+    },
+    "description": {
+      "translate": "advancement.snweaponry.werewolf.quest1.description"
+    },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": false,
+    "hidden": true
+  },
+  "criteria": {
+    "transformation_began": {
+      "trigger": "snweaponry:transform_into",
+      "conditions": {
+        "transformation": "WEREWOLF"
+      }
+    },
+    "is_done": {
+      "trigger": "snweaponry:parent_done",
+      "conditions": {
+        "parent_id": "snweaponry:werewolf/root"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "transformation_began"
+    ],
+    [
+      "is_done"
+    ]
+  ]
+}

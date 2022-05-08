@@ -1,0 +1,26 @@
+{
+  "name": "Note #2: All starts now",
+  "icon": "minecraft:paper",
+  "category": "quest_category",
+  "advancement": "snweaponry:werewolf/quest_1",
+  "sortnum": 1,
+
+  "priority":false,
+  "secret":false,
+  "read_by_default":false,
+  "turnin": "snweaponry:werewolf/quest_2",
+  "pages": [
+    {
+      "type": "quest",
+      "trigger": "snweaponry:werewolf/quest_2",
+      "title": "snweaponry.page.werewolf_q2T",
+      "text": "snweaponry.page.werewolf_q2b"
+
+    },
+    {
+      "type": "text",
+      "title": "Notes",
+      "text": "snweaponry.page.werewolf_q2a"
+    }
+  ]
+}

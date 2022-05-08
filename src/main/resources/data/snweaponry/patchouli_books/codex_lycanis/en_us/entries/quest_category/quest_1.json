@@ -1,0 +1,30 @@
+{
+  "name": "Note #1: Beginning",
+  "icon": "minecraft:paper",
+  "category": "quest_category",
+  "advancement": "snweaponry:werewolf/root",
+  "sortnum": 2,
+
+  "priority":false,
+  "secret":false,
+  "read_by_default":false,
+  "turnin": "snweaponry:werewolf/quest_1",
+  "pages": [
+    {
+      "type": "quest",
+      "trigger": "snweaponry:werewolf/quest_1",
+      "title": "snweaponry.page.werewolf_q1T",
+      "text": "snweaponry.page.werewolf_q1b"
+    },
+    {
+      "type": "text",
+      "title": "Notes",
+      "text": "snweaponry.page.werewolf_q1aa"
+    },
+    {
+      "type": "text",
+      "title": "Notes",
+      "text": "snweaponry.page.werewolf_q1ab"
+    }
+  ]
+}

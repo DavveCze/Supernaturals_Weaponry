@@ -4,11 +4,11 @@
  - crafting recipe - completed
  - new Item extend - completed
 
-2. add Baubles support
+2. add Baubles support - completed
  - add talismans & rings
  - make mods compatible
 
-3. add Patchouli
+3. add Patchouli . completed
  - make compatibility
  - create ingame documentation of how things work
  - lang file for book

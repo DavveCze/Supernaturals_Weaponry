@@ -40,7 +40,7 @@ public class CuriosIntegration extends EquipmentHandler {
         InterModComms.sendTo("curios", CuriosAPI.IMC.REGISTER_TYPE, () -> new CurioIMCMessage("ring").setSize(2));
     }
 
-    public static void keepCurioDrops(LivingCurioDropRulesEvent event) { //TODO make this less hacky
+    public static void keepCurioDrops(LivingCurioDropRulesEvent event) {
         event.addOverride(stack -> false, ICurio.DropRule.ALWAYS_KEEP);
     }
 

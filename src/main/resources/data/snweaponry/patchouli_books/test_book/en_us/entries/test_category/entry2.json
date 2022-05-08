@@ -1,0 +1,21 @@
+{
+  "name": "Test Entry 2",
+  "icon": "minecraft:writable_book",
+  "category": "test_category",
+  "pages": [
+    {
+      "type": "quest",
+      "title": "Lava is my friend",
+      "text": "Fill a bucket with lava",
+      "trigger": "minecraft:story/lava_bucket",
+      "turnin": "minecraft:story/lava_bucket"
+    },
+    {
+      "type": "empty"
+    },
+    {
+      "type": "test_template",
+      "text": "We just passed in the text from a variable!"
+    }
+  ]
+}

@@ -1,0 +1,39 @@
+{
+  "parent": "snweaponry:root",
+  "display": {
+    "icon": {
+      "item": "minecraft:written_book"
+    },
+    "title": "Hunters Duty",
+    "description": "Unlocks hunter transformation",
+    "frame": "challenge",
+    "show_toast": false,
+    "announce_to_chat": false,
+    "hidden": true
+  },
+  "criteria": {
+    "use_codex": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "minecraft:leather"
+          }
+        ]
+      }
+    },"children_off": {
+      "trigger": "snweaponry:children_block",
+      "conditions": {
+        "parent_id": "snweaponry:root"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "use_codex"
+    ],
+    [
+      "children_off"
+    ]
+  ]
+}

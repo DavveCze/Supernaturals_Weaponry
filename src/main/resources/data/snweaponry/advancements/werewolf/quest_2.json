@@ -1,0 +1,43 @@
+{
+  "parent": "snweaponry:werewolf/quest_1",
+  "display": {
+    "icon": {
+      "item": "snweaponry:wolf_heart"
+    },
+    "title": {
+      "translate": "advancement.snweaponry.werewolf.quest2.title"
+    },
+    "description": {
+      "translate": "advancement.snweaponry.werewolf.quest2.description"
+    },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": false,
+    "hidden": true
+  },
+  "criteria": {
+    "full_moon_rises": {
+      "trigger": "snweaponry:moon_phase_change",
+      "conditions": {
+        "moon_phase": "FULL_MOON"
+      }
+    },
+    "is_done": {
+      "trigger": "snweaponry:parent_done",
+      "conditions": {
+        "parent_id": "snweaponry:werewolf/quest_1"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "full_moon_rises"
+    ],
+    [
+      "is_done"
+    ]
+  ],
+  "rewards": {
+    "experience": 100
+  }
+}

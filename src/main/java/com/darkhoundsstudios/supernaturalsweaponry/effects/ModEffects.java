@@ -23,4 +23,5 @@ public class ModEffects {
             new MagicExhaustionEffect(EffectType.NEUTRAL, 3115194, "Magic Exhaustion"));
     public static RegistryObject<Effect> WOLF_GIFT = EFFECTS.register("wolf_gift", () ->
             new WolfGiftEffect(EffectType.NEUTRAL, 3115194, "Wolf's Gift").addAttributesModifier(SharedMonsterAttributes.MOVEMENT_SPEED, String.valueOf(UUID.randomUUID()), (double)0.2F, AttributeModifier.Operation.MULTIPLY_TOTAL));
+
 }

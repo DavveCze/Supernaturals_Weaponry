@@ -1,0 +1,14 @@
+{
+  "name": "item.snweaponry.codex_lycanis",
+  "landing_text": "LANDING TEXT",
+  "subtitle": "Old dusty book of wisdom",
+  "show_progress": false,
+  "model": "snweaponry:codex_lycanis",
+  "dont_generate_book": true,
+  "custom_book_item": "snweaponry:codex_lycanis",
+  "pause_game": true,
+  "advancements_tab": "snweaponry:root",
+  "advancement_namespaces": [ "snweaponry" ],
+  "i18n": true,
+  "version": 0
+}

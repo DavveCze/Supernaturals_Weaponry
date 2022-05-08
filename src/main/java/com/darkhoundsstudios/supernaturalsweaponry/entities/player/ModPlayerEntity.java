@@ -1,12 +1,9 @@
 package com.darkhoundsstudios.supernaturalsweaponry.entities.player;
+import com.darkhoundsstudios.supernaturalsweaponry.advancements.triggers.TransformIntoTrigger;
 import com.darkhoundsstudios.supernaturalsweaponry.client.particle.ModParticles;
 import com.darkhoundsstudios.supernaturalsweaponry.entities.ModCreatureAttribute;
-import com.darkhoundsstudios.supernaturalsweaponry.entities.ModEntities;
-import com.darkhoundsstudios.supernaturalsweaponry.entities.entity.werewolf.wolf.Werewolf_Wolf;
 import com.darkhoundsstudios.supernaturalsweaponry.entities.player.transformations.Transformation;
-import com.darkhoundsstudios.supernaturalsweaponry.events.ClientEventBus;
 import com.darkhoundsstudios.supernaturalsweaponry.events.ModEventBusEvents;
-import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
@@ -14,7 +11,6 @@ import net.minecraft.entity.ai.attributes.IAttribute;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.boss.dragon.EnderDragonPartEntity;
 import net.minecraft.entity.item.ArmorStandEntity;
-import net.minecraft.entity.merchant.villager.VillagerEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -37,12 +33,15 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
-public class ModPlayerEntity extends PlayerEntity implements IPlayerFileData {
+public class ModPlayerEntity extends PlayerEntity implements IPlayerFileData{
     //Transformation things
     public List<IAttributeInstance> attributes = new ArrayList<>();
     public List<AttributeModifier> modifiers;
     public PlayerEntity playerEntity;
     public Transformation transformation;
+    public boolean canTransformW = false;
+    public TransformationType type;
+
 
     //Leveling things
     private float LevelXp;
@@ -63,6 +62,7 @@ public class ModPlayerEntity extends PlayerEntity implements IPlayerFileData {
         ResetAttributes();
         ApplyModifiers();
         getCreatureAttribute();
+        System.out.println(playerEntity.getPersistentData());
     }
 
     @Override
@@ -72,6 +72,7 @@ public class ModPlayerEntity extends PlayerEntity implements IPlayerFileData {
         }
         return super.getCreatureAttribute();
     }
+
 
     private void addAttributesToList()
     {
@@ -113,6 +114,21 @@ public class ModPlayerEntity extends PlayerEntity implements IPlayerFileData {
 
     public void setTransformation(Transformation transformation){
         this.transformation = transformation;
+        switch (transformation.getTransType()) {
+            case "Werewolf":
+                type = TransformationType.Werewolf;
+                break;
+            case "Hunter":
+                type = TransformationType.Hunter;
+                break;
+            case "Vampire":
+                type = TransformationType.Vampire;
+                break;
+            default:
+                type = null;
+                break;
+        }
+        writePlayerData(playerEntity);
         initPlayer(false);
     }
 
@@ -292,7 +308,7 @@ public class ModPlayerEntity extends PlayerEntity implements IPlayerFileData {
                 int lvlBef = transformation.getLevel();
                 if (transformation.increaseLevel(LevelXp)) {
                     System.out.println("Level Up!!!");
-                    SummonLvlUpParticle(ModEventBusEvents.getServerPlayer());
+                    SummonLvlUpParticle(ModEventBusEvents.getPlayer());
                     int x = Math.max(transformation.getLevel() - lvlBef, 1);
                     setTransformation();
                     for (int i = 0; i < x; i++) {
@@ -307,7 +323,7 @@ public class ModPlayerEntity extends PlayerEntity implements IPlayerFileData {
         }
     }
 
-    private void SummonLvlUpParticle(ServerPlayerEntity player){
+    private void SummonLvlUpParticle(ModPlayerEntity player){
         for (int i = 0; i < 5; ++i) {
             ((ServerWorld) player.world).spawnParticle(ModParticles.LEVEL_UP_PARTICLE.get(), player.getPosXRandom(1.0D), player.getPosYRandom(), player.getPosZRandom(1.0D),
                     0, 0, 0.0D, 0, 0.1d);
@@ -329,7 +345,21 @@ public class ModPlayerEntity extends PlayerEntity implements IPlayerFileData {
     }
 
     @Override
-    public void writePlayerData(PlayerEntity player) {
+    public void writePlayerData(@NotNull PlayerEntity player) {
+        if(transformation != null) {
+            player.getPersistentData().putString("transformation_name", transformation.getTransType());
+            player.getPersistentData().putInt("transformation_level", transformation.getLevel());
+        }
+        else
+        {
+            player.getPersistentData().putString("transformation_name", "");
+            player.getPersistentData().putInt("transformation_level", 0);
+        }
+
+        player.getPersistentData().putFloat("transformation_xp", LevelXp);
+        player.getPersistentData().putInt("transformation_sp", LevelPoints);
+    }
+    public void writePlayerData(ServerPlayerEntity player) {
         if(transformation != null) {
             player.getPersistentData().putString("transformation_name", transformation.getTransType());
             player.getPersistentData().putInt("transformation_level", transformation.getLevel());
@@ -354,7 +384,7 @@ public class ModPlayerEntity extends PlayerEntity implements IPlayerFileData {
 
     @Nullable
     @Override
-    public CompoundNBT readPlayerData(PlayerEntity player) {
+    public CompoundNBT readPlayerData(@NotNull PlayerEntity player) {
         try {
             String transformation_name = player.getPersistentData().getString("transformation_name");
             int transformation_level = player.getPersistentData().getInt("transformation_level");
@@ -367,8 +397,14 @@ public class ModPlayerEntity extends PlayerEntity implements IPlayerFileData {
             else
                 System.out.println("Player is not Supernatural!");
         }catch (Exception e){
-            System.out.println(e);
+            System.out.println(e.getMessage());
         }
         return player.getPersistentData();
+    }
+
+    public enum TransformationType{
+        Werewolf,
+        Hunter,
+        Vampire
     }
 }

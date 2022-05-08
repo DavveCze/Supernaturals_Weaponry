@@ -11,9 +11,11 @@ import java.util.UUID;
 
 public class Transformation{
     //drží typy transformací a jejich level
-    final String type;
+    final String  type;
+
     static boolean isWerewolf, isVampire, isHunter;
     int level;
+
 
 
     public Transformation(String type, int level) {
@@ -26,6 +28,7 @@ public class Transformation{
         this.level = level;
         this.type = type;
     }
+
 
     //vrací transformaci
     public String getTransType(){
@@ -91,6 +94,11 @@ public class Transformation{
         private static List<AttributeModifier> modifiers;
         //stálý effekt
         public static EffectInstance Wolf_Gift = new EffectInstance(ModEffects.WOLF_GIFT.get(),300, 0, true,false);
+
+        //Advancement things
+        public static boolean checkBite = false, isFullMoon = false, unleashedBeast = false;
+        public static int killedDuringNight, supernaturalKilled, killedTotal, huntersKilled,
+                            masterHuntersKilled, wolfTamed, chieftainsKilled;
 
         //drží vnitřní informace
         private final static String name = "Werewolf";

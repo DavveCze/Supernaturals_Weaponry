@@ -1,0 +1,39 @@
+{
+  "parent": "snweaponry:root",
+  "display": {
+    "icon": {
+      "item": "minecraft:written_book"
+    },
+    "title": "Blood's awaking",
+    "description": "Unlocks vampire transformation",
+    "frame": "challenge",
+    "show_toast": false,
+    "announce_to_chat": false,
+    "hidden": true
+  },
+  "criteria": {
+    "use_codex": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "minecraft:sand"
+          }
+        ]
+      }
+    },"children_off": {
+      "trigger": "snweaponry:children_block",
+      "conditions": {
+        "parent_id": "snweaponry:root"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "use_codex"
+    ],
+    [
+      "children_off"
+    ]
+  ]
+}

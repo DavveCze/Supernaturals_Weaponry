@@ -16,6 +16,7 @@ import com.darkhoundsstudios.supernaturalsweaponry.effects.ModEffects;
 import com.darkhoundsstudios.supernaturalsweaponry.entities.ModEntities;
 import com.darkhoundsstudios.supernaturalsweaponry.items.ItemBase;
 import com.darkhoundsstudios.supernaturalsweaponry.items.curios.rings.SeaRing;
+import com.darkhoundsstudios.supernaturalsweaponry.items.patchouli.WerewolfCodex;
 import com.darkhoundsstudios.supernaturalsweaponry.items.useable.Bandage;
 import com.darkhoundsstudios.supernaturalsweaponry.items.weapons.ModWeapon;
 import com.darkhoundsstudios.supernaturalsweaponry.items.weapons.Two_Handed;
@@ -181,6 +182,10 @@ public class RegistryHandler {
     //Rings
     public static final RegistryObject<Item> SEA_RING = Items.register("sea_ring", ()->
             new SeaRing(new Item.Properties().maxStackSize(1).group(SupernaturalWeaponry.TAB)));
+
+    //Codexes
+    public static final RegistryObject<WerewolfCodex> CODEX_LYCANIS = Items.register("codex_lycanis", () ->
+            new WerewolfCodex(new Item.Properties().maxStackSize(1).group(SupernaturalWeaponry.TAB).rarity(Rarity.EPIC)));
     //Armors
     public static final RegistryObject<ArmorItem> WG_HELMET = Items.register("wg_helmet", () ->
             new ArmorItem(ModArmorMaterial.WG, EquipmentSlotType.HEAD, new Item.Properties().group(SupernaturalWeaponry.TAB)));
