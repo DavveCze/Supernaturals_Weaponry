@@ -1,7 +1,7 @@
 {
   "name": "item.snweaponry.codex_lycanis",
-  "landing_text": "LANDING TEXT",
-  "subtitle": "Old dusty book of wisdom",
+  "landing_text": "snweaponry.page.werewolf_landing",
+  "subtitle": "snweaponry.page.werewolf_subtitle",
   "show_progress": false,
   "model": "snweaponry:codex_lycanis",
   "dont_generate_book": true,

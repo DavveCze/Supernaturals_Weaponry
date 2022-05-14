@@ -1,5 +1,4 @@
 package com.darkhoundsstudios.supernaturalsweaponry.entities.player;
-import com.darkhoundsstudios.supernaturalsweaponry.advancements.triggers.TransformIntoTrigger;
 import com.darkhoundsstudios.supernaturalsweaponry.client.particle.ModParticles;
 import com.darkhoundsstudios.supernaturalsweaponry.entities.ModCreatureAttribute;
 import com.darkhoundsstudios.supernaturalsweaponry.entities.player.transformations.Transformation;
@@ -39,13 +38,14 @@ public class ModPlayerEntity extends PlayerEntity implements IPlayerFileData{
     public List<AttributeModifier> modifiers;
     public PlayerEntity playerEntity;
     public Transformation transformation;
-    public boolean canTransformW = false;
+    public boolean canTransformW = false, canTransformV = false, canTransformH = false;
     public TransformationType type;
 
 
     //Leveling things
     private float LevelXp;
     private int LevelPoints;
+
 
     public ModPlayerEntity(PlayerEntity _playerEntity) {
         super(_playerEntity.getEntityWorld(), _playerEntity.getGameProfile());
@@ -134,6 +134,16 @@ public class ModPlayerEntity extends PlayerEntity implements IPlayerFileData{
 
     private void setTransformation(){
         initPlayer(true);
+    }
+
+    public void Fullmoon(boolean active, boolean first_time){
+        if(first_time) {
+            playerEntity.addPotionEffect(new EffectInstance(Effects.BLINDNESS, 100, 5));
+            playerEntity.addPotionEffect(new EffectInstance(Effects.NAUSEA, 100, 5));
+            playerEntity.addPotionEffect(new EffectInstance(Effects.SLOWNESS, 100, 15));
+            playerEntity.addPotionEffect(new EffectInstance(Effects.WEAKNESS, 600, 2));
+        }
+        transformation.isFullmoon = active;
     }
 
     public void customAttackTargetEntityWithCurrentItem(PlayerEntity playerEntity, Entity targetEntity) {
@@ -350,32 +360,41 @@ public class ModPlayerEntity extends PlayerEntity implements IPlayerFileData{
             player.getPersistentData().putString("transformation_name", transformation.getTransType());
             player.getPersistentData().putInt("transformation_level", transformation.getLevel());
         }
-        else
-        {
-            player.getPersistentData().putString("transformation_name", "");
+        else {
+            if (type != null)
+                player.getPersistentData().putString("transformation_name", type.name());
+            else
+                player.getPersistentData().putString("transformation_name", "");
             player.getPersistentData().putInt("transformation_level", 0);
         }
 
         player.getPersistentData().putFloat("transformation_xp", LevelXp);
         player.getPersistentData().putInt("transformation_sp", LevelPoints);
+        player.getPersistentData().putBoolean("can_werewolf", canTransformW);
+        player.getPersistentData().putBoolean("can_vampire", canTransformV);
+        player.getPersistentData().putBoolean("can_hunter", canTransformH);
     }
     public void writePlayerData(ServerPlayerEntity player) {
         if(transformation != null) {
             player.getPersistentData().putString("transformation_name", transformation.getTransType());
             player.getPersistentData().putInt("transformation_level", transformation.getLevel());
         }
-        else
-        {
-            player.getPersistentData().putString("transformation_name", "");
+        else {
+            if (type != null)
+                player.getPersistentData().putString("transformation_name", type.name());
+            else
+                player.getPersistentData().putString("transformation_name", "");
             player.getPersistentData().putInt("transformation_level", 0);
         }
 
         player.getPersistentData().putFloat("transformation_xp", LevelXp);
         player.getPersistentData().putInt("transformation_sp", LevelPoints);
+        player.getPersistentData().putBoolean("can_werewolf", canTransformW);
+        player.getPersistentData().putBoolean("can_vampire", canTransformV);
+        player.getPersistentData().putBoolean("can_hunter", canTransformH);
     }
 
     public void giveExperiencePoints(int amount) {
-        System.out.println(amount);
         if(transformation != null) {
             this.LevelXp += amount;
             checkLvlUp();
@@ -390,9 +409,19 @@ public class ModPlayerEntity extends PlayerEntity implements IPlayerFileData{
             int transformation_level = player.getPersistentData().getInt("transformation_level");
             this.LevelXp = player.getPersistentData().getFloat("transformation_xp");
             this.LevelPoints = player.getPersistentData().getInt("transformation_sp");
+            this.canTransformW = player.getPersistentData().getBoolean("can_werewolf");
+            this.canTransformV = player.getPersistentData().getBoolean("can_vampire");
+            this.canTransformH = player.getPersistentData().getBoolean("can_hunter");
             if(!transformation_name.equals("") && transformation_level > 0){
                 transformation = new Transformation(transformation_name, transformation_level);
                 ApplyModifiers();
+            }
+            else if(!transformation_name.equals("")){
+                switch (transformation_name){
+                    case "Werewolf": type = TransformationType.Werewolf; break;
+                    case "Vampire": type = TransformationType.Vampire; break;
+                    case "Hunter": type = TransformationType.Hunter; break;
+                }
             }
             else
                 System.out.println("Player is not Supernatural!");

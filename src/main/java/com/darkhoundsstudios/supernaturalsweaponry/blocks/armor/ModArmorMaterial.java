@@ -1,4 +1,4 @@
-package com.darkhoundsstudios.supernaturalsweaponry.armor;
+package com.darkhoundsstudios.supernaturalsweaponry.blocks.armor;
 
 import com.darkhoundsstudios.supernaturalsweaponry.SupernaturalWeaponry;
 import com.darkhoundsstudios.supernaturalsweaponry.util.RegistryHandler;

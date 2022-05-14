@@ -1,7 +1,7 @@
 package com.darkhoundsstudios.supernaturalsweaponry.util;
 
 import com.darkhoundsstudios.supernaturalsweaponry.SupernaturalWeaponry;
-import com.darkhoundsstudios.supernaturalsweaponry.armor.ModArmorMaterial;
+import com.darkhoundsstudios.supernaturalsweaponry.blocks.armor.ModArmorMaterial;
 import com.darkhoundsstudios.supernaturalsweaponry.blocks.ores.AmethystOre;
 import com.darkhoundsstudios.supernaturalsweaponry.blocks.ores.ManaOre;
 import com.darkhoundsstudios.supernaturalsweaponry.blocks.ores.SilverOre;
@@ -15,7 +15,7 @@ import com.darkhoundsstudios.supernaturalsweaponry.container.ModContainers;
 import com.darkhoundsstudios.supernaturalsweaponry.effects.ModEffects;
 import com.darkhoundsstudios.supernaturalsweaponry.entities.ModEntities;
 import com.darkhoundsstudios.supernaturalsweaponry.items.ItemBase;
-import com.darkhoundsstudios.supernaturalsweaponry.items.curios.rings.SeaRing;
+import com.darkhoundsstudios.supernaturalsweaponry.items.curios.rings.*;
 import com.darkhoundsstudios.supernaturalsweaponry.items.patchouli.WerewolfCodex;
 import com.darkhoundsstudios.supernaturalsweaponry.items.useable.Bandage;
 import com.darkhoundsstudios.supernaturalsweaponry.items.weapons.ModWeapon;
@@ -182,10 +182,19 @@ public class RegistryHandler {
     //Rings
     public static final RegistryObject<Item> SEA_RING = Items.register("sea_ring", ()->
             new SeaRing(new Item.Properties().maxStackSize(1).group(SupernaturalWeaponry.TAB)));
+    public static final RegistryObject<Item> JAGUAR_RING = Items.register("jaguar_ring", ()->
+            new JaguarRing(new Item.Properties().maxStackSize(1).group(SupernaturalWeaponry.TAB)));
+    public static final RegistryObject<Item> CHEETAH_RING = Items.register("cheetah_ring", ()->
+            new CheetahRing(new Item.Properties().maxStackSize(1).group(SupernaturalWeaponry.TAB)));
+    public static final RegistryObject<Item> BEAR_RING = Items.register("bear_ring", ()->
+            new BearRing(new Item.Properties().maxStackSize(1).group(SupernaturalWeaponry.TAB)));
+    public static final RegistryObject<Item> TURTLE_RING = Items.register("turtle_ring", ()->
+            new TurtleRing(new Item.Properties().maxStackSize(1).group(SupernaturalWeaponry.TAB)));
 
     //Codexes
     public static final RegistryObject<WerewolfCodex> CODEX_LYCANIS = Items.register("codex_lycanis", () ->
             new WerewolfCodex(new Item.Properties().maxStackSize(1).group(SupernaturalWeaponry.TAB).rarity(Rarity.EPIC)));
+    public static final RegistryObject<Item> TRANSFORMATION_BOOK = Items.register("transformation_book",ItemBase::new);
     //Armors
     public static final RegistryObject<ArmorItem> WG_HELMET = Items.register("wg_helmet", () ->
             new ArmorItem(ModArmorMaterial.WG, EquipmentSlotType.HEAD, new Item.Properties().group(SupernaturalWeaponry.TAB)));

@@ -1,6 +1,10 @@
 {
   "replace": false,
   "values": [
-    "snweaponry:sea_ring"
+    "snweaponry:sea_ring",
+    "snweaponry:jaguar_ring",
+    "snweaponry:cheetah_ring",
+    "snweaponry:bear_ring",
+    "snweaponry:turtle_ring"
   ]
 }

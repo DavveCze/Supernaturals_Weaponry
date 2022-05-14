@@ -15,11 +15,14 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.entity.SpriteRenderer;
+import net.minecraft.entity.merchant.villager.VillagerEntity;
 import net.minecraft.item.*;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.datafix.fixes.VillagerTrades;
 import net.minecraft.world.storage.loot.LootPool;
 import net.minecraft.world.storage.loot.TableLootEntry;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.VillagerTradingManager;
 import net.minecraftforge.event.LootTableLoadEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModList;
@@ -82,12 +85,10 @@ public class SupernaturalWeaponry
     private void setup(final FMLCommonSetupEvent event)
     {
         EquipmentHandler.init();
-
     }
 
     //stará se o registry na straně clienta
     private void doClientStuff(final FMLClientSetupEvent event) {
-
         registerEntityModels(event.getMinecraftSupplier());
         registerTEScreens();
     }
@@ -117,6 +118,12 @@ public class SupernaturalWeaponry
         }
         if (evt.getName().toString().equals("minecraft:entities/polar_bear")) {
             evt.getTable().addPool(LootPool.builder().addEntry(TableLootEntry.builder(new ResourceLocation(SupernaturalWeaponry.Mod_ID, "inject/polar_bear"))).build());
+        }
+        if (evt.getName().toString().equals("minecraft:chests/pillager_outpost")) {
+            evt.getTable().addPool(LootPool.builder().addEntry(TableLootEntry.builder(new ResourceLocation(SupernaturalWeaponry.Mod_ID, "inject/pillager_outpost"))).build());
+        }
+        if (evt.getName().toString().equals("minecraft:chests/stronghold_library")) {
+            evt.getTable().addPool(LootPool.builder().addEntry(TableLootEntry.builder(new ResourceLocation(SupernaturalWeaponry.Mod_ID, "inject/stronghold_library"))).build());
         }
     }
 

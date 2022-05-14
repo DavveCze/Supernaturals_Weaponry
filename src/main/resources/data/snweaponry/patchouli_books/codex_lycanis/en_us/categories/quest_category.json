@@ -1,5 +1,5 @@
 {
   "name": "Quest Category",
-  "description": "Player's notes",
+  "description": "$(playername)'s notes",
   "icon": "minecraft:writable_book"
 }

@@ -3,8 +3,14 @@ package com.darkhoundsstudios.supernaturalsweaponry.entities.player.transformati
 import com.darkhoundsstudios.supernaturalsweaponry.effects.ModEffects;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Food;
+import net.minecraft.item.Foods;
+import net.minecraft.item.Item;
 import net.minecraft.potion.EffectInstance;
+import net.minecraft.potion.Effects;
+import net.minecraft.util.FoodStats;
 
+import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -15,6 +21,8 @@ public class Transformation{
 
     static boolean isWerewolf, isVampire, isHunter;
     int level;
+
+    public boolean isFullmoon;
 
 
 
@@ -84,6 +92,8 @@ public class Transformation{
             else if (level <= 10) {
                 Werewolf.setEffects(2);
             }
+            if(isFullmoon)
+                player.addPotionEffect(Werewolf.Full_Moon_Effect);
             player.addPotionEffect(Werewolf.Wolf_Gift);
         }
     }
@@ -94,7 +104,7 @@ public class Transformation{
         private static List<AttributeModifier> modifiers;
         //stálý effekt
         public static EffectInstance Wolf_Gift = new EffectInstance(ModEffects.WOLF_GIFT.get(),300, 0, true,false);
-
+        public static EffectInstance Full_Moon_Effect = new EffectInstance(Effects.HUNGER,300,2, true,false);
         //Advancement things
         public static boolean checkBite = false, isFullMoon = false, unleashedBeast = false;
         public static int killedDuringNight, supernaturalKilled, killedTotal, huntersKilled,
@@ -114,7 +124,6 @@ public class Transformation{
 
         //nastavuje se nový effekt, v závislosti na jeho úrovni
         public static void setEffects(int amplifier){
-
             Wolf_Gift = new EffectInstance(ModEffects.WOLF_GIFT.get(),300, amplifier, true,false,true);
         }
 

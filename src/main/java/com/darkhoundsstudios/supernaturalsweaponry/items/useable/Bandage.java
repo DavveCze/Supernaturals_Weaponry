@@ -30,6 +30,7 @@ public class Bandage extends Item {
             }
         }
         playerIn.heal((float) ((Math.random() * (4.0f - 2.0f)) + 2.0f));
-        return ActionResult.resultPass(stack);
+        stack.shrink(1);
+        return ActionResult.resultSuccess(stack);
     }
 }
