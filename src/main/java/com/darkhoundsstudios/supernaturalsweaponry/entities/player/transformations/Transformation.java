@@ -1,19 +1,10 @@
 package com.darkhoundsstudios.supernaturalsweaponry.entities.player.transformations;
 
-import com.darkhoundsstudios.supernaturalsweaponry.effects.ModEffects;
-import net.minecraft.entity.ai.attributes.AttributeModifier;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Food;
-import net.minecraft.item.Foods;
-import net.minecraft.item.Item;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.Effects;
-import net.minecraft.util.FoodStats;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.AbstractList;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class Transformation{
     //drží typy transformací a jejich level
@@ -26,10 +17,10 @@ public class Transformation{
 
 
 
-    public Transformation(String type, int level) {
+    public Transformation(LivingEntity entity,String type, int level) {
         switch (type)
         {
-            case "Werewolf": isWerewolf = true; Werewolf.init(level); break;
+            case "Werewolf": isWerewolf = true; Werewolf.init(entity, level); break;
             case "Hunter": isHunter = true; break;
             case "Vampire": isVampire = true; break;
         }
@@ -48,11 +39,7 @@ public class Transformation{
     }
 
     //vrací list modifierů určité transformace při určitém levelu
-    public static List<AttributeModifier> getModifiers(){
-        if(isWerewolf)
-            return Werewolf.getModifiers();
-        return null;
-    }
+  
 
     //zvyšuje level v závislosti na počet xp získaných hráčem
     public boolean increaseLevel(float playerXP) {
@@ -73,7 +60,6 @@ public class Transformation{
                     else
                         this.level++;
                     x = true;
-                    Werewolf.init(this.level);
                 }
             }
         }
@@ -83,124 +69,171 @@ public class Transformation{
     //Aplikuje speciální effekty transformací závislé na úrovni
     public void ApplyEffects(PlayerEntity player) {
         if (isWerewolf) {
-            if (level <= 4) {
-                Werewolf.setEffects(0);
-            }
-            else if (level <= 6) {
-                Werewolf.setEffects(1);
-            }
-            else if (level <= 10) {
-                Werewolf.setEffects(2);
-            }
-            if(isFullmoon)
-                player.addPotionEffect(Werewolf.Full_Moon_Effect);
-            player.addPotionEffect(Werewolf.Wolf_Gift);
+            Werewolf.applyAll(player);
         }
+    }
+
+    public void addSkill(Skill skill, boolean constant, boolean passive){
+        if (isWerewolf) {
+            Werewolf.addSkill(skill,constant,passive);
+        }
+    }
+    public boolean useSkill(LivingEntity entity, Skill skill){
+        if (isWerewolf) {
+           return Werewolf.useSkill(entity,skill);
+        }
+        return false;
+    }
+    public void disableSkill(LivingEntity entity, Skill skill){
+        if (isWerewolf) {
+            Werewolf.disableSkill(entity,skill);
+        }
+    }
+
+    public TransformState getState() {
+        if (isWerewolf)
+            return Werewolf.state;
+        return TransformState.Human;
+    }
+    public void setState(TransformState _state) {
+        if (isWerewolf)
+            Werewolf.state = _state;
+    }
+    public ArrayList<Integer> getSkillIds(){
+        if (isWerewolf){
+            return Werewolf.getSkillIds();
+        }
+        return null;
+    }
+
+    public void setSkills(int[] ids){
+        if(isWerewolf){
+            Werewolf.setSkillIds(ids);
+        }
+    }
+    public void addBasicSkills(){
+        if(isWerewolf){
+            Werewolf.addBasicSkills();
+        }
+    }
+
+    public enum TransformState{
+        Human,
+        Animal,
+        Beast
     }
 
     //statická třída vlkodlaka, drží všechny důležité informace o něm
     static class Werewolf{
         //list modifierů
-        private static List<AttributeModifier> modifiers;
         //stálý effekt
-        public static EffectInstance Wolf_Gift = new EffectInstance(ModEffects.WOLF_GIFT.get(),300, 0, true,false);
-        public static EffectInstance Full_Moon_Effect = new EffectInstance(Effects.HUNGER,300,2, true,false);
+
         //Advancement things
         public static boolean checkBite = false, isFullMoon = false, unleashedBeast = false;
         public static int killedDuringNight, supernaturalKilled, killedTotal, huntersKilled,
                             masterHuntersKilled, wolfTamed, chieftainsKilled;
+        public static List<Skill> passive_const_skillList = new ArrayList<>();
+        public static List<Skill> passive_skillList = new ArrayList<>();
+        public static List<Skill> active_skillList = new ArrayList<>();
+        public static TransformState state;
 
         //drží vnitřní informace
         private final static String name = "Werewolf";
         public final static int levelCap = 10;
         private final static int[] xpNeeded = new int[]{150,400,750,1150,1700,2400,3600,5700,8500};
-        private static int healthBoost, strengthBoost, resistanceBoost;
 
         //inicializuje nového vlkodlaka či při jeho level upu
-        public static void init(int level){
-            setBoosts(level);
-            modifiers = setModifiers();
-        }
-
-        //nastavuje se nový effekt, v závislosti na jeho úrovni
-        public static void setEffects(int amplifier){
-            Wolf_Gift = new EffectInstance(ModEffects.WOLF_GIFT.get(),300, amplifier, true,false,true);
-        }
-
-        //nastavují se modifiery attributů, v závislosti na úrovni
-        private static void setBoosts(int level)
-        {
-            switch (level){
-                case 1:
-                    healthBoost = 0;
-                    strengthBoost = 2;
-                    resistanceBoost = 1;
-                    break;
-                case 2:
-                    healthBoost = 2;
-                    strengthBoost = 2;
-                    resistanceBoost = 2;
-                    break;
-                case 3:
-                    healthBoost = 4;
-                    strengthBoost = 3;
-                    resistanceBoost = 2;
-                    break;
-                case 4:
-                    healthBoost = 6;
-                    strengthBoost = 3;
-                    resistanceBoost = 2;
-                    break;
-                case 5:
-                    healthBoost = 6;
-                    strengthBoost = 3;
-                    resistanceBoost = 3;
-                    break;
-                case 6:
-                    healthBoost = 8;
-                    strengthBoost = 3;
-                    resistanceBoost = 4;
-                    break;
-                case 7:
-                    healthBoost = 10;
-                    strengthBoost = 3;
-                    resistanceBoost = 4;
-                    break;
-                case 8:
-                    healthBoost = 10;
-                    strengthBoost = 3;
-                    resistanceBoost = 5;
-                    break;
-                case 9:
-                    healthBoost = 10;
-                    strengthBoost = 4;
-                    resistanceBoost = 5;
-                    break;
-                case 10:
-                    healthBoost = 10;
-                    strengthBoost = 4;
-                    resistanceBoost = 8;
-                    break;
-                default:
-                    healthBoost = 0;
-                    strengthBoost = 0;
-                    resistanceBoost = 0;
-                    break;
+        public static void init(LivingEntity entity, int level){
+            for (Skill skill: passive_skillList) {
+                skill.onUse(entity);
             }
         }
 
-        //nastavuje se list modifierů a attributů
-        private static List<AttributeModifier> setModifiers() {
-            ArrayList<AttributeModifier> _modifiers = new ArrayList<>();
-            _modifiers.add(new AttributeModifier(UUID.randomUUID(), "Supernaturality-Health", healthBoost, AttributeModifier.Operation.ADDITION));
-            _modifiers.add(new AttributeModifier(UUID.randomUUID(), "Supernaturality-Strength", strengthBoost, AttributeModifier.Operation.ADDITION));
-            _modifiers.add(new AttributeModifier(UUID.randomUUID(), "Supernaturality-Resistance", resistanceBoost, AttributeModifier.Operation.ADDITION));
-            return _modifiers;
+        public static void addBasicSkills(){
+            addSkill(Skills.Werewolf_Skills.Wolf_form, Skills.Werewolf_Skills.Wolf_form.parameters().get(0), Skills.Werewolf_Skills.Wolf_form.parameters().get(1));
+            addSkill(Skills.Werewolf_Skills.Poison_Reduction_I, Skills.Werewolf_Skills.Poison_Reduction_I.parameters().get(0),  Skills.Werewolf_Skills.Poison_Reduction_I.parameters().get(1));
+            addSkill(Skills.Werewolf_Skills.Regeneration, Skills.Werewolf_Skills.Regeneration.parameters().get(0),  Skills.Werewolf_Skills.Regeneration.parameters().get(1));
+        }
+        
+        public static void applyAll(LivingEntity entity){
+            for (Skill skill : passive_const_skillList) {
+                skill.onUse(entity);
+                skill.cooldown();
+            }
+            for (Skill skill : active_skillList) {
+                if(state == TransformState.Animal || state == TransformState.Beast)
+                    skill.applyEffects(entity);
+                skill.cooldown();
+            }
+            for (Skill skill : passive_skillList) {
+                if(skill == Skills.Werewolf_Skills.Poison_Reduction_I | skill == Skills.Werewolf_Skills.Poison_Reduction_II | skill == Skills.Werewolf_Skills.Wither_Reduction)
+                    skill.onUse(entity);
+                skill.cooldown();
+            }
+        }
+        public static void applyPassive(LivingEntity entity){
+            for (Skill skill: passive_skillList) {
+                skill.onUse(entity);
+            }
         }
 
-        //vrací zpět list
-        public static List<AttributeModifier> getModifiers() {
-            return modifiers;
+        public static void addSkill(Skill skill, boolean constant, boolean passive){
+            if(constant && passive)
+                passive_const_skillList.add(skill);
+            else if(passive)
+                passive_skillList.add(skill);
+            else if(!constant && !passive){
+                active_skillList.add(skill);
+            }
+        }
+        public static boolean useSkill(LivingEntity entity, Skill _skill){
+            for (Skill skill:active_skillList) {
+                if(skill == _skill){
+                    skill.onUse(entity);
+                    return true;
+                }
+            }
+            return false;
+        }
+        public static void disableSkill(LivingEntity entity, Skill _skill){
+            for (Skill skill : active_skillList) {
+                if(skill == _skill){
+                    skill.onDisable(entity);
+                }
+            }
+        }
+
+        public static ArrayList<Integer> getSkillIds() {
+            ArrayList<Integer> ids = new ArrayList<>();
+            for (Skill skill : passive_const_skillList) {
+                ids.add(skill.getID());
+            }
+            for (Skill skill : active_skillList) {
+                ids.add(skill.getID());
+            }
+            for (Skill skill : passive_skillList) {
+                ids.add(skill.getID());
+            }
+
+            System.out.println(ids.size());
+            return ids;
+        }
+        public static void setSkillIds(int[] ids) {
+            active_skillList.clear();
+            passive_skillList.clear();
+            passive_const_skillList.clear();
+            System.out.println(ids.length);
+            if(ids.length == 0)
+                addBasicSkills();
+            System.out.println(active_skillList.size() + ", " + passive_skillList.size() + ", " + passive_const_skillList.size());
+            for (int id : ids) {
+                for (Skill skill : Skills.Werewolf_Skills.skill_list) {
+                    if(id == skill.getID()){
+                        addSkill(skill,skill.parameters().get(0),skill.parameters().get(1));
+                        break;
+                    }
+                }
+            }
         }
 
         //vrací zpět počet xp nutný pro další level up

@@ -1,9 +1,10 @@
 package com.darkhoundsstudios.supernaturalsweaponry.entities.player.transformations;
 
 import com.darkhoundsstudios.supernaturalsweaponry.SupernaturalWeaponry;
+import com.darkhoundsstudios.supernaturalsweaponry.client.particle.LevelUp_Particle;
 import com.darkhoundsstudios.supernaturalsweaponry.effects.ModEffects;
 import com.darkhoundsstudios.supernaturalsweaponry.effects.bleeding.BleedingEffectInstance;
-import net.java.games.input.Component;
+import com.darkhoundsstudios.supernaturalsweaponry.events.ModEventBusEvents;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
@@ -13,61 +14,108 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 
-import java.util.Objects;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
 
 public class Skills {
-    static class Werewolf_Skills{
-        Skill Wolf_form = new Skill() {
+    public static class Werewolf_Skills{
+        public static ArrayList<Skill> skill_list = new ArrayList<>();
+
+        public static void init(){
+            skill_list.clear();
+            skill_list.add(Wolf_form);
+            skill_list.add(Regeneration);
+            skill_list.add(Poison_Reduction_I);
+            skill_list.add(Strength_I);
+            skill_list.add(Dire_form);
+            skill_list.add(Strength_II);
+            skill_list.add(Strength_III);
+            skill_list.add(Rending_Slashes);
+            skill_list.add(Bleeding);
+            skill_list.add(Bloodlust);
+            skill_list.add(Bestial_Rage);
+            skill_list.add(Faster_Regeneration);
+            skill_list.add(Survival_instinct);
+            skill_list.add(Armor_I);
+            skill_list.add(Armor_II);
+            skill_list.add(Poison_Reduction_II);
+            skill_list.add(Armor_III);
+            skill_list.add(Wither_Reduction);
+            skill_list.add(Hyper_Armor);
+        }
+
+        public static Skill Wolf_form = new Skill() {
+            int timer = 0;
+            final ArrayList<AttributeModifier> attributes = new ArrayList<>();
             @Override
             public void onUse(LivingEntity entity) {
-                Skill.attributes.clear();
-                Skill.effects.clear();
-                Skill.attributes.add(new AttributeModifier(UUID.fromString(SupernaturalWeaponry.Mod_ID + ":werewolf_health_wf"),SupernaturalWeaponry.Mod_ID + ":werewolf_health_wf",10, AttributeModifier.Operation.ADDITION));
-                Skill.attributes.add(new AttributeModifier(UUID.fromString(SupernaturalWeaponry.Mod_ID + ":werewolf_speed_wf"),SupernaturalWeaponry.Mod_ID + ":werewolf_speed_wf",0.35, AttributeModifier.Operation.ADDITION));
-
-                Skill.effects.add(Effects.HUNGER);
-                Skill.effects.add(Effects.JUMP_BOOST);
-                entity.entityDropItem(entity.getHeldItemMainhand());
-                entity.entityDropItem(entity.getHeldItemOffhand());
-                entity.entityDropItem(entity.getItemStackFromSlot(EquipmentSlotType.CHEST));
-                entity.entityDropItem(entity.getItemStackFromSlot(EquipmentSlotType.HEAD));
-                entity.entityDropItem(entity.getItemStackFromSlot(EquipmentSlotType.LEGS));
-                entity.entityDropItem(entity.getItemStackFromSlot(EquipmentSlotType.FEET));
-                applyEffects(entity);
-                applyModifiers(entity);
+                if(cooldown()) {
+                    entity.entityDropItem(entity.getHeldItemMainhand());
+                    entity.entityDropItem(entity.getHeldItemOffhand());
+                    entity.entityDropItem(entity.getItemStackFromSlot(EquipmentSlotType.CHEST));
+                    entity.entityDropItem(entity.getItemStackFromSlot(EquipmentSlotType.HEAD));
+                    entity.entityDropItem(entity.getItemStackFromSlot(EquipmentSlotType.LEGS));
+                    entity.entityDropItem(entity.getItemStackFromSlot(EquipmentSlotType.FEET));
+                    if(attributes.size() < 2) {
+                        attributes.add(new AttributeModifier(SupernaturalWeaponry.Mod_ID + ":werewolf_health_wf", 10, AttributeModifier.Operation.ADDITION));
+                        attributes.add(new AttributeModifier(SupernaturalWeaponry.Mod_ID + ":werewolf_speed_wf", 0.15, AttributeModifier.Operation.MULTIPLY_BASE));
+                    }
+                    applyEffects(entity);
+                    applyModifiers(entity);
+                    ModEventBusEvents.getPlayer().transformation.setState(Transformation.TransformState.Animal);
+                    entity.heal(entity.getMaxHealth() - entity.getHealth());
+                }
             }
 
             @Override
             public void onDisable(LivingEntity entity) {
                 entity.getAttribute(SharedMonsterAttributes.MAX_HEALTH).removeModifier(attributes.get(0));
                 entity.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(attributes.get(1));
+                ModEventBusEvents.getPlayer().transformation.setState(Transformation.TransformState.Human);
             }
 
             @Override
             public void applyEffects(LivingEntity entity) {
-                entity.addPotionEffect(new EffectInstance(effects.get(0),300,Objects.requireNonNull(entity.getActivePotionEffect(effects.get(0))).getAmplifier() + 2,false,false));
-                entity.addPotionEffect(new EffectInstance(effects.get(1),300,Objects.requireNonNull(entity.getActivePotionEffect(effects.get(1))).getAmplifier() + 1,false,false));
+                entity.addPotionEffect(new EffectInstance(Effects.HUNGER,300,2,false,false));
+                entity.addPotionEffect(new EffectInstance(Effects.JUMP_BOOST,300,1,false,false));
+            }
+
+            @Override
+            public boolean cooldown() {
+                if(timer % 60 == 0)
+                    return true;
+                else {
+                    timer++;
+                    return false;
+                }
+            }
+
+            @Override
+            public int getID() {
+                return 0;
             }
 
             @Override
             public void applyModifiers(LivingEntity entity) {
-                entity.getAttribute(SharedMonsterAttributes.MAX_HEALTH).removeModifier(attributes.get(0));
-                entity.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(attributes.get(1));
-
+                if(entity.getAttribute(SharedMonsterAttributes.MAX_HEALTH).hasModifier(attributes.get(0)))
+                {
+                    entity.getAttribute(SharedMonsterAttributes.MAX_HEALTH).removeModifier(attributes.get(0));
+                    entity.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(attributes.get(1));
+                }
                 entity.getAttribute(SharedMonsterAttributes.MAX_HEALTH).applyModifier(attributes.get(0));
                 entity.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).applyModifier(attributes.get(1));
             }
+
+            @Override
+            public ArrayList<Boolean> parameters() {
+                ArrayList<Boolean> par = new ArrayList<>();
+                par.add(false);
+                par.add(false);
+                return par;
+            }
         };
-        Skill Regeneration = new Skill() {
-            Skill parent = Survival_instinct;
+        public static Skill Regeneration = new Skill() {
             @Override
             public void onUse(LivingEntity entity) {
-                Skill.attributes.clear();
-                Skill.effects.clear();
-                effects.add(Effects.REGENERATION);
-
                 applyEffects(entity);
                 applyModifiers(entity);
             }
@@ -79,7 +127,17 @@ public class Skills {
 
             @Override
             public void applyEffects(LivingEntity entity) {
-                entity.addPotionEffect(new EffectInstance(effects.get(0),300,Objects.requireNonNull(entity.getActivePotionEffect(effects.get(0))).getAmplifier() + 1,false,false));
+                entity.addPotionEffect(new EffectInstance(Effects.REGENERATION,300, 0,false,false));
+            }
+
+            @Override
+            public boolean cooldown() {
+                return false;
+            }
+
+            @Override
+            public int getID() {
+                return 1;
             }
 
 
@@ -87,14 +145,19 @@ public class Skills {
             public void applyModifiers(LivingEntity entity) {
 
             }
+
+            @Override
+            public ArrayList<Boolean> parameters() {
+                ArrayList<Boolean> par = new ArrayList<>();
+                par.add(true);
+                par.add(true);
+                return par;
+            }
         };
-        Skill Poison_Reduction_I = new Skill() {
+        public static Skill Poison_Reduction_I = new Skill() {
+            EffectInstance instance;
             @Override
             public void onUse(LivingEntity entity) {
-                Skill.attributes.clear();
-                Skill.effects.clear();
-                effects.add(Effects.POISON);
-
                 applyEffects(entity);
                 applyModifiers(entity);
             }
@@ -106,13 +169,26 @@ public class Skills {
 
             @Override
             public void applyEffects(LivingEntity entity) {
-                EffectInstance instance = entity.getActivePotionEffect(effects.get(0));
-                assert instance != null;
-                if(instance.getAmplifier() > 0){
-                    entity.addPotionEffect(new EffectInstance(effects.get(0),instance.getDuration(),instance.getAmplifier() - 1,instance.isAmbient(),instance.doesShowParticles()));
+                EffectInstance effectInstance = entity.getActivePotionEffect(Effects.POISON);
+                if(effectInstance != null & instance != null) {
+                    if(instance.getAmplifier() - 1 != effectInstance.getAmplifier()) {
+                        if (effectInstance.getAmplifier() > 0) {
+                            entity.addPotionEffect(new EffectInstance(Effects.POISON, effectInstance.getDuration(), effectInstance.getAmplifier() - 1, effectInstance.isAmbient(), effectInstance.doesShowParticles()));
+                        } else
+                            entity.removePotionEffect(Effects.POISON);
+                    }
                 }
-                else
-                    entity.removePotionEffect(Effects.POISON);
+                instance = effectInstance;
+            }
+
+            @Override
+            public boolean cooldown() {
+                return false;
+            }
+
+            @Override
+            public int getID() {
+                return 2;
             }
 
 
@@ -120,16 +196,20 @@ public class Skills {
             public void applyModifiers(LivingEntity entity) {
 
             }
+
+            @Override
+            public ArrayList<Boolean> parameters() {
+                ArrayList<Boolean> par = new ArrayList<>();
+                par.add(false);
+                par.add(true);
+                return par;
+            }
         };
 
-        Skill Strength_I = new Skill() {
+        public static Skill Strength_I = new Skill() {
             public int cost = 1;
             @Override
             public void onUse(LivingEntity entity) {
-                Skill.attributes.clear();
-                Skill.effects.clear();
-                Skill.attributes.add(new AttributeModifier(UUID.fromString(SupernaturalWeaponry.Mod_ID + ":werewolf_strength"), SupernaturalWeaponry.Mod_ID + ":werewolf_strength", 2, AttributeModifier.Operation.ADDITION));
-
                 applyEffects(entity);
                 applyModifiers(entity);
             }
@@ -145,75 +225,112 @@ public class Skills {
             }
 
             @Override
+            public boolean cooldown() {
+                return false;
+            }
+
+            @Override
+            public int getID() {
+                return 3;
+            }
+
+            @Override
             public void applyModifiers(LivingEntity entity) {
-                entity.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).applyModifier(attributes.get(0));
+                if (entity.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).hasModifier(new AttributeModifier(SupernaturalWeaponry.Mod_ID + ":werewolf_strength", 2, AttributeModifier.Operation.ADDITION)))
+                    entity.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).removeModifier(new AttributeModifier(SupernaturalWeaponry.Mod_ID + ":werewolf_strength", 2, AttributeModifier.Operation.ADDITION));
+
+                entity.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).applyModifier(new AttributeModifier(SupernaturalWeaponry.Mod_ID + ":werewolf_strength", 2, AttributeModifier.Operation.ADDITION));
+            }
+
+            @Override
+            public ArrayList<Boolean> parameters() {
+                ArrayList<Boolean> par = new ArrayList<>();
+                par.add(false);
+                par.add(true);
+                return par;
             }
         };
-        Skill Dire_form = new Skill() {
+        public static Skill Dire_form = new Skill() {
             Skill parent = Strength_I;
             public int cost = 2;
-
+            int timer = 0;
             @Override
             public void onUse(LivingEntity entity) {
-                Skill.attributes.clear();
-                Skill.effects.clear();
-                Skill.attributes.add(new AttributeModifier(UUID.fromString(SupernaturalWeaponry.Mod_ID + ":werewolf_health_df"), SupernaturalWeaponry.Mod_ID + ":werewolf_health_df", 15, AttributeModifier.Operation.ADDITION));
-                Skill.attributes.add(new AttributeModifier(UUID.fromString(SupernaturalWeaponry.Mod_ID + ":werewolf_armor_df"), SupernaturalWeaponry.Mod_ID + ":werewolf_armor_df", 10, AttributeModifier.Operation.ADDITION));
-                Skill.attributes.add(new AttributeModifier(UUID.fromString(SupernaturalWeaponry.Mod_ID + ":werewolf_strength_df"), SupernaturalWeaponry.Mod_ID + ":werewolf_strength_df", 2, AttributeModifier.Operation.ADDITION));
-                Skill.attributes.add(new AttributeModifier(UUID.fromString(SupernaturalWeaponry.Mod_ID + ":werewolf_speed_df"), SupernaturalWeaponry.Mod_ID + ":werewolf_speed_df", 0.2, AttributeModifier.Operation.ADDITION));
-                Skill.attributes.add(new AttributeModifier(UUID.fromString(SupernaturalWeaponry.Mod_ID + ":werewolf_kn_res_df"), SupernaturalWeaponry.Mod_ID + ":werewolf_kn_res_df", 3, AttributeModifier.Operation.ADDITION));
-
-                Skill.effects.add(Effects.REGENERATION);
-                Skill.effects.add(Effects.HUNGER);
-                entity.entityDropItem(entity.getHeldItemMainhand());
-                entity.entityDropItem(entity.getHeldItemOffhand());
-                entity.entityDropItem(entity.getItemStackFromSlot(EquipmentSlotType.CHEST));
-                entity.entityDropItem(entity.getItemStackFromSlot(EquipmentSlotType.HEAD));
-                entity.entityDropItem(entity.getItemStackFromSlot(EquipmentSlotType.LEGS));
-                entity.entityDropItem(entity.getItemStackFromSlot(EquipmentSlotType.FEET));
-                applyEffects(entity);
-                applyModifiers(entity);
+                if(cooldown()) {
+                    entity.entityDropItem(entity.getHeldItemMainhand());
+                    entity.entityDropItem(entity.getHeldItemOffhand());
+                    entity.entityDropItem(entity.getItemStackFromSlot(EquipmentSlotType.CHEST));
+                    entity.entityDropItem(entity.getItemStackFromSlot(EquipmentSlotType.HEAD));
+                    entity.entityDropItem(entity.getItemStackFromSlot(EquipmentSlotType.LEGS));
+                    entity.entityDropItem(entity.getItemStackFromSlot(EquipmentSlotType.FEET));
+                    applyEffects(entity);
+                    applyModifiers(entity);
+                    ModEventBusEvents.getPlayer().transformation.setState(Transformation.TransformState.Beast);
+                    timer++;
+                }
             }
 
             @Override
             public void onDisable(LivingEntity entity) {
-                entity.getAttribute(SharedMonsterAttributes.MAX_HEALTH).removeModifier(attributes.get(0));
-                entity.getAttribute(SharedMonsterAttributes.ARMOR).removeModifier(attributes.get(1));
-                entity.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).removeModifier(attributes.get(2));
-                entity.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(attributes.get(3));
-                entity.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).removeModifier(attributes.get(4));
+                entity.getAttribute(SharedMonsterAttributes.MAX_HEALTH).removeModifier(new AttributeModifier(SupernaturalWeaponry.Mod_ID + ":werewolf_health_df", 15, AttributeModifier.Operation.ADDITION));
+                entity.getAttribute(SharedMonsterAttributes.ARMOR).removeModifier(new AttributeModifier(SupernaturalWeaponry.Mod_ID + ":werewolf_armor_df", 10, AttributeModifier.Operation.ADDITION));
+                entity.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).removeModifier(new AttributeModifier(SupernaturalWeaponry.Mod_ID + ":werewolf_strength_df", 2, AttributeModifier.Operation.ADDITION));
+                entity.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(new AttributeModifier(SupernaturalWeaponry.Mod_ID + ":werewolf_speed_df", 0.2, AttributeModifier.Operation.MULTIPLY_BASE));
+                entity.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).removeModifier(new AttributeModifier(SupernaturalWeaponry.Mod_ID + ":werewolf_kn_res_df", 3, AttributeModifier.Operation.ADDITION));
+                ModEventBusEvents.getPlayer().transformation.setState(Transformation.TransformState.Human);
             }
 
             @Override
             public void applyEffects(LivingEntity entity) {
-                entity.addPotionEffect(new EffectInstance(effects.get(0), 300, Objects.requireNonNull(entity.getActivePotionEffect(effects.get(0))).getAmplifier() + 2, false, false));
-                entity.addPotionEffect(new EffectInstance(effects.get(1), 300, Objects.requireNonNull(entity.getActivePotionEffect(effects.get(1))).getAmplifier() + 2, false, false));
+                entity.addPotionEffect(new EffectInstance(Effects.REGENERATION, 300, 2, false, false));
+                entity.addPotionEffect(new EffectInstance(Effects.HUNGER, 300,  2, false, false));
+            }
+
+            @Override
+            public boolean cooldown() {
+                if(timer % 60 == 0)
+                    return true;
+                else {
+                    timer++;
+                    return false;
+                }
+            }
+
+            @Override
+            public int getID() {
+                return 4;
             }
 
             @Override
             public void applyModifiers(LivingEntity entity) {
-                entity.getAttribute(SharedMonsterAttributes.MAX_HEALTH).removeModifier(attributes.get(0));
-                entity.getAttribute(SharedMonsterAttributes.ARMOR).removeModifier(attributes.get(1));
-                entity.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).removeModifier(attributes.get(2));
-                entity.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(attributes.get(3));
-                entity.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).removeModifier(attributes.get(4));
+                if(entity.getAttribute(SharedMonsterAttributes.MAX_HEALTH).hasModifier(new AttributeModifier(SupernaturalWeaponry.Mod_ID + ":werewolf_health_df", 15, AttributeModifier.Operation.ADDITION))) {
+                    entity.getAttribute(SharedMonsterAttributes.MAX_HEALTH).removeModifier(new AttributeModifier(SupernaturalWeaponry.Mod_ID + ":werewolf_health_df", 15, AttributeModifier.Operation.ADDITION));
+                    entity.getAttribute(SharedMonsterAttributes.ARMOR).removeModifier(new AttributeModifier(SupernaturalWeaponry.Mod_ID + ":werewolf_armor_df", 10, AttributeModifier.Operation.ADDITION));
+                    entity.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).removeModifier(new AttributeModifier(SupernaturalWeaponry.Mod_ID + ":werewolf_strength_df", 2, AttributeModifier.Operation.ADDITION));
+                    entity.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(new AttributeModifier(SupernaturalWeaponry.Mod_ID + ":werewolf_speed_df", 0.2, AttributeModifier.Operation.MULTIPLY_BASE));
+                    entity.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).removeModifier(new AttributeModifier(SupernaturalWeaponry.Mod_ID + ":werewolf_kn_res_df", 3, AttributeModifier.Operation.ADDITION));
 
-                entity.getAttribute(SharedMonsterAttributes.MAX_HEALTH).applyModifier(attributes.get(0));
-                entity.getAttribute(SharedMonsterAttributes.ARMOR).applyModifier(attributes.get(1));
-                entity.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).applyModifier(attributes.get(2));
-                entity.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).applyModifier(attributes.get(3));
-                entity.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).applyModifier(attributes.get(4));
+                }
+                entity.getAttribute(SharedMonsterAttributes.MAX_HEALTH).applyModifier(new AttributeModifier(SupernaturalWeaponry.Mod_ID + ":werewolf_health_df", 15, AttributeModifier.Operation.ADDITION));
+                entity.getAttribute(SharedMonsterAttributes.ARMOR).applyModifier(new AttributeModifier(SupernaturalWeaponry.Mod_ID + ":werewolf_armor_df", 10, AttributeModifier.Operation.ADDITION));
+                entity.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).applyModifier(new AttributeModifier(SupernaturalWeaponry.Mod_ID + ":werewolf_strength_df", 2, AttributeModifier.Operation.ADDITION));
+                entity.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).applyModifier(new AttributeModifier(SupernaturalWeaponry.Mod_ID + ":werewolf_speed_df", 0.2, AttributeModifier.Operation.ADDITION));
+                entity.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).applyModifier(new AttributeModifier(SupernaturalWeaponry.Mod_ID + ":werewolf_kn_res_df", 3, AttributeModifier.Operation.ADDITION));
+            }
+
+            @Override
+            public ArrayList<Boolean> parameters() {
+                ArrayList<Boolean> par = new ArrayList<>();
+                par.add(false);
+                par.add(false);
+                return par;
             }
         };
-        Skill Strength_II = new Skill() {
+        public static Skill Strength_II = new Skill() {
             Skill parent = Dire_form;
             public int cost = 2;
             @Override
             public void onUse(LivingEntity entity) {
-                Skill.attributes.clear();
-                Skill.effects.clear();
-                Skill.attributes.add(new AttributeModifier(UUID.fromString(SupernaturalWeaponry.Mod_ID + ":werewolf_strength"), SupernaturalWeaponry.Mod_ID + ":werewolf_strength", 3, AttributeModifier.Operation.ADDITION));
-
                 applyEffects(entity);
                 applyModifiers(entity);
             }
@@ -229,20 +346,36 @@ public class Skills {
             }
 
             @Override
+            public boolean cooldown() {
+                return false;
+            }
+
+            @Override
+            public int getID() {
+                return 5;
+            }
+
+            @Override
             public void applyModifiers(LivingEntity entity) {
-                entity.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).removeModifier(attributes.get(0));
-                entity.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).applyModifier(attributes.get(0));
+                if (entity.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).hasModifier(new AttributeModifier(SupernaturalWeaponry.Mod_ID + ":werewolf_strength", 2, AttributeModifier.Operation.ADDITION)))
+                    entity.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).removeModifier(new AttributeModifier(SupernaturalWeaponry.Mod_ID + ":werewolf_strength", 2, AttributeModifier.Operation.ADDITION));
+
+                entity.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).applyModifier(new AttributeModifier(SupernaturalWeaponry.Mod_ID + ":werewolf_strength", 3, AttributeModifier.Operation.ADDITION));
+            }
+
+            @Override
+            public ArrayList<Boolean> parameters() {
+                ArrayList<Boolean> par = new ArrayList<>();
+                par.add(false);
+                par.add(true);
+                return par;
             }
         };
-        Skill Strength_III = new Skill() {
+        public static Skill Strength_III = new Skill() {
             Skill parent = Strength_II;
             public int cost = 3;
             @Override
             public void onUse(LivingEntity entity) {
-                Skill.attributes.clear();
-                Skill.effects.clear();
-                Skill.attributes.add(new AttributeModifier(UUID.fromString(SupernaturalWeaponry.Mod_ID + ":werewolf_strength"), SupernaturalWeaponry.Mod_ID + ":werewolf_strength", 4, AttributeModifier.Operation.ADDITION));
-
                 applyEffects(entity);
                 applyModifiers(entity);
             }
@@ -258,33 +391,41 @@ public class Skills {
             }
 
             @Override
+            public boolean cooldown() {
+                return false;
+            }
+
+            @Override
+            public int getID() {
+                return 6;
+            }
+
+            @Override
             public void applyModifiers(LivingEntity entity) {
-                entity.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).removeModifier(attributes.get(0));
-                entity.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).applyModifier(attributes.get(0));
+                if (entity.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).hasModifier(new AttributeModifier(SupernaturalWeaponry.Mod_ID + ":werewolf_strength", 3, AttributeModifier.Operation.ADDITION)))
+                    entity.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).removeModifier(new AttributeModifier(SupernaturalWeaponry.Mod_ID + ":werewolf_strength", 3, AttributeModifier.Operation.ADDITION));
+
+                entity.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).applyModifier(new AttributeModifier(SupernaturalWeaponry.Mod_ID + ":werewolf_strength", 4, AttributeModifier.Operation.ADDITION));
+            }
+
+            @Override
+            public ArrayList<Boolean> parameters() {
+                ArrayList<Boolean> par = new ArrayList<>();
+                par.add(false);
+                par.add(true);
+                return par;
             }
         };
-        Skill Rending_Slashes = new Skill() {
+        public static Skill Rending_Slashes = new Skill() {
             Skill parent = Strength_II;
             public int cost = 3;
-            @Override
-            public void onUse(LivingEntity target) {
-
-                Skill.attributes.clear();
-                Skill.effects.clear();
-
-                applyEffects(target);
-                applyModifiers(target);
-            }
 
             @Override
             public void onDisable(LivingEntity entity) {
 
             }
-
-            public void onUse(LivingEntity target, LivingEntity attacker) {
-                Skill.attributes.clear();
-                Skill.effects.clear();
-
+            @Override
+            public void onUse(LivingEntity target) {
                 int x = new Random().nextInt(4);
                 ItemStack stack = null;
                 switch (x){
@@ -294,7 +435,7 @@ public class Skills {
                     case 3: stack = target.getItemStackFromSlot(EquipmentSlotType.FEET); break;
                 }
                 ItemStack finalStack = stack;
-                stack.damageItem((int) (stack.getDamage() * Math.random()), attacker, (p_220045_0_) -> p_220045_0_.sendBreakAnimation(Objects.requireNonNull(finalStack.getEquipmentSlot())));
+                stack.damageItem((int) (stack.getDamage() * Math.random()), target, (p_220045_0_) -> p_220045_0_.sendBreakAnimation(finalStack.getEquipmentSlot()));
                 if(Math.random() * 100 < 2.5) {
                     target.entityDropItem(stack);
                 }
@@ -307,20 +448,35 @@ public class Skills {
 
             }
 
+            @Override
+            public boolean cooldown() {
+                return false;
+            }
+
+            @Override
+            public int getID() {
+                return 7;
+            }
+
 
             @Override
             public void applyModifiers(LivingEntity entity) {
 
             }
+
+            @Override
+            public ArrayList<Boolean> parameters() {
+                ArrayList<Boolean> par = new ArrayList<>();
+                par.add(false);
+                par.add(true);
+                return par;
+            }
         };
-        Skill Bleeding = new Skill() {
+        public static Skill Bleeding = new Skill() {
             Skill parent = Strength_III;
             public int cost = 3;
             @Override
             public void onUse(LivingEntity target) {
-                Skill.attributes.clear();
-                Skill.effects.clear();
-
                 applyEffects(target);
                 applyModifiers(target);
             }
@@ -342,19 +498,36 @@ public class Skills {
                 }
             }
 
+            @Override
+            public boolean cooldown() {
+                return false;
+            }
+
+            @Override
+            public int getID() {
+                return 8;
+            }
+
 
             @Override
             public void applyModifiers(LivingEntity entity) {
 
             }
+
+            @Override
+            public ArrayList<Boolean> parameters() {
+                ArrayList<Boolean> par = new ArrayList<>();
+                par.add(false);
+                par.add(true);
+                return par;
+            }
         };
-        Skill Bloodlust = new Skill() {
+        public static Skill Bloodlust = new Skill() {
             Skill parent = Rending_Slashes;
             public int cost = 3;
             @Override
             public void onUse(LivingEntity entity) {
-                Skill.attributes.clear();
-                Skill.effects.clear();
+                ((PlayerEntity) entity).getFoodStats().addStats(1, 0.3f);
 
                 applyEffects(entity);
                 applyModifiers(entity);
@@ -371,69 +544,90 @@ public class Skills {
             }
 
             @Override
+            public boolean cooldown() {
+                return false;
+            }
+
+            @Override
+            public int getID() {
+                return 9;
+            }
+
+            @Override
             public void applyModifiers(LivingEntity entity) {
 
             }
-            public void addHunger(LivingEntity entity,int amount, float multiplier){
-                ((PlayerEntity) entity).getFoodStats().addStats(amount, multiplier);
+
+            @Override
+            public ArrayList<Boolean> parameters() {
+                ArrayList<Boolean> par = new ArrayList<>();
+                par.add(false);
+                par.add(true);
+                return par;
             }
         };
-        Skill Bestial_Rage = new Skill() {
+        public static Skill Bestial_Rage = new Skill() {
             Skill parent_1 = Bloodlust;
             Skill parent_2 = Bleeding;
             public int cost = 5;
-
+            int timer = 0;
             @Override
             public void onUse(LivingEntity entity) {
-                Skill.attributes.clear();
-                Skill.effects.clear();
-                Skill.attributes.add(new AttributeModifier(UUID.fromString(SupernaturalWeaponry.Mod_ID + ":werewolf_strength_br"), SupernaturalWeaponry.Mod_ID + ":werewolf_strength_br", 0.08, AttributeModifier.Operation.MULTIPLY_TOTAL));
-                Skill.attributes.add(new AttributeModifier(UUID.fromString(SupernaturalWeaponry.Mod_ID + ":werewolf_speed_br"), SupernaturalWeaponry.Mod_ID + ":werewolf_speed_br", 0.08, AttributeModifier.Operation.MULTIPLY_TOTAL));
-                Skill.attributes.add(new AttributeModifier(UUID.fromString(SupernaturalWeaponry.Mod_ID + ":werewolf_atk_spd_br"), SupernaturalWeaponry.Mod_ID + ":werewolf_atk_spd_br", 0.08, AttributeModifier.Operation.MULTIPLY_TOTAL));
-
-                effects.add(Effects.BLINDNESS);
-                effects.add(Effects.HUNGER);
-
-                entity.addPotionEffect(new EffectInstance(effects.get(0),100,1,false,false));
-                applyEffects(entity);
-                applyModifiers(entity);
+                if(cooldown()) {
+                    entity.addPotionEffect(new EffectInstance(Effects.BLINDNESS, 100, 1, false, false));
+                    applyEffects(entity);
+                    applyModifiers(entity);
+                    timer++;
+                }
             }
 
             @Override
             public void onDisable(LivingEntity entity) {
-                entity.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).removeModifier(attributes.get(0));
-                entity.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(attributes.get(1));
-                entity.getAttribute(SharedMonsterAttributes.ATTACK_SPEED).removeModifier(attributes.get(2));
+                entity.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).removeModifier(new AttributeModifier(SupernaturalWeaponry.Mod_ID + ":werewolf_strength_br", 0.08, AttributeModifier.Operation.MULTIPLY_TOTAL));
+                entity.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(new AttributeModifier(SupernaturalWeaponry.Mod_ID + ":werewolf_speed_br", 0.08, AttributeModifier.Operation.MULTIPLY_TOTAL));
+                entity.getAttribute(SharedMonsterAttributes.ATTACK_SPEED).removeModifier(new AttributeModifier(SupernaturalWeaponry.Mod_ID + ":werewolf_atk_spd_br", 0.08, AttributeModifier.Operation.MULTIPLY_TOTAL));
             }
 
             @Override
             public void applyEffects(LivingEntity entity) {
-                entity.addPotionEffect(new EffectInstance(effects.get(0),300,10,false,false));
+                entity.addPotionEffect(new EffectInstance(Effects.HUNGER,300,10,false,false));
+            }
+
+            @Override
+            public boolean cooldown() {
+                if(timer % 300 == 0)
+                    return true;
+                else {
+                    timer++;
+                    return false;
+                }
+            }
+
+            @Override
+            public int getID() {
+                return 10;
             }
 
             @Override
             public void applyModifiers(LivingEntity entity) {
-                entity.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).removeModifier(attributes.get(0));
-                entity.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(attributes.get(1));
-                entity.getAttribute(SharedMonsterAttributes.ATTACK_SPEED).removeModifier(attributes.get(2));
-                entity.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).applyModifier(attributes.get(0));
-                entity.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).applyModifier(attributes.get(1));
-                entity.getAttribute(SharedMonsterAttributes.ATTACK_SPEED).applyModifier(attributes.get(2));
+                entity.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).applyModifier(new AttributeModifier(SupernaturalWeaponry.Mod_ID + ":werewolf_strength_br", 0.08, AttributeModifier.Operation.MULTIPLY_TOTAL));
+                entity.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).applyModifier(new AttributeModifier(SupernaturalWeaponry.Mod_ID + ":werewolf_speed_br", 0.08, AttributeModifier.Operation.MULTIPLY_TOTAL));
+                entity.getAttribute(SharedMonsterAttributes.ATTACK_SPEED).applyModifier(new AttributeModifier(SupernaturalWeaponry.Mod_ID + ":werewolf_atk_spd_br", 0.08, AttributeModifier.Operation.MULTIPLY_TOTAL));
             }
 
-            public void addHunger(LivingEntity entity,int amount, float multiplier){
-                ((PlayerEntity) entity).getFoodStats().addStats(amount, multiplier);
+            @Override
+            public ArrayList<Boolean> parameters() {
+                ArrayList<Boolean> par = new ArrayList<>();
+                par.add(false);
+                par.add(false);
+                return par;
             }
         };
 
-        Skill Faster_Regeneration = new Skill() {
+        public static Skill Faster_Regeneration = new Skill() {
             public int cost = 1;
             @Override
             public void onUse(LivingEntity entity) {
-                Skill.attributes.clear();
-                Skill.effects.clear();
-                effects.add(Effects.REGENERATION);
-
                 applyEffects(entity);
                 applyModifiers(entity);
             }
@@ -445,7 +639,17 @@ public class Skills {
 
             @Override
             public void applyEffects(LivingEntity entity) {
-                entity.addPotionEffect(new EffectInstance(effects.get(0),300,Objects.requireNonNull(entity.getActivePotionEffect(effects.get(0))).getAmplifier() + 1,false,false));
+                entity.addPotionEffect(new EffectInstance(Effects.REGENERATION,300,1,false,false));
+            }
+
+            @Override
+            public boolean cooldown() {
+                return false;
+            }
+
+            @Override
+            public int getID() {
+                return 11;
             }
 
 
@@ -453,15 +657,27 @@ public class Skills {
             public void applyModifiers(LivingEntity entity) {
 
             }
+
+            @Override
+            public ArrayList<Boolean> parameters() {
+                ArrayList<Boolean> par = new ArrayList<>();
+                par.add(true);
+                par.add(true);
+                return par;
+            }
         };
-        Skill Survival_instinct = new Skill() {
+        public static Skill Survival_instinct = new Skill() {
             Skill parent = Faster_Regeneration;
             public int cost = 2;
+            int timer = 0;
             @Override
             public void onUse(LivingEntity entity) {
-                Wolf_form.onUse(entity);
-                applyEffects(entity);
-                applyModifiers(entity);
+                if(cooldown()) {
+                    Wolf_form.onUse(entity);
+                    applyEffects(entity);
+                    applyModifiers(entity);
+                    timer++;
+                }
             }
 
             @Override
@@ -471,23 +687,42 @@ public class Skills {
 
             @Override
             public void applyEffects(LivingEntity entity) {
-                entity.addPotionEffect(new EffectInstance(Effects.RESISTANCE,100,Objects.requireNonNull(entity.getActivePotionEffect(effects.get(0))).getAmplifier() + 2,false,false));
+                entity.addPotionEffect(new EffectInstance(Effects.RESISTANCE,100,2,false,false));
+            }
+
+            @Override
+            public boolean cooldown() {
+                if(timer % 300 == 0)
+                    return true;
+                else {
+                    timer++;
+                    return false;
+                }
+            }
+
+            @Override
+            public int getID() {
+                return 12;
             }
 
             @Override
             public void applyModifiers(LivingEntity entity) {
 
             }
+
+            @Override
+            public ArrayList<Boolean> parameters() {
+                ArrayList<Boolean> par = new ArrayList<>();
+                par.add(false);
+                par.add(true);
+                return par;
+            }
         };
-        Skill Armor_I = new Skill() {
+        public static Skill Armor_I = new Skill() {
             Skill parent = Survival_instinct;
             public int cost = 2;
             @Override
             public void onUse(LivingEntity entity) {
-                Skill.attributes.clear();
-                Skill.effects.clear();
-                Skill.attributes.add(new AttributeModifier(UUID.fromString(SupernaturalWeaponry.Mod_ID + ":werewolf_armor_t"), SupernaturalWeaponry.Mod_ID + ":werewolf_armor_t", 2, AttributeModifier.Operation.ADDITION));
-
                 applyEffects(entity);
                 applyModifiers(entity);
             }
@@ -500,23 +735,40 @@ public class Skills {
             @Override
             public void applyEffects(LivingEntity entity) {
 
+            }
+
+            @Override
+            public boolean cooldown() {
+                return false;
+            }
+
+            @Override
+            public int getID() {
+                return 13;
             }
 
 
             @Override
             public void applyModifiers(LivingEntity entity) {
-                entity.getAttribute(SharedMonsterAttributes.ARMOR_TOUGHNESS).applyModifier(attributes.get(0));
+                if (entity.getAttribute(SharedMonsterAttributes.ARMOR_TOUGHNESS).hasModifier(new AttributeModifier(SupernaturalWeaponry.Mod_ID + ":werewolf_armor_t", 2, AttributeModifier.Operation.ADDITION)))
+                    entity.getAttribute(SharedMonsterAttributes.ARMOR_TOUGHNESS).removeModifier(new AttributeModifier(SupernaturalWeaponry.Mod_ID + ":werewolf_armor_t", 2, AttributeModifier.Operation.ADDITION));
+
+                entity.getAttribute(SharedMonsterAttributes.ARMOR_TOUGHNESS).applyModifier(new AttributeModifier(SupernaturalWeaponry.Mod_ID + ":werewolf_armor_t", 2, AttributeModifier.Operation.ADDITION));
+            }
+
+            @Override
+            public ArrayList<Boolean> parameters() {
+                ArrayList<Boolean> par = new ArrayList<>();
+                par.add(false);
+                par.add(true);
+                return par;
             }
         };
-        Skill Armor_II = new Skill() {
+        public static Skill Armor_II = new Skill() {
             Skill parent = Armor_I;
             public int cost = 3;
             @Override
             public void onUse(LivingEntity entity) {
-                Skill.attributes.clear();
-                Skill.effects.clear();
-                Skill.attributes.add(new AttributeModifier(UUID.fromString(SupernaturalWeaponry.Mod_ID + ":werewolf_armor_t"), SupernaturalWeaponry.Mod_ID + ":werewolf_armor_t", 4, AttributeModifier.Operation.ADDITION));
-
                 applyEffects(entity);
                 applyModifiers(entity);
             }
@@ -529,24 +781,40 @@ public class Skills {
             @Override
             public void applyEffects(LivingEntity entity) {
 
+            }
+
+            @Override
+            public boolean cooldown() {
+                return false;
+            }
+
+            @Override
+            public int getID() {
+                return 14;
             }
 
 
             @Override
             public void applyModifiers(LivingEntity entity) {
-                entity.getAttribute(SharedMonsterAttributes.ARMOR_TOUGHNESS).removeModifier(attributes.get(0));
-                entity.getAttribute(SharedMonsterAttributes.ARMOR_TOUGHNESS).applyModifier(attributes.get(0));
+                if (entity.getAttribute(SharedMonsterAttributes.ARMOR_TOUGHNESS).hasModifier(new AttributeModifier(SupernaturalWeaponry.Mod_ID + ":werewolf_armor_t", 2, AttributeModifier.Operation.ADDITION)))
+                    entity.getAttribute(SharedMonsterAttributes.ARMOR_TOUGHNESS).removeModifier(new AttributeModifier(SupernaturalWeaponry.Mod_ID + ":werewolf_armor_t", 2, AttributeModifier.Operation.ADDITION));
+                entity.getAttribute(SharedMonsterAttributes.ARMOR_TOUGHNESS).applyModifier(new AttributeModifier(SupernaturalWeaponry.Mod_ID + ":werewolf_armor_t", 4, AttributeModifier.Operation.ADDITION));
+            }
+
+            @Override
+            public ArrayList<Boolean> parameters() {
+                ArrayList<Boolean> par = new ArrayList<>();
+                par.add(false);
+                par.add(true);
+                return par;
             }
         };
-        Skill Poison_Reduction_II = new Skill() {
+        public static Skill Poison_Reduction_II = new Skill() {
             Skill parent = Armor_I;
             public int cost = 3;
+            EffectInstance instance;
             @Override
             public void onUse(LivingEntity entity) {
-                Skill.attributes.clear();
-                Skill.effects.clear();
-                effects.add(Effects.POISON);
-
                 applyEffects(entity);
                 applyModifiers(entity);
             }
@@ -558,13 +826,26 @@ public class Skills {
 
             @Override
             public void applyEffects(LivingEntity entity) {
-                EffectInstance instance = entity.getActivePotionEffect(effects.get(0));
-                assert instance != null;
-                if(instance.getAmplifier() > 1){
-                    entity.addPotionEffect(new EffectInstance(effects.get(0),instance.getDuration(),instance.getAmplifier() - 2,instance.isAmbient(),instance.doesShowParticles()));
+                EffectInstance effectInstance = entity.getActivePotionEffect(Effects.POISON);
+                if(effectInstance != null & instance != null) {
+                    if(instance.getAmplifier() - 2 != effectInstance.getAmplifier()) {
+                        if (effectInstance.getAmplifier() > 0) {
+                            entity.addPotionEffect(new EffectInstance(Effects.POISON, effectInstance.getDuration(), effectInstance.getAmplifier() - 2, effectInstance.isAmbient(), effectInstance.doesShowParticles()));
+                        } else
+                            entity.removePotionEffect(Effects.POISON);
+                    }
                 }
-                else
-                    entity.removePotionEffect(Effects.POISON);
+                instance = effectInstance;
+            }
+
+            @Override
+            public boolean cooldown() {
+                return false;
+            }
+
+            @Override
+            public int getID() {
+                return 15;
             }
 
 
@@ -572,16 +853,20 @@ public class Skills {
             public void applyModifiers(LivingEntity entity) {
 
             }
+
+            @Override
+            public ArrayList<Boolean> parameters() {
+                ArrayList<Boolean> par = new ArrayList<>();
+                par.add(false);
+                par.add(true);
+                return par;
+            }
         };
-        Skill Armor_III = new Skill() {
+        public static Skill Armor_III = new Skill() {
             Skill parent = Armor_II;
             public int cost = 3;
             @Override
             public void onUse(LivingEntity entity) {
-                Skill.attributes.clear();
-                Skill.effects.clear();
-                Skill.attributes.add(new AttributeModifier(UUID.fromString(SupernaturalWeaponry.Mod_ID + ":werewolf_armor_t"), SupernaturalWeaponry.Mod_ID + ":werewolf_armor_t", 8, AttributeModifier.Operation.ADDITION));
-
                 applyEffects(entity);
                 applyModifiers(entity);
             }
@@ -596,24 +881,40 @@ public class Skills {
 
             }
 
+            @Override
+            public boolean cooldown() {
+                return false;
+            }
+
+            @Override
+            public int getID() {
+                return 16;
+            }
+
 
             @Override
             public void applyModifiers(LivingEntity entity) {
-                entity.getAttribute(SharedMonsterAttributes.ARMOR_TOUGHNESS).removeModifier(attributes.get(0));
-                entity.getAttribute(SharedMonsterAttributes.ARMOR_TOUGHNESS).applyModifier(attributes.get(0));
+                if (entity.getAttribute(SharedMonsterAttributes.ARMOR_TOUGHNESS).hasModifier(new AttributeModifier(SupernaturalWeaponry.Mod_ID + ":werewolf_armor_t", 4, AttributeModifier.Operation.ADDITION)))
+                    entity.getAttribute(SharedMonsterAttributes.ARMOR_TOUGHNESS).removeModifier(new AttributeModifier(SupernaturalWeaponry.Mod_ID + ":werewolf_armor_t", 4, AttributeModifier.Operation.ADDITION));
+                entity.getAttribute(SharedMonsterAttributes.ARMOR_TOUGHNESS).applyModifier(new AttributeModifier(SupernaturalWeaponry.Mod_ID + ":werewolf_armor_t", 8, AttributeModifier.Operation.ADDITION));
+            }
+
+            @Override
+            public ArrayList<Boolean> parameters() {
+                ArrayList<Boolean> par = new ArrayList<>();
+                par.add(false);
+                par.add(true);
+                return par;
             }
         };
-        Skill Wither_Reduction = new Skill() {
+        public static Skill Wither_Reduction = new Skill() {
             Skill parent = Poison_Reduction_II;
             public int cost = 3;
+            EffectInstance instance;
             @Override
             public void onUse(LivingEntity entity) {
-                Skill.attributes.clear();
-                Skill.effects.clear();
-                effects.add(Effects.WITHER);
-
-                applyEffects(entity);
-                applyModifiers(entity);
+                    applyEffects(entity);
+                    applyModifiers(entity);
             }
 
             @Override
@@ -623,13 +924,26 @@ public class Skills {
 
             @Override
             public void applyEffects(LivingEntity entity) {
-                EffectInstance instance = entity.getActivePotionEffect(effects.get(0));
-                assert instance != null;
-                if(instance.getAmplifier() > 0){
-                    entity.addPotionEffect(new EffectInstance(effects.get(0),instance.getDuration(),instance.getAmplifier() - 1,instance.isAmbient(),instance.doesShowParticles()));
+                EffectInstance effectInstance = entity.getActivePotionEffect(Effects.WITHER);
+                if(effectInstance != null & instance != null) {
+                    if(instance.getAmplifier() - 1 != effectInstance.getAmplifier()) {
+                        if (effectInstance.getAmplifier() > 0) {
+                            entity.addPotionEffect(new EffectInstance(Effects.WITHER, effectInstance.getDuration(), effectInstance.getAmplifier() - 1, effectInstance.isAmbient(), effectInstance.doesShowParticles()));
+                        } else
+                            entity.removePotionEffect(Effects.WITHER);
+                    }
                 }
-                else
-                    entity.removePotionEffect(Effects.POISON);
+                instance = effectInstance;
+            }
+
+            @Override
+            public boolean cooldown() {
+                return false;
+            }
+
+            @Override
+            public int getID() {
+                return 17;
             }
 
 
@@ -637,45 +951,76 @@ public class Skills {
             public void applyModifiers(LivingEntity entity) {
 
             }
+
+            @Override
+            public ArrayList<Boolean> parameters() {
+                ArrayList<Boolean> par = new ArrayList<>();
+                par.add(false);
+                par.add(true);
+                return par;
+            }
         };
-        Skill Hyper_Armor = new Skill() {
+        public static Skill Hyper_Armor = new Skill() {
             Skill parent_1 = Armor_III;
             Skill parent_2 = Wither_Reduction;
             public int cost = 5;
+            int timer = 0;
             @Override
             public void onUse(LivingEntity entity) {
-                Skill.attributes.clear();
-                Skill.effects.clear();
-                Skill.attributes.add(new AttributeModifier(UUID.fromString(SupernaturalWeaponry.Mod_ID + ":werewolf_armor_ha"), SupernaturalWeaponry.Mod_ID + ":werewolf_armor_ha", 15, AttributeModifier.Operation.ADDITION));
-                Skill.attributes.add(new AttributeModifier(UUID.fromString(SupernaturalWeaponry.Mod_ID + ":werewolf_armor_t_ha"), SupernaturalWeaponry.Mod_ID + ":werewolf_armor_t_ha", 5, AttributeModifier.Operation.ADDITION));
-
-                effects.add(Effects.SLOWNESS);
-                effects.add(Effects.ABSORPTION);
-                effects.add(Effects.MINING_FATIGUE);
-                applyEffects(entity);
-                applyModifiers(entity);
+                if(cooldown()) {
+                    applyEffects(entity);
+                    applyModifiers(entity);
+                    timer++;
+                }
+                else
+                    onDisable(entity);
             }
 
             @Override
             public void onDisable(LivingEntity entity) {
-                entity.getAttribute(SharedMonsterAttributes.ARMOR).removeModifier(attributes.get(0));
-                entity.getAttribute(SharedMonsterAttributes.ARMOR_TOUGHNESS).removeModifier(attributes.get(1));
+                entity.getAttribute(SharedMonsterAttributes.ARMOR).removeModifier(new AttributeModifier(SupernaturalWeaponry.Mod_ID + ":werewolf_armor_ha", 15, AttributeModifier.Operation.ADDITION));
+                entity.getAttribute(SharedMonsterAttributes.ARMOR_TOUGHNESS).removeModifier(new AttributeModifier(SupernaturalWeaponry.Mod_ID + ":werewolf_armor_t_ha", 5, AttributeModifier.Operation.ADDITION));
             }
 
             @Override
             public void applyEffects(LivingEntity entity) {
-                entity.addPotionEffect(new EffectInstance(effects.get(0),300,Objects.requireNonNull(entity.getActivePotionEffect(effects.get(0))).getAmplifier() + 2,false,false));
-                entity.addPotionEffect(new EffectInstance(effects.get(1),300,Objects.requireNonNull(entity.getActivePotionEffect(effects.get(1))).getAmplifier() + 5,false,false));
-                entity.addPotionEffect(new EffectInstance(effects.get(2),300,Objects.requireNonNull(entity.getActivePotionEffect(effects.get(2))).getAmplifier() + 3,false,false));
+                entity.addPotionEffect(new EffectInstance(Effects.SLOWNESS,300,2,false,false));
+                entity.addPotionEffect(new EffectInstance(Effects.ABSORPTION,300,5,false,false));
+                entity.addPotionEffect(new EffectInstance(Effects.MINING_FATIGUE,300,3,false,false));
+            }
+
+            @Override
+            public boolean cooldown() {
+                if(timer % 150 == 0)
+                    return true;
+                else {
+                    timer++;
+                    return false;
+                }
+            }
+
+            @Override
+            public int getID() {
+                return 18;
             }
 
 
             @Override
             public void applyModifiers(LivingEntity entity) {
-                entity.getAttribute(SharedMonsterAttributes.ARMOR).removeModifier(attributes.get(0));
-                entity.getAttribute(SharedMonsterAttributes.ARMOR_TOUGHNESS).removeModifier(attributes.get(1));
-                entity.getAttribute(SharedMonsterAttributes.ARMOR).applyModifier(attributes.get(0));
-                entity.getAttribute(SharedMonsterAttributes.ARMOR_TOUGHNESS).applyModifier(attributes.get(1));
+                if (entity.getAttribute(SharedMonsterAttributes.ARMOR).hasModifier(new AttributeModifier(SupernaturalWeaponry.Mod_ID + ":werewolf_armor_ha", 15, AttributeModifier.Operation.ADDITION))){
+                    entity.getAttribute(SharedMonsterAttributes.ARMOR).removeModifier(new AttributeModifier(SupernaturalWeaponry.Mod_ID + ":werewolf_armor_ha", 15, AttributeModifier.Operation.ADDITION));
+                    entity.getAttribute(SharedMonsterAttributes.ARMOR_TOUGHNESS).removeModifier(new AttributeModifier(SupernaturalWeaponry.Mod_ID + ":werewolf_armor_t_ha", 5, AttributeModifier.Operation.ADDITION));
+                }
+                entity.getAttribute(SharedMonsterAttributes.ARMOR).applyModifier(new AttributeModifier(SupernaturalWeaponry.Mod_ID + ":werewolf_armor_ha", 15, AttributeModifier.Operation.ADDITION));
+                entity.getAttribute(SharedMonsterAttributes.ARMOR_TOUGHNESS).applyModifier(new AttributeModifier(SupernaturalWeaponry.Mod_ID + ":werewolf_armor_t_ha", 5, AttributeModifier.Operation.ADDITION));
+            }
+
+            @Override
+            public ArrayList<Boolean> parameters() {
+                ArrayList<Boolean> par = new ArrayList<>();
+                par.add(false);
+                par.add(false);
+                return par;
             }
         };
 

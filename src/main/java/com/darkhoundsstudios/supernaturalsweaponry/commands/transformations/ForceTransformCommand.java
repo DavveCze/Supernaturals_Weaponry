@@ -39,13 +39,13 @@ public class ForceTransformCommand {
         System.out.println("level: " + level);
         switch (transformation) {
             case "werewolf":
-                ModEventBusEvents.getPlayer().setTransformation(new Transformation("Werewolf", level));
+                ModEventBusEvents.getPlayer().setTransformation(new Transformation(ModEventBusEvents.getPlayer(), "Werewolf", level));
                 break;
             case "vampire":
-                ModEventBusEvents.getPlayer().setTransformation(new Transformation("Vampire", level));
+                ModEventBusEvents.getPlayer().setTransformation(new Transformation(ModEventBusEvents.getPlayer(), "Vampire", level));
                 break;
             case "hunter":
-                ModEventBusEvents.getPlayer().setTransformation(new Transformation("Hunter", level));
+                ModEventBusEvents.getPlayer().setTransformation(new Transformation(ModEventBusEvents.getPlayer(), "Hunter", level));
                 break;
             default:
                 break;

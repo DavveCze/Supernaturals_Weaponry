@@ -1,12 +1,11 @@
 package com.darkhoundsstudios.supernaturalsweaponry.entities.player;
 import com.darkhoundsstudios.supernaturalsweaponry.client.particle.ModParticles;
 import com.darkhoundsstudios.supernaturalsweaponry.entities.ModCreatureAttribute;
+import com.darkhoundsstudios.supernaturalsweaponry.entities.player.transformations.Skills;
 import com.darkhoundsstudios.supernaturalsweaponry.entities.player.transformations.Transformation;
 import com.darkhoundsstudios.supernaturalsweaponry.events.ModEventBusEvents;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.*;
-import net.minecraft.entity.ai.attributes.AttributeModifier;
-import net.minecraft.entity.ai.attributes.IAttribute;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.boss.dragon.EnderDragonPartEntity;
 import net.minecraft.entity.item.ArmorStandEntity;
@@ -35,7 +34,6 @@ import java.util.*;
 public class ModPlayerEntity extends PlayerEntity implements IPlayerFileData{
     //Transformation things
     public List<IAttributeInstance> attributes = new ArrayList<>();
-    public List<AttributeModifier> modifiers;
     public PlayerEntity playerEntity;
     public Transformation transformation;
     public boolean canTransformW = false, canTransformV = false, canTransformH = false;
@@ -50,8 +48,7 @@ public class ModPlayerEntity extends PlayerEntity implements IPlayerFileData{
     public ModPlayerEntity(PlayerEntity _playerEntity) {
         super(_playerEntity.getEntityWorld(), _playerEntity.getGameProfile());
         this.playerEntity = _playerEntity;
-        addAttributesToList();
-        initPlayer(false);
+        //initPlayer(false);
     }
 
     public void initPlayer(boolean levelUp) {
@@ -59,7 +56,6 @@ public class ModPlayerEntity extends PlayerEntity implements IPlayerFileData{
             LevelXp = 0;
             LevelPoints = 0;
         }
-        ResetAttributes();
         ApplyModifiers();
         getCreatureAttribute();
         System.out.println(playerEntity.getPersistentData());
@@ -74,17 +70,6 @@ public class ModPlayerEntity extends PlayerEntity implements IPlayerFileData{
     }
 
 
-    private void addAttributesToList()
-    {
-        attributes.clear();
-        attributes.addAll(playerEntity.getAttributes().getAllAttributes());
-    }
-
-    private void ResetAttributes() {
-        for (IAttributeInstance attribute : attributes) {
-            attribute.removeAllModifiers();
-        }
-    }
 
     private void ResetEffects() {
         if (!getActivePotionEffects().isEmpty())
@@ -95,38 +80,27 @@ public class ModPlayerEntity extends PlayerEntity implements IPlayerFileData{
 
     private void ApplyModifiers(){
         if(transformation != null) {
-            modifiers = Transformation.getModifiers();
-            if (modifiers != null) {
-                for (IAttributeInstance attribute : attributes) {
-                    IAttribute attributeAttribute = attribute.getAttribute();
-                    if (SharedMonsterAttributes.MAX_HEALTH.equals(attributeAttribute)) {
-                        playerEntity.getAttribute(attribute.getAttribute()).applyModifier(modifiers.get(0));
-                    } else if (SharedMonsterAttributes.ATTACK_DAMAGE.equals(attributeAttribute)) {
-                        playerEntity.getAttribute(attribute.getAttribute()).applyModifier(modifiers.get(1));
-                    } else if (SharedMonsterAttributes.ARMOR_TOUGHNESS.equals(attributeAttribute)) {
-                        playerEntity.getAttribute(attribute.getAttribute()).applyModifier(modifiers.get(2));
-                    }
-                }
-            }
             transformation.ApplyEffects(playerEntity);
         }
     }
 
-    public void setTransformation(Transformation transformation){
-        this.transformation = transformation;
-        switch (transformation.getTransType()) {
-            case "Werewolf":
-                type = TransformationType.Werewolf;
-                break;
-            case "Hunter":
-                type = TransformationType.Hunter;
-                break;
-            case "Vampire":
-                type = TransformationType.Vampire;
-                break;
-            default:
-                type = null;
-                break;
+    public void setTransformation(Transformation _transformation) {
+        this.transformation = _transformation;
+        if (transformation != null) {
+            switch (transformation.getTransType()) {
+                case "Werewolf":
+                    type = TransformationType.Werewolf;
+                    break;
+                case "Hunter":
+                    type = TransformationType.Hunter;
+                    break;
+                case "Vampire":
+                    type = TransformationType.Vampire;
+                    break;
+                default:
+                    type = null;
+                    break;
+            }
         }
         writePlayerData(playerEntity);
         initPlayer(false);
@@ -136,14 +110,34 @@ public class ModPlayerEntity extends PlayerEntity implements IPlayerFileData{
         initPlayer(true);
     }
 
-    public void Fullmoon(boolean active, boolean first_time){
-        if(first_time) {
-            playerEntity.addPotionEffect(new EffectInstance(Effects.BLINDNESS, 100, 5));
-            playerEntity.addPotionEffect(new EffectInstance(Effects.NAUSEA, 100, 5));
-            playerEntity.addPotionEffect(new EffectInstance(Effects.SLOWNESS, 100, 15));
-            playerEntity.addPotionEffect(new EffectInstance(Effects.WEAKNESS, 600, 2));
+    public void Fullmoon(boolean active, boolean first_time) {
+        if(transformation != null) {
+            transformation.isFullmoon = active;
+            if (active) {
+                if (first_time) {
+                    playerEntity.addPotionEffect(new EffectInstance(Effects.WITHER, 100, 5));
+                    playerEntity.addPotionEffect(new EffectInstance(Effects.BLINDNESS, 100, 5));
+                    playerEntity.addPotionEffect(new EffectInstance(Effects.NAUSEA, 150, 5));
+                    playerEntity.addPotionEffect(new EffectInstance(Effects.SLOWNESS, 100, 15));
+                    playerEntity.addPotionEffect(new EffectInstance(Effects.WEAKNESS, 250, 2));
+                }
+                if (transformation.getLevel() < 5) {
+                    transformation.useSkill(playerEntity, Skills.Werewolf_Skills.Wolf_form);
+                }
+            } else {
+                System.out.println("Disabling, " + transformation.getState());
+                if(transformation.getState() != null) {
+                    switch (transformation.getState()) {
+                        case Animal:
+                            transformation.disableSkill(playerEntity, Skills.Werewolf_Skills.Wolf_form);
+                            break;
+                        case Beast:
+                            transformation.disableSkill(playerEntity, Skills.Werewolf_Skills.Dire_form);
+                            break;
+                    }
+                }
+            }
         }
-        transformation.isFullmoon = active;
     }
 
     public void customAttackTargetEntityWithCurrentItem(PlayerEntity playerEntity, Entity targetEntity) {
@@ -356,17 +350,22 @@ public class ModPlayerEntity extends PlayerEntity implements IPlayerFileData{
 
     @Override
     public void writePlayerData(@NotNull PlayerEntity player) {
-        if(transformation != null) {
+        if (transformation != null) {
             player.getPersistentData().putString("transformation_name", transformation.getTransType());
             player.getPersistentData().putInt("transformation_level", transformation.getLevel());
-        }
-        else {
-            if (type != null)
-                player.getPersistentData().putString("transformation_name", type.name());
-            else
-                player.getPersistentData().putString("transformation_name", "");
+            player.getPersistentData().putInt("transformation_level", transformation.getLevel());
+            if (transformation.getState() != null)
+                player.getPersistentData().putString("transformation_state", transformation.getState().name());
+            if (transformation.getSkillIds() != null)
+                player.getPersistentData().putIntArray("transformation_skills", transformation.getSkillIds());
+        }else{
+            player.getPersistentData().putString("transformation_name", "");
             player.getPersistentData().putInt("transformation_level", 0);
+            player.getPersistentData().putString("transformation_state", Transformation.TransformState.Human.name());
+            player.getPersistentData().putIntArray("transformation_skills", new ArrayList<>());
         }
+        if (type != null)
+            player.getPersistentData().putString("transformation_type", type.name());
 
         player.getPersistentData().putFloat("transformation_xp", LevelXp);
         player.getPersistentData().putInt("transformation_sp", LevelPoints);
@@ -378,14 +377,19 @@ public class ModPlayerEntity extends PlayerEntity implements IPlayerFileData{
         if(transformation != null) {
             player.getPersistentData().putString("transformation_name", transformation.getTransType());
             player.getPersistentData().putInt("transformation_level", transformation.getLevel());
-        }
-        else {
-            if (type != null)
-                player.getPersistentData().putString("transformation_name", type.name());
-            else
-                player.getPersistentData().putString("transformation_name", "");
+            player.getPersistentData().putInt("transformation_level", transformation.getLevel());
+            if (transformation.getState() != null)
+                player.getPersistentData().putString("transformation_state", transformation.getState().name());
+            if (transformation.getSkillIds() != null)
+                player.getPersistentData().putIntArray("transformation_skills", transformation.getSkillIds());
+        }else{
+            player.getPersistentData().putString("transformation_name", "");
             player.getPersistentData().putInt("transformation_level", 0);
+            player.getPersistentData().putString("transformation_state", Transformation.TransformState.Human.name());
+            player.getPersistentData().putIntArray("transformation_skills", new ArrayList<>());
         }
+        if (type != null)
+            player.getPersistentData().putString("transformation_type", type.name());
 
         player.getPersistentData().putFloat("transformation_xp", LevelXp);
         player.getPersistentData().putInt("transformation_sp", LevelPoints);
@@ -406,6 +410,14 @@ public class ModPlayerEntity extends PlayerEntity implements IPlayerFileData{
     public CompoundNBT readPlayerData(@NotNull PlayerEntity player) {
         try {
             String transformation_name = player.getPersistentData().getString("transformation_name");
+            String transformation_type = player.getPersistentData().getString("transformation_type");
+            int[] skill_ids = player.getPersistentData().getIntArray("transformation_skills");
+            Transformation.TransformState transform_State = null;
+            switch(player.getPersistentData().getString("transformation_state")){
+                case "Animal": transform_State = Transformation.TransformState.Animal; break;
+                case "Beast": transform_State = Transformation.TransformState.Beast; break;
+                case "Human": transform_State = Transformation.TransformState.Human; break;
+            };
             int transformation_level = player.getPersistentData().getInt("transformation_level");
             this.LevelXp = player.getPersistentData().getFloat("transformation_xp");
             this.LevelPoints = player.getPersistentData().getInt("transformation_sp");
@@ -413,11 +425,17 @@ public class ModPlayerEntity extends PlayerEntity implements IPlayerFileData{
             this.canTransformV = player.getPersistentData().getBoolean("can_vampire");
             this.canTransformH = player.getPersistentData().getBoolean("can_hunter");
             if(!transformation_name.equals("") && transformation_level > 0){
-                transformation = new Transformation(transformation_name, transformation_level);
-                ApplyModifiers();
+                transformation = new Transformation(player,transformation_name, transformation_level);
+                transformation.setSkills(skill_ids);
+                transformation.setState(transform_State);
+                if(transformation.getState() == Transformation.TransformState.Animal)
+                    transformation.useSkill(playerEntity, Skills.Werewolf_Skills.Wolf_form);
+                else if(transformation.getState() == Transformation.TransformState.Beast)
+                    transformation.useSkill(playerEntity, Skills.Werewolf_Skills.Dire_form);
+                //transformation.applyPassive(playerEntity);
             }
-            else if(!transformation_name.equals("")){
-                switch (transformation_name){
+            else if(!transformation_type.equals("")){
+                switch (transformation_type){
                     case "Werewolf": type = TransformationType.Werewolf; break;
                     case "Vampire": type = TransformationType.Vampire; break;
                     case "Hunter": type = TransformationType.Hunter; break;
@@ -428,6 +446,7 @@ public class ModPlayerEntity extends PlayerEntity implements IPlayerFileData{
         }catch (Exception e){
             System.out.println(e.getMessage());
         }
+        ApplyModifiers();
         return player.getPersistentData();
     }
 

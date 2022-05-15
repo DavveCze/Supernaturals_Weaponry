@@ -18,6 +18,7 @@ import com.darkhoundsstudios.supernaturalsweaponry.items.ItemBase;
 import com.darkhoundsstudios.supernaturalsweaponry.items.curios.rings.*;
 import com.darkhoundsstudios.supernaturalsweaponry.items.patchouli.WerewolfCodex;
 import com.darkhoundsstudios.supernaturalsweaponry.items.useable.Bandage;
+import com.darkhoundsstudios.supernaturalsweaponry.items.useable.Elixir_Lycanis;
 import com.darkhoundsstudios.supernaturalsweaponry.items.weapons.ModWeapon;
 import com.darkhoundsstudios.supernaturalsweaponry.items.weapons.Two_Handed;
 import com.darkhoundsstudios.supernaturalsweaponry.items.weapons.bombs.Granade;
@@ -104,6 +105,7 @@ public class RegistryHandler {
             new Granade(new Item.Properties().group(SupernaturalWeaponry.TAB).maxStackSize(3),true,false, 1f));
     public static final RegistryObject<Granade> GRENADE_FIRE = Items.register("grenade_fire", () ->
             new Granade(new Item.Properties().group(SupernaturalWeaponry.TAB).maxStackSize(3),false,true, 1.5f));
+    public static final RegistryObject<Elixir_Lycanis> ELI_LYCAN = Items.register("eli_lycan", () -> new Elixir_Lycanis(new Item.Properties().group(SupernaturalWeaponry.TAB).maxStackSize(1)));
 
     //Entity drops
     public static final RegistryObject<Item> WOLF_FUR = Items.register("wolf_fur", ItemBase::new);

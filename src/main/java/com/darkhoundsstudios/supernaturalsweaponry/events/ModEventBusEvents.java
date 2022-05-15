@@ -6,17 +6,24 @@ import com.darkhoundsstudios.supernaturalsweaponry.advancements.triggers.Transfo
 import com.darkhoundsstudios.supernaturalsweaponry.commands.transformations.ForceTransformCommand;
 import com.darkhoundsstudios.supernaturalsweaponry.entities.entity.werewolf.wolf.Werewolf_Wolf;
 import com.darkhoundsstudios.supernaturalsweaponry.entities.player.ModPlayerEntity;
+import com.darkhoundsstudios.supernaturalsweaponry.entities.player.transformations.Skills;
 import com.darkhoundsstudios.supernaturalsweaponry.entities.player.transformations.Transformation;
+import com.darkhoundsstudios.supernaturalsweaponry.util.RegistryHandler;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.advancements.*;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.potion.Effect;
 import net.minecraft.potion.Effects;
+import net.minecraft.util.DamageSource;
+import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.AdvancementEvent;
+import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerXpEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -69,8 +76,10 @@ public class ModEventBusEvents {
 
     @SubscribeEvent
     public static void onPlayerLogIn(PlayerEvent.PlayerLoggedInEvent event) throws CommandSyntaxException {
+        Skills.Werewolf_Skills.init();
         player = new ModPlayerEntity(event.getEntity().getCommandSource().asPlayer());
         getPlayer().readPlayerData(event.getEntity().getCommandSource().asPlayer());
+        getPlayer().initPlayer(false);
         serverPlayer = event.getEntity().getCommandSource().asPlayer();
     }
     @SubscribeEvent
@@ -83,7 +92,6 @@ public class ModEventBusEvents {
                             ItemStack stack = event.getItem();
                             if (!event.getItem().toString().contains("Cooked")) {
                                 ((PlayerEntity) event.getEntity()).getFoodStats().consume(stack.getItem(), stack);
-                                ((PlayerEntity) event.getEntity()).removePotionEffect(Effects.HUNGER);
                             }
                         } else
                             ((PlayerEntity) event.getEntity()).getFoodStats().setFoodLevel(((PlayerEntity) event.getEntity()).getFoodStats().getFoodLevel());
@@ -91,6 +99,9 @@ public class ModEventBusEvents {
                     }
                 }
             }
+        }
+        else if(event.getItem().getItem() == RegistryHandler.ELI_LYCAN.get()){
+
         }
     }
 
@@ -104,7 +115,8 @@ public class ModEventBusEvents {
     public static void onPlayerRespawn(PlayerEvent.Clone event) throws CommandSyntaxException {
         getPlayer().writePlayerData(event.getEntity().getCommandSource().asPlayer());
         player = new ModPlayerEntity(event.getEntity().getCommandSource().asPlayer());
-        player.readPlayerData(event.getEntity().getCommandSource().asPlayer());
+        getPlayer().readPlayerData(event.getEntity().getCommandSource().asPlayer());
+        getPlayer().initPlayer(false);
         serverPlayer = event.getEntity().getCommandSource().asPlayer();
     }
 
@@ -115,49 +127,49 @@ public class ModEventBusEvents {
                 getPlayer().playerTick();
         }
         if (event.phase == TickEvent.Phase.END && event.side == LogicalSide.SERVER) {
-            int phase = event.player.world.getMoonPhase();
-            if (prevMoonPhase != phase) {
-                MoonPhaseTrigger.MoonPhase totPhase;
-                switch (phase) {
-                    case 2:
-                        totPhase = MoonPhaseTrigger.MoonPhase.FULL_MOON;
-                        break;
-                    case 3:
-                        totPhase = MoonPhaseTrigger.MoonPhase.WANING_GIBBOUS;
-                        break;
-                    case 4:
-                        totPhase = MoonPhaseTrigger.MoonPhase.THIRD_QUARTER;
-                        break;
-                    case 5:
-                        totPhase = MoonPhaseTrigger.MoonPhase.WANING_CRESCENT;
-                        break;
-                    case 6:
-                        totPhase = MoonPhaseTrigger.MoonPhase.NEW_MOON;
-                        break;
-                    case 7:
-                        totPhase = MoonPhaseTrigger.MoonPhase.WAXING_CRESCENT;
-                        break;
-                    case 8:
-                        totPhase = MoonPhaseTrigger.MoonPhase.FIRST_QUARTER;
-                        break;
-                    case 1:
-                        totPhase = MoonPhaseTrigger.MoonPhase.WAXING_GIBBOUS;
-                        break;
-                    default:
-                        totPhase = MoonPhaseTrigger.MoonPhase.UNKNOWN;
-                }
+            MoonPhaseTrigger.MoonPhase totPhase;
+            switch (event.player.world.getMoonPhase()) {
+                case 0:
+                    totPhase = MoonPhaseTrigger.MoonPhase.FULL_MOON;
+                    break;
+                case 1:
+                    totPhase = MoonPhaseTrigger.MoonPhase.WANING_GIBBOUS;
+                    break;
+                case 2:
+                    totPhase = MoonPhaseTrigger.MoonPhase.THIRD_QUARTER;
+                    break;
+                case 3:
+                    totPhase = MoonPhaseTrigger.MoonPhase.WANING_CRESCENT;
+                    break;
+                case 4:
+                    totPhase = MoonPhaseTrigger.MoonPhase.NEW_MOON;
+                    break;
+                case 5:
+                    totPhase = MoonPhaseTrigger.MoonPhase.WAXING_CRESCENT;
+                    break;
+                case 6:
+                    totPhase = MoonPhaseTrigger.MoonPhase.FIRST_QUARTER;
+                    break;
+                case 7:
+                    totPhase = MoonPhaseTrigger.MoonPhase.WAXING_GIBBOUS;
+                    break;
+                default:
+                    totPhase = MoonPhaseTrigger.MoonPhase.UNKNOWN;
+            }
+            if(getPlayer().world.getDayTime() % 24000 > 12500)
                 SupernaturalWeaponry.Advancements.MOON_PHASE.trigger((ServerPlayerEntity) event.player, totPhase);
-                prevMoonPhase = phase;
+
+
+            if (getPlayer().transformation != null && getPlayer().transformation.getState() != Transformation.TransformState.Human && getPlayer().world.getDayTime() % 24000 <= 12500 ) {
+                getPlayer().Fullmoon(false, false);
             }
-            if (getPlayer().type == ModPlayerEntity.TransformationType.Werewolf & phase == 1 & getPlayer().world.getDayTime() > 12500) {
+            else if (getPlayer().type == ModPlayerEntity.TransformationType.Werewolf && event.player.world.getMoonPhase() == 0 && getPlayer().world.getDayTime() % 24000 >12500) {
                 if (getPlayer().transformation == null) {
-                    getPlayer().transformation = new Transformation("Werewolf", 1);
+                    getPlayer().transformation = new Transformation(event.player, "Werewolf", 1);
+                    getPlayer().transformation.addBasicSkills();
                     getPlayer().Fullmoon(true, true);
-                } else
+                } else if ((getPlayer().transformation.getState() == Transformation.TransformState.Human))
                     getPlayer().Fullmoon(true, false);
-            }
-            if(getPlayer().transformation != null & phase != 1) {
-                getPlayer().Fullmoon(false,false);
             }
         }
         assert getPlayer() != null;
@@ -189,12 +201,61 @@ public class ModEventBusEvents {
     }
 
     @SubscribeEvent
-    public static void onPlayerHurt(LivingHurtEvent event){
-        if(event.getEntity() instanceof PlayerEntity) {
-            if(((PlayerEntity) event.getEntity()).getLastAttackedEntity() instanceof  Werewolf_Wolf & getPlayer().canTransformW & getPlayer().type == null) {
+    public static void onPlayerHurt(LivingHurtEvent event) {
+        if (event.getEntity() instanceof PlayerEntity) {
+            if (((PlayerEntity) event.getEntity()).getLastAttackedEntity() instanceof Werewolf_Wolf & getPlayer().canTransformW & getPlayer().type == null) {
                 if (Math.random() * 100 <= 5) {
                     getPlayer().type = ModPlayerEntity.TransformationType.Werewolf;
                     getPlayer().canTransformW = false;
+                }
+            }
+            if(getPlayer().transformation != null) {
+                if (getPlayer().transformation.getTransType().equals("Werewolf")) {
+                    if (((PlayerEntity) event.getEntity()).getHealth() < ((PlayerEntity) event.getEntity()).getHealth() * 0.15)
+                        getPlayer().transformation.useSkill(event.getEntityLiving(), Skills.Werewolf_Skills.Survival_instinct);
+                    if (event.getSource() == DamageSource.WITHER | ((PlayerEntity) event.getEntity()).getActivePotionEffect(Effects.POISON) != null) {
+                        getPlayer().transformation.useSkill(event.getEntityLiving(), Skills.Werewolf_Skills.Poison_Reduction_I);
+                        getPlayer().transformation.useSkill(event.getEntityLiving(), Skills.Werewolf_Skills.Poison_Reduction_II);
+                        getPlayer().transformation.useSkill(event.getEntityLiving(), Skills.Werewolf_Skills.Wither_Reduction);
+                    }
+                }
+            }
+        }
+    }
+    @SubscribeEvent
+    public static void onPlayerAttack(AttackEntityEvent event){
+        if(event.getEntity() instanceof PlayerEntity) {
+            if(getPlayer().transformation != null) {
+                if (getPlayer().transformation.getTransType().equals("Werewolf")) {
+                    getPlayer().transformation.useSkill(event.getEntityLiving(), Skills.Werewolf_Skills.Bloodlust);
+                    getPlayer().transformation.useSkill((LivingEntity) event.getTarget(), Skills.Werewolf_Skills.Bleeding);
+                    getPlayer().transformation.useSkill((LivingEntity) event.getTarget(), Skills.Werewolf_Skills.Rending_Slashes);
+                }
+            }
+        }
+    }
+    @SubscribeEvent
+    public static void onPlayerKeyDown(InputEvent.KeyInputEvent event){
+        if(event.getAction() == 1 & getPlayer() != null){
+            if(getPlayer().transformation != null) {
+                if (event.getKey() == 74 & (getPlayer().transformation.getState() == Transformation.TransformState.Human) & getPlayer().transformation.getLevel() >= 5) {
+                    getPlayer().transformation.useSkill(getPlayer(), Skills.Werewolf_Skills.Wolf_form);
+                    getPlayer().transformation.setState(Transformation.TransformState.Animal);
+                } else if (event.getKey() == 74 & getPlayer().transformation.getLevel() >= 5) {
+                    getPlayer().transformation.disableSkill(getPlayer(), Skills.Werewolf_Skills.Wolf_form);
+                    getPlayer().transformation.setState(Transformation.TransformState.Human);
+                } else if (event.getKey() == 74 & event.getModifiers() == 2 & (getPlayer().transformation.getState() == Transformation.TransformState.Human)) {
+                    getPlayer().transformation.useSkill(getPlayer(), Skills.Werewolf_Skills.Dire_form);
+                    getPlayer().transformation.setState(Transformation.TransformState.Beast);
+                } else if (event.getKey() == 74 & event.getModifiers() == 2) {
+                    getPlayer().transformation.disableSkill(getPlayer(), Skills.Werewolf_Skills.Dire_form);
+                    getPlayer().transformation.setState(Transformation.TransformState.Human);
+                }
+                else if (event.getKey() == 72) {
+                    getPlayer().transformation.useSkill(getPlayer(), Skills.Werewolf_Skills.Hyper_Armor);
+                }
+                else if (event.getKey() == 72 & event.getModifiers() == 2) {
+                    getPlayer().transformation.useSkill(getPlayer(), Skills.Werewolf_Skills.Bestial_Rage);
                 }
             }
         }
