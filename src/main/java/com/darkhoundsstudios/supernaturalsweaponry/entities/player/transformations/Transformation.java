@@ -2,7 +2,6 @@ package com.darkhoundsstudios.supernaturalsweaponry.entities.player.transformati
 
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
@@ -20,7 +19,7 @@ public class Transformation{
     public Transformation(LivingEntity entity,String type, int level) {
         switch (type)
         {
-            case "Werewolf": isWerewolf = true; Werewolf.init(entity, level); break;
+            case "Werewolf": isWerewolf = true; Werewolf.init(entity); break;
             case "Hunter": isHunter = true; break;
             case "Vampire": isVampire = true; break;
         }
@@ -45,16 +44,16 @@ public class Transformation{
     public boolean increaseLevel(float playerXP) {
         if (isWerewolf) {
             if (this.level >= 1 && this.level < Werewolf.levelCap)
-                return checkLevel(playerXP, Werewolf.levelCap, this.level);
+                return checkLevel(playerXP, this.level);
         }
         return false;
     }
 
-    private boolean checkLevel(float playerXP, int lvlCap, int currLvl) {
+    private boolean checkLevel(float playerXP, int currLvl) {
         boolean x = false;
-        for (int i = lvlCap - 1; i >= currLvl; i--) {
+        for (int i = Werewolf.levelCap - 1; i >= currLvl; i--) {
             if (isWerewolf) {
-                if (playerXP >= Werewolf.getXpNeeded(i) && currLvl < lvlCap) {
+                if (playerXP >= Werewolf.getXpNeeded(i)) {
                     if (i - currLvl > 0)
                         this.level += i - currLvl;
                     else
@@ -116,6 +115,18 @@ public class Transformation{
             Werewolf.addBasicSkills();
         }
     }
+    public boolean tryAddSkill(Skill _skill){
+        if(isWerewolf) {
+            for (Skill skill : Werewolf.all_skills) {
+                if (skill.equals(_skill))
+                    return false;
+            }
+        }
+        return true;
+    }
+    public boolean removeSkill(Skill _skill){
+        return Werewolf.removeSkill(_skill);
+    }
 
     public enum TransformState{
         Human,
@@ -135,6 +146,7 @@ public class Transformation{
         public static List<Skill> passive_const_skillList = new ArrayList<>();
         public static List<Skill> passive_skillList = new ArrayList<>();
         public static List<Skill> active_skillList = new ArrayList<>();
+        public static List<Skill> all_skills = new ArrayList<>();
         public static TransformState state;
 
         //drží vnitřní informace
@@ -143,16 +155,19 @@ public class Transformation{
         private final static int[] xpNeeded = new int[]{150,400,750,1150,1700,2400,3600,5700,8500};
 
         //inicializuje nového vlkodlaka či při jeho level upu
-        public static void init(LivingEntity entity, int level){
+        public static void init(LivingEntity entity){
             for (Skill skill: passive_skillList) {
                 skill.onUse(entity);
             }
         }
 
         public static void addBasicSkills(){
-            addSkill(Skills.Werewolf_Skills.Wolf_form, Skills.Werewolf_Skills.Wolf_form.parameters().get(0), Skills.Werewolf_Skills.Wolf_form.parameters().get(1));
-            addSkill(Skills.Werewolf_Skills.Poison_Reduction_I, Skills.Werewolf_Skills.Poison_Reduction_I.parameters().get(0),  Skills.Werewolf_Skills.Poison_Reduction_I.parameters().get(1));
-            addSkill(Skills.Werewolf_Skills.Regeneration, Skills.Werewolf_Skills.Regeneration.parameters().get(0),  Skills.Werewolf_Skills.Regeneration.parameters().get(1));
+            if(tryAddSkill(Skills.Werewolf_Skills.Wolf_form))
+                addSkill(Skills.Werewolf_Skills.Wolf_form,Skills.Werewolf_Skills.Wolf_form.parameters().get(0),Skills.Werewolf_Skills.Wolf_form.parameters().get(1));
+            if(tryAddSkill(Skills.Werewolf_Skills.Regeneration))
+                addSkill(Skills.Werewolf_Skills.Regeneration,Skills.Werewolf_Skills.Regeneration.parameters().get(0),Skills.Werewolf_Skills.Regeneration.parameters().get(1));
+            if(tryAddSkill(Skills.Werewolf_Skills.Poison_Reduction_I))
+                addSkill(Skills.Werewolf_Skills.Poison_Reduction_I,Skills.Werewolf_Skills.Poison_Reduction_I.parameters().get(0),Skills.Werewolf_Skills.Poison_Reduction_I.parameters().get(1));
         }
         
         public static void applyAll(LivingEntity entity){
@@ -176,6 +191,13 @@ public class Transformation{
                 skill.onUse(entity);
             }
         }
+        public static boolean tryAddSkill(Skill _skill) {
+            for (Skill skill : Werewolf.all_skills) {
+                if (skill.equals(_skill))
+                    return false;
+            }
+            return true;
+        }
 
         public static void addSkill(Skill skill, boolean constant, boolean passive){
             if(constant && passive)
@@ -185,6 +207,7 @@ public class Transformation{
             else if(!constant && !passive){
                 active_skillList.add(skill);
             }
+            all_skills.add(skill);
         }
         public static boolean useSkill(LivingEntity entity, Skill _skill){
             for (Skill skill:active_skillList) {
@@ -202,16 +225,23 @@ public class Transformation{
                 }
             }
         }
+        public static boolean removeSkill(Skill _skill){
+            if(all_skills.contains(_skill)) {
+                if (_skill.parameters().get(0) && _skill.parameters().get(1))
+                    passive_const_skillList.remove(_skill);
+                else if (_skill.parameters().get(1))
+                    passive_skillList.remove(_skill);
+                else if (!_skill.parameters().get(0) && !_skill.parameters().get(1)) {
+                    active_skillList.remove(_skill);
+                }
+                return true;
+            }
+            return false;
+        }
 
         public static ArrayList<Integer> getSkillIds() {
             ArrayList<Integer> ids = new ArrayList<>();
-            for (Skill skill : passive_const_skillList) {
-                ids.add(skill.getID());
-            }
-            for (Skill skill : active_skillList) {
-                ids.add(skill.getID());
-            }
-            for (Skill skill : passive_skillList) {
+            for (Skill skill : all_skills) {
                 ids.add(skill.getID());
             }
 
@@ -222,14 +252,16 @@ public class Transformation{
             active_skillList.clear();
             passive_skillList.clear();
             passive_const_skillList.clear();
+            all_skills.clear();
             System.out.println(ids.length);
-            if(ids.length == 0)
-                addBasicSkills();
+            addBasicSkills();
             System.out.println(active_skillList.size() + ", " + passive_skillList.size() + ", " + passive_const_skillList.size());
             for (int id : ids) {
                 for (Skill skill : Skills.Werewolf_Skills.skill_list) {
                     if(id == skill.getID()){
-                        addSkill(skill,skill.parameters().get(0),skill.parameters().get(1));
+                        if(tryAddSkill(skill)) {
+                            addSkill(skill, skill.parameters().get(0), skill.parameters().get(1));
+                        }
                         break;
                     }
                 }

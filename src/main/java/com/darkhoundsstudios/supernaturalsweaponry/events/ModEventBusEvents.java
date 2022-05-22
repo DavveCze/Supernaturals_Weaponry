@@ -8,14 +8,12 @@ import com.darkhoundsstudios.supernaturalsweaponry.entities.entity.werewolf.wolf
 import com.darkhoundsstudios.supernaturalsweaponry.entities.player.ModPlayerEntity;
 import com.darkhoundsstudios.supernaturalsweaponry.entities.player.transformations.Skills;
 import com.darkhoundsstudios.supernaturalsweaponry.entities.player.transformations.Transformation;
-import com.darkhoundsstudios.supernaturalsweaponry.util.RegistryHandler;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.advancements.*;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.potion.Effect;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.DamageSource;
 import net.minecraftforge.client.event.InputEvent;
@@ -99,9 +97,6 @@ public class ModEventBusEvents {
                     }
                 }
             }
-        }
-        else if(event.getItem().getItem() == RegistryHandler.ELI_LYCAN.get()){
-
         }
     }
 

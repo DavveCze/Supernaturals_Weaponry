@@ -1,7 +1,6 @@
 package com.darkhoundsstudios.supernaturalsweaponry.entities.player.transformations;
 
 import com.darkhoundsstudios.supernaturalsweaponry.SupernaturalWeaponry;
-import com.darkhoundsstudios.supernaturalsweaponry.client.particle.LevelUp_Particle;
 import com.darkhoundsstudios.supernaturalsweaponry.effects.ModEffects;
 import com.darkhoundsstudios.supernaturalsweaponry.effects.bleeding.BleedingEffectInstance;
 import com.darkhoundsstudios.supernaturalsweaponry.events.ModEventBusEvents;
@@ -61,6 +60,7 @@ public class Skills {
                     }
                     applyEffects(entity);
                     applyModifiers(entity);
+                    timer++;
                     ModEventBusEvents.getPlayer().transformation.setState(Transformation.TransformState.Animal);
                     entity.heal(entity.getMaxHealth() - entity.getHealth());
                 }
@@ -628,6 +628,9 @@ public class Skills {
             public int cost = 1;
             @Override
             public void onUse(LivingEntity entity) {
+                /*if(entity instanceof PlayerEntity){
+                    ModEventBusEvents.getPlayer().transformation.removeSkill(Regeneration);
+                }*/
                 applyEffects(entity);
                 applyModifiers(entity);
             }
@@ -815,6 +818,9 @@ public class Skills {
             EffectInstance instance;
             @Override
             public void onUse(LivingEntity entity) {
+                if(entity instanceof PlayerEntity){
+                    ModEventBusEvents.getPlayer().transformation.removeSkill(Poison_Reduction_I);
+                }
                 applyEffects(entity);
                 applyModifiers(entity);
             }

@@ -1,6 +1,26 @@
 {
-  "parent": "item/generated",
-  "textures": {
-    "layer0": "snweaponry:items/haft"
-  }
+	"parent": "item/generated",
+	"textures": {
+		"layer0": "snweaponry:items/haft"
+	},
+	"display": {
+		"thirdperson_righthand": {
+			"rotation": [55, 90, 0],
+			"translation": [0, 0, 1.25]
+		},
+		"thirdperson_lefthand": {
+			"rotation": [55, -90, 0],
+			"translation": [0, 0, 1.25]
+		},
+		"firstperson_righthand": {
+			"rotation": [30, 90, 0]
+		},
+		"firstperson_lefthand": {
+			"rotation": [30, -90, 0]
+		},
+		"ground": {
+			"rotation": [90, 0, 0],
+			"translation": [0, -2.5, 0]
+		}
+	}
 }

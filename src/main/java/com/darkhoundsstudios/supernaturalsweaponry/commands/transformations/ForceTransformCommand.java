@@ -1,5 +1,6 @@
 package com.darkhoundsstudios.supernaturalsweaponry.commands.transformations;
 
+import com.darkhoundsstudios.supernaturalsweaponry.entities.player.transformations.Skills;
 import com.darkhoundsstudios.supernaturalsweaponry.entities.player.transformations.Transformation;
 import com.darkhoundsstudios.supernaturalsweaponry.events.ClientEventBus;
 import com.darkhoundsstudios.supernaturalsweaponry.events.ModEventBusEvents;
@@ -24,6 +25,17 @@ public class ForceTransformCommand {
                         )
                         .then(Commands.literal("human")
                                 .executes((command) -> BecomeHuman())
+                        )
+                )
+                .then(Commands.literal("add")
+                        .then(Commands.literal("skill")
+                                .then(Commands.argument("id", IntegerArgumentType.integer(0, Skills.Werewolf_Skills.skill_list.size()))
+                                        .executes((this::AddSkill))
+                                )
+                        )
+                        .then(Commands.literal("skillpoint")
+                        )
+                        .then(Commands.literal("xp")
                         )
                 );
         dispatcher.register(transformationCommand);
@@ -55,6 +67,16 @@ public class ForceTransformCommand {
 
     public int BecomeHuman(){
         ModEventBusEvents.getPlayer().setTransformation(null);
+        return 1;
+    }
+
+    public int AddSkill(CommandContext<CommandSource> commandContext){
+        if(commandContext != null) {
+            int skill_id = IntegerArgumentType.getInteger(commandContext, "id");
+            if (ModEventBusEvents.getPlayer().transformation.tryAddSkill(Skills.Werewolf_Skills.skill_list.get(skill_id))) {
+                ModEventBusEvents.getPlayer().transformation.addSkill(Skills.Werewolf_Skills.skill_list.get(skill_id),Skills.Werewolf_Skills.skill_list.get(skill_id).parameters().get(0),Skills.Werewolf_Skills.skill_list.get(skill_id).parameters().get(1));
+            }
+        }
         return 1;
     }
 }

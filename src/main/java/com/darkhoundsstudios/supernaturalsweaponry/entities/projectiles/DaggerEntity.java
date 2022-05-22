@@ -26,6 +26,7 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.network.NetworkHooks;
 import org.jetbrains.annotations.NotNull;
 
@@ -75,33 +76,18 @@ public class DaggerEntity extends ProjectileItemEntity {
             float damage = 3;
             if (material != null)
             {
-                if (SILVER.equals(material) && ((LivingEntity)entity).isEntityUndead()) {
-                    damage = damage * 2;
+                if (SILVER.equals(material)) {
+                    ModWeapon.performSpecial_Silver(getItem(), (LivingEntity) entity,getThrower(),damage);
                 } else if (WHITE_GOLD.equals(material)) {
-                    damage = WG_dmg(damage, (LivingEntity) entity);
+                    ModWeapon.performSpecial_WG(getItem(), (LivingEntity) entity,getThrower(),damage);
                 }
             }
-            entity.attackEntityFrom(DamageSource.causeThrownDamage(this,this.getThrower()),damage);
+            //entity.attackEntityFrom(DamageSource.causeThrownDamage(this,this.getThrower()),damage);
         }
         if(!world.isRemote())
         {
             this.remove();
         }
-    }
-
-    private float WG_dmg(float _damage, LivingEntity target){
-        float vanillaDMG = 0;
-        float realAttackDamage = 0;
-        if (target.getArmorInventoryList().toString().contains("diamond")) {
-            float x = 8;
-            x = x * target.getArmorCoverPercentage();
-            vanillaDMG = (_damage - _damage * (1 - (Math.min(20, Math.max(((target.getTotalArmorValue() - x) / 5), (target.getTotalArmorValue() - x) - ((4 * _damage) / (x + 8))))) / 25));
-            realAttackDamage = _damage + vanillaDMG + vanillaDMG * 0.49f + 1;
-        } else {
-            vanillaDMG = ((_damage - _damage * (1 - (Math.min(20, Math.max((target.getTotalArmorValue() / 5f), target.getTotalArmorValue() - ((4 * _damage) / 8)))) / 25)));
-            realAttackDamage = _damage + vanillaDMG + vanillaDMG * 0.49f;
-        }
-        return realAttackDamage;
     }
 
     @Override

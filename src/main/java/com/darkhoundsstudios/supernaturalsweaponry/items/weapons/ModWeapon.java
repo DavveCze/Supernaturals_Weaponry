@@ -43,10 +43,10 @@ public class ModWeapon extends SwordItem {
     }
 
     //vyvolá a způsobí dmg, který "prochází brněním"
-    public final void performSpecial_WG(ItemStack stack, LivingEntity target, LivingEntity attacker,float Damage)
+    public static void performSpecial_WG(ItemStack stack, LivingEntity target, LivingEntity attacker, float Damage)
     {
         System.out.println("base dmg: " + Damage);
-        float vanillaDMG;
+        float vanillaDMG, realAttackDamage = 0;
         if (target.getArmorInventoryList().toString().contains("diamond")) {
             float x = (float) target.getAttribute(SharedMonsterAttributes.ARMOR_TOUGHNESS).getValue();
             vanillaDMG = (Damage - Damage * (1 - (Math.min(20, Math.max(((target.getTotalArmorValue() - x) / 5), (target.getTotalArmorValue() - x) - ((4 * Damage) / (x + 8))))) / 25));
@@ -56,9 +56,9 @@ public class ModWeapon extends SwordItem {
             realAttackDamage = Damage + vanillaDMG + vanillaDMG * 0.49f;
         }
         if (attacker instanceof PlayerEntity) {
-            target.attackEntityFrom(ModDamageSources.PURITY, this.realAttackDamage);
+            target.attackEntityFrom(ModDamageSources.PURITY, realAttackDamage);
         } else {
-            target.attackEntityFrom(ModDamageSources.PURITY, this.realAttackDamage);
+            target.attackEntityFrom(ModDamageSources.PURITY, realAttackDamage);
         }
         System.out.println("Damage dealt: " + realAttackDamage);
         realAttackDamage = Damage;
@@ -66,19 +66,16 @@ public class ModWeapon extends SwordItem {
     }
 
     //působí zvýšené poškození pokud cíl je nemrtvý či nadpřirozený
-    public final void performSpecial_Silver(ItemStack stack, LivingEntity target, LivingEntity attacker, float Damage)
+    public static void performSpecial_Silver(ItemStack stack, LivingEntity target, LivingEntity attacker, float Damage)
     {
         if (target.isEntityUndead() || target.getCreatureAttribute().equals(ModCreatureAttribute.Supernatural)) {
-            realAttackDamage = Damage * 2;
+            float realAttackDamage = Damage * 2;
             if (attacker instanceof PlayerEntity) {
-                target.attackEntityFrom(DamageSource.causePlayerDamage((PlayerEntity) attacker), this.realAttackDamage);
+                target.attackEntityFrom(DamageSource.causePlayerDamage((PlayerEntity) attacker), realAttackDamage);
             } else {
-                target.attackEntityFrom(DamageSource.causeMobDamage(attacker), this.realAttackDamage);
+                target.attackEntityFrom(DamageSource.causeMobDamage(attacker), realAttackDamage);
             }
-            System.out.println("Damage dealt: " + realAttackDamage);
-            realAttackDamage = Damage;
-        } else
-            System.out.println("Damage dealt: " + realAttackDamage);
+        }
         System.out.println("Target's health: " + target.getHealth());
     }
 

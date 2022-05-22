@@ -48,6 +48,7 @@ public class ModPlayerEntity extends PlayerEntity implements IPlayerFileData{
     public ModPlayerEntity(PlayerEntity _playerEntity) {
         super(_playerEntity.getEntityWorld(), _playerEntity.getGameProfile());
         this.playerEntity = _playerEntity;
+        Skills.Werewolf_Skills.init();
         //initPlayer(false);
     }
 

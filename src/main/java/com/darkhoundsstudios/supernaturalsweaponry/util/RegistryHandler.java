@@ -135,13 +135,13 @@ public class RegistryHandler {
     public static final RegistryObject<ModWeapon> SILVER_SWORD = Items.register("silver_sword",()->
             new ModWeapon(ModItemTier.SILVER, 2, -2.1f, new Item.Properties().group(SupernaturalWeaponry.TAB).maxStackSize(1)));
     public static final RegistryObject<Two_Handed> SILVER_LONGSWORD = Items.register("silver_longsword",()->
-            new Two_Handed(ModItemTier.SILVER, 10, -3.15f, new Item.Properties().group(SupernaturalWeaponry.TAB).maxStackSize(1)));
+            new Two_Handed(ModItemTier.SILVER, 10, -3.15f,0.2, new Item.Properties().group(SupernaturalWeaponry.TAB).maxStackSize(1)));
     public static final RegistryObject<Two_Handed> SILVER_DA = Items.register("silver_da", ()->
-            new Two_Handed(ModItemTier.SILVER,9,-2.90f,new Item.Properties().group(SupernaturalWeaponry.TAB).maxStackSize(1)));
+            new Two_Handed(ModItemTier.SILVER,9,-2.90f,0.25,new Item.Properties().group(SupernaturalWeaponry.TAB).maxStackSize(1)));
     public static final RegistryObject<TDagger> SILVER_TDAGGER = Items.register("silver_tdagger", () ->
             new TDagger(new Item.Properties().group(SupernaturalWeaponry.TAB).maxStackSize(12), ModItemTier.SILVER));
     public static final RegistryObject<Two_Handed> SILVER_SPEAR = Items.register("silver_spear", ()->
-            new Two_Handed(ModItemTier.SILVER,6,-2.2f,new Item.Properties().group(SupernaturalWeaponry.TAB).maxStackSize(1)));
+            new Two_Handed(ModItemTier.SILVER,6,-2.2f,0.15,new Item.Properties().group(SupernaturalWeaponry.TAB).maxStackSize(1)));
     public static final RegistryObject<ModWeapon>  SILVER_BROADSWORD = Items.register("silver_broadsword", ()->
             new ModWeapon(ModItemTier.SILVER,7,-2.4f,new Item.Properties().group(SupernaturalWeaponry.TAB).maxStackSize(1)));
 
@@ -156,13 +156,13 @@ public class RegistryHandler {
     public static final RegistryObject<ModWeapon> WG_SWORD = Items.register("wg_sword",()->
             new ModWeapon(ModItemTier.WHITE_GOLD, 2, -2.35f, new Item.Properties().group(SupernaturalWeaponry.TAB).maxStackSize(1)));
     public static final RegistryObject<Two_Handed> WG_LONGSWORD = Items.register("wg_longsword",()->
-            new Two_Handed(ModItemTier.WHITE_GOLD,8, -3.35f, new Item.Properties().group(SupernaturalWeaponry.TAB).maxStackSize(1)));
+            new Two_Handed(ModItemTier.WHITE_GOLD,8, -3.35f,0.24, new Item.Properties().group(SupernaturalWeaponry.TAB).maxStackSize(1)));
     public static final RegistryObject<Two_Handed> WG_DA = Items.register("wg_da", ()->
-            new Two_Handed(ModItemTier.WHITE_GOLD,9,-3f,new Item.Properties().group(SupernaturalWeaponry.TAB).maxStackSize(1)));
+            new Two_Handed(ModItemTier.WHITE_GOLD,9,-3f,0.28,new Item.Properties().group(SupernaturalWeaponry.TAB).maxStackSize(1)));
     public static final RegistryObject<TDagger> WG_TDAGGER = Items.register("wg_tdagger", () ->
             new TDagger(new Item.Properties().group(SupernaturalWeaponry.TAB).maxStackSize(12), ModItemTier.WHITE_GOLD));
     public static final RegistryObject<Two_Handed> WG_SPEAR = Items.register("wg_spear", ()->
-            new Two_Handed(ModItemTier.WHITE_GOLD,6,-2.35f,new Item.Properties().group(SupernaturalWeaponry.TAB).maxStackSize(1)));
+            new Two_Handed(ModItemTier.WHITE_GOLD,6,-2.35f,0.15,new Item.Properties().group(SupernaturalWeaponry.TAB).maxStackSize(1)));
     public static final RegistryObject<ModWeapon>  WG_BROADSWORD = Items.register("wg_broadsword", ()->
             new ModWeapon(ModItemTier.WHITE_GOLD,7,-2.4f,new Item.Properties().group(SupernaturalWeaponry.TAB).maxStackSize(1)));
 
@@ -171,13 +171,13 @@ public class RegistryHandler {
     public static final RegistryObject<DaggerWeapon> IRON_DAGGER = Items.register("iron_dagger",()->
             new DaggerWeapon(ItemTier.IRON, 0, -2.1f, new Item.Properties().group(SupernaturalWeaponry.TAB).maxStackSize(1)));
     public static final RegistryObject<Two_Handed> IRON_LONGSWORD = Items.register("iron_longsword",()->
-            new Two_Handed(ItemTier.IRON, 10, -3.55f, new Item.Properties().group(SupernaturalWeaponry.TAB).maxStackSize(1)));
+            new Two_Handed(ItemTier.IRON, 10, -3.55f,0.26, new Item.Properties().group(SupernaturalWeaponry.TAB).maxStackSize(1)));
     public static final RegistryObject<Two_Handed> IRON_DA = Items.register("iron_da", ()->
-            new Two_Handed(ItemTier.IRON,9,-3.2f,new Item.Properties().group(SupernaturalWeaponry.TAB).maxStackSize(1)));
+            new Two_Handed(ItemTier.IRON,9,-3.2f,0.3,new Item.Properties().group(SupernaturalWeaponry.TAB).maxStackSize(1)));
     public static final RegistryObject<TDagger> IRON_TDAGGER = Items.register("iron_tdagger", () ->
             new TDagger(new Item.Properties().group(SupernaturalWeaponry.TAB).maxStackSize(12), ItemTier.IRON));
     public static final RegistryObject<Two_Handed> IRON_SPEAR = Items.register("iron_spear", ()->
-            new Two_Handed(ItemTier.IRON,6,-2.4f,new Item.Properties().group(SupernaturalWeaponry.TAB).maxStackSize(1)));
+            new Two_Handed(ItemTier.IRON,6,-2.4f,0.2,new Item.Properties().group(SupernaturalWeaponry.TAB).maxStackSize(1)));
     public static final RegistryObject<ModWeapon> IRON_BROADSWORD = Items.register("iron_broadsword", ()->
             new ModWeapon(ItemTier.IRON,7,-2.4f,new Item.Properties().group(SupernaturalWeaponry.TAB).maxStackSize(1)));
 
